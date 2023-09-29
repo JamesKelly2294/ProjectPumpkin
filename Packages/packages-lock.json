@@ -195,18 +195,18 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.sysroot": {
-      "version": "2.0.5",
+      "version": "2.0.7",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.sysroot.linux-x86_64": {
-      "version": "2.0.4",
+      "version": "2.0.6",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.unity.sysroot": "2.0.5"
+        "com.unity.sysroot": "2.0.7"
       },
       "url": "https://packages.unity.com"
     },
@@ -242,6 +242,16 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.toolchain.macos-arm64-linux-x86_64": {
+      "version": "2.0.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.sysroot": "2.0.7",
+        "com.unity.sysroot.linux-x86_64": "2.0.6"
+      },
+      "url": "https://packages.unity.com"
+    },
     "com.unity.toolchain.macos-x86_64-linux-x86_64": {
       "version": "2.0.4",
       "depth": 0,
@@ -260,6 +270,13 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "info.jacobingalls.jamkit": {
+      "version": "https://github.com/Jacobingalls/JamKit.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1d5cf5fbb612c470888df24c714455d710b4a71d"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
