@@ -8,17 +8,15 @@ public class ActionButton : MonoBehaviour
 {
 
     public Action Action;
-
     public Image Icon;
     public Image IconBackground;
-
     public TextMeshProUGUI TooltipTitle;
     public TextMeshProUGUI TooltipDescription;
     public TextMeshProUGUI TooltipFlavorText;
     public TooltipAmount ActionCostPrefab;
     public TooltipAmount ManaCostPrefab;
+    public TextMeshProUGUI TooltipCostText;
     public GameObject TooltipCostsHolder;
-
     public GameObject PipsHolder;
     public GameObject ActionPipPrefab;
     public GameObject ManaPipPrefab;
@@ -58,6 +56,11 @@ public class ActionButton : MonoBehaviour
         // Add costs to Tooltip
         foreach (Transform child in TooltipCostsHolder.transform) {
             Destroy(child.gameObject);
+        }
+        if(Action.ActionPointCost > 0 || Action.MagicCost > 0) {
+            TooltipCostText.text = "COST:";
+        } else {
+            TooltipCostText.text = "FREE!";
         }
         if (Action.ActionPointCost > 0) {
             TooltipAmount tooltipAmount = GameObject.Instantiate(ActionCostPrefab, TooltipCostsHolder.transform);
