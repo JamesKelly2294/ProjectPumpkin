@@ -65,6 +65,7 @@ public class Entity : MonoBehaviour, ISelectable
     public void Move(List<Vector2Int> path)
     {
         if (moving) { return; }
+        if (path == null) { return; }
         if (path.Count == 0) { return; }
 
         moving = true;
