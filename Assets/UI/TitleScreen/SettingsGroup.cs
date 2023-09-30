@@ -48,7 +48,7 @@ public class SettingsGroup : MonoBehaviour
         _am.SetSFXVol(volume);
     }
 
-
+    [System.Obsolete]
     public void SetResolution(int resolutionIndex)
     {
         var resolution = resolutions[resolutionIndex];
@@ -91,6 +91,7 @@ public class SettingsGroup : MonoBehaviour
     }
 
     // Start is called before the first frame update
+    [System.Obsolete]
     void Start()
     {
         _am = AudioManager.Instance;
