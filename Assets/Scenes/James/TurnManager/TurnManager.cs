@@ -57,6 +57,19 @@ public class TurnManager : MonoBehaviour
     [SerializeField]
     private List<Entity> _currentTeamEntitiesThatCanTakeAction = new();
 
+    public bool BlockingEventIsExecuting
+    {
+        get { return _blockingEventIsExecuting; }
+        private set
+        {
+            if (_blockingEventIsExecuting == value) { return; }
+            _blockingEventIsExecuting = value;
+            _pubSubSender.Publish("turnManager.blockingEventIsExecuting.changed", BlockingEventIsExecuting);
+        }
+    }
+    [SerializeField]
+    private bool _blockingEventIsExecuting = false;
+
     private PubSubSender _pubSubSender;
     private GridManager _gridManager;
 
@@ -76,6 +89,13 @@ public class TurnManager : MonoBehaviour
         var currentTeamEntities = OwnedEntities(team);
 
         return currentTeamEntities.Where(e => EntityCanDoMoreThisTurn(e)).ToList();
+    }
+
+    public void EntityBusynessDidChange()
+    {
+        var anyEntityIsBusy = _gridManager.Entities.Any(e => e.IsBusy);
+
+        BlockingEventIsExecuting = anyEntityIsBusy;
     }
 
     // Start is called before the first frame update

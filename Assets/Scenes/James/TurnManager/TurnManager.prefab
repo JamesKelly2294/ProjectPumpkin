@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3439432534766932242}
   - component: {fileID: 6348062743794194724}
+  - component: {fileID: 6968483175160599130}
+  - component: {fileID: 3687852304567902618}
   m_Layer: 0
   m_Name: TurnManager
   m_TagString: Untagged
@@ -45,3 +47,48 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _currentTurn: 0
+  _currentTeam: 1
+  _currentTeamCanTakeAction: 0
+  _currentTeamEntitiesThatCanTakeAction: []
+  _blockingEventIsExecuting: 0
+--- !u!114 &6968483175160599130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5264641961546735064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa85f00fea274f27ad241da0b5a270c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3687852304567902618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5264641961546735064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3e1e1583edd74c4f9c6fcd2a572cbfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Subscriptions:
+  - Key: entity.is_busy.changed
+    Delegate:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6348062743794194724}
+          m_TargetAssemblyTypeName: TurnManager, Assembly-CSharp
+          m_MethodName: EntityBusynessDidChange
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
