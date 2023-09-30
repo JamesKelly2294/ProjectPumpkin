@@ -199,16 +199,17 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private Dictionary<Vector2Int, Entity> entities = new Dictionary<Vector2Int, Entity>();
+    private Dictionary<Entity, Vector2Int> entityPositions = new Dictionary<Entity, Vector2Int>();
+    private Dictionary<Vector2Int, Entity> tileEntities = new Dictionary<Vector2Int, Entity>();
 
     // An ordered list of selectables at a given tile.
     public List<Selectable> GetSelectables(Vector2Int position)
     {
         var selectables = new List<Selectable>();
 
-        if (entities.ContainsKey(position))
+        if (tileEntities.ContainsKey(position))
         {
-            var entity = entities[position];
+            var entity = tileEntities[position];
             var selectable = entity.GetComponent<Selectable>();
             if (selectable != null) { selectables.Add(selectable); }
         }
@@ -216,11 +217,16 @@ public class GridManager : MonoBehaviour
         return selectables;
     }
 
+    public Vector2Int PositionForEntity(Entity entity)
+    {
+        return entityPositions[entity];
+    }
+
     public void RegisterEntity(Entity entity, Vector2Int position)
     {
-        if (entities.ContainsKey(position))
+        if (tileEntities.ContainsKey(position))
         {
-            Debug.LogError("Cannot register entity " + entity + " at " + position + " as " + entities[position] + " is already occupying that space!");
+            Debug.LogError("Cannot register entity " + entity + " at " + position + " as " + tileEntities[position] + " is already occupying that space!");
             return;
         }
 
@@ -230,19 +236,43 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        entities[position] = entity;
+        entityPositions[entity] = position;
+
         SnapEntityToGrid(entity, position);
+        _setEntityPositions_unsafe(entity, position);
+
         Debug.Log("Registered " + entity + " at " + position + ".");
     }
 
-    public Entity GetEntity(Vector2Int position)
+    public void SetEntityPosition(Entity entity, Vector2Int position)
     {
-        return entities[position];
+        if (!entityPositions.ContainsKey(entity))
+        {
+            Debug.Log("Unable to set position for entity that has not be registered.");
+            return;
+        }
+
+        _setEntityPositions_unsafe(entity, position);
+    }
+
+    private void _setEntityPositions_unsafe(Entity entity, Vector2Int position)
+    {
+        var oldPosition = entityPositions[entity];
+        entityPositions[entity] = position;
+        tileEntities.Remove(oldPosition);
+
+
+        tileEntities[position] = entity;
+    }
+
+    public Entity GetEntity(Vector2Int position)
+    { 
+        return tileEntities[position];
     }
 
     public bool HasEntity(Vector2Int position)
     {
-        return entities.ContainsKey(position);
+        return tileEntities.ContainsKey(position);
     }
 
     void SnapEntityToGrid(Entity entity, Vector2Int position)

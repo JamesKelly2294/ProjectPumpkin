@@ -16,7 +16,7 @@ public class Entity : MonoBehaviour, ISelectable
     public int ActionPoints;
     public int Movement;
 
-    public Vector2Int Position { get; private set; }
+    public Vector2Int Position { get { return GridManager.PositionForEntity(this); } }
 
     public int MaxHealth { get { return Definition.BaseMaxHealth; } }
     public int MaxMana { get { return Definition.BaseMaxMana; } }
@@ -38,14 +38,13 @@ public class Entity : MonoBehaviour, ISelectable
         Mana = MaxMana;
         ActionPoints = MaxActionPoints;
         Movement = MaxMovement;
-        Position = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
 
         foreach (var actionDefinition in Definition.BaseActions)
         {
             Actions.Add(new Action(actionDefinition, this));
         }
 
-        GridManager.RegisterEntity(this, Position);
+        GridManager.RegisterEntity(this, new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)));
     }
 
     // Update is called once per frame
@@ -94,7 +93,7 @@ public class Entity : MonoBehaviour, ISelectable
             transform.position = (Vector3Int)Position + (direction * progress) + new Vector3(0.5f, 0.5f, 0.0f);
 
             if (t > timeToWalkAcrossTile) {
-                Position = currentNode;
+                GridManager.SetEntityPosition(this, currentNode);
 
                 if (path.Count > 0)
                 {
@@ -106,6 +105,7 @@ public class Entity : MonoBehaviour, ISelectable
 
             yield return null;
         }
+        GridManager.SetEntityPosition(this, destinationNode);
 
         moving = false;
     }
