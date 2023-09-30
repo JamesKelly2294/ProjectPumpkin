@@ -1139,7 +1139,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f1130a8e74424b3b9e21ae96e890806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Entity: {fileID: 0}
   ActionButtonPrefab: {fileID: 2304567484694746408, guid: 9013ee5d41cd9403c852764576e33d50, type: 3}
 --- !u!1 &3067269075335811585
 GameObject:
