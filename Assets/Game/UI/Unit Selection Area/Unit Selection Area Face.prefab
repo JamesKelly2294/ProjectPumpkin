@@ -381,10 +381,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PipsHolder: {fileID: 2765584244399865064}
+  PipsHolderFrame: {fileID: 1032544229399242139}
   ActionPointPrefab: {fileID: 170382560253157007, guid: 3559fce5e438d4c199d21a5e62f662cc, type: 3}
   UnavailableActionPointPrefab: {fileID: 2132076934420558842, guid: 980cbbd7063084baba16b92190dde7b1, type: 3}
   Icon: {fileID: 7254377875425215450}
   IconBackground: {fileID: 4642123470598978645}
+  IconFrame: {fileID: 9218721499747297632}
+  GoldFramePrefab: {fileID: 21300000, guid: 31b5f35adaa0e4c4ea289d915e9ccf7f, type: 3}
+  SilverFramePrefab: {fileID: 21300000, guid: 7e98089cd25ef41c4a1819b7a1e54144, type: 3}
+  GoldColor: {r: 1, g: 0.83921576, b: 0.427451, a: 1}
+  SilverColor: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
   TooltipName: {fileID: 3860506138450185664}
   TooltipDescription: {fileID: 1598891663271849351}
   TooltipFlavorText: {fileID: 6134871861867903693}

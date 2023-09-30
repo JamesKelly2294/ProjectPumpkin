@@ -1302,10 +1302,16 @@ MonoBehaviour:
   Entity: {fileID: 0}
   Icon: {fileID: 674037987354348111}
   IconBackground: {fileID: 8954923012800238484}
+  IconFrame: {fileID: 9064788806757439413}
+  GoldFramePrefab: {fileID: 21300000, guid: 31b5f35adaa0e4c4ea289d915e9ccf7f, type: 3}
+  SilverFramePrefab: {fileID: 21300000, guid: 7e98089cd25ef41c4a1819b7a1e54144, type: 3}
+  GoldColor: {r: 1, g: 0.83921576, b: 0.427451, a: 1}
+  SilverColor: {r: 0.333, g: 0.333, b: 0.333, a: 1}
   MovementBar: {fileID: 4125423496701623499}
   ManaBar: {fileID: 1357381773311133677}
   HealthBar: {fileID: 1609617568181984177}
   PipsHolder: {fileID: 128591576323776607}
+  PipsHolderFrame: {fileID: 7411501949425558674}
   ActionPointPrefab: {fileID: 3729858269792382930, guid: 6889ead7ef83c4a17a6b15cc0e4455d2, type: 3}
   UnavailableActionPointPrefab: {fileID: 5384404965599835497, guid: 91efd3253dcd947a19f7904493e8aab8, type: 3}
 --- !u!1 &7256075301236924185

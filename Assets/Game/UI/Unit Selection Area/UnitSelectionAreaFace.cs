@@ -8,11 +8,16 @@ public class UnitSelectionAreaFace : MonoBehaviour
 {
 
     public GameObject PipsHolder;
+    public Image PipsHolderFrame;
     public GameObject ActionPointPrefab;
     public GameObject UnavailableActionPointPrefab;
     public Image Icon;
     public Image IconBackground;
-
+    public Image IconFrame;
+    public Sprite GoldFramePrefab;
+    public Sprite SilverFramePrefab;
+    public Color GoldColor;
+    public Color SilverColor;
     public TextMeshProUGUI TooltipName;
     public TextMeshProUGUI TooltipDescription;
     public TextMeshProUGUI TooltipFlavorText;
@@ -44,6 +49,15 @@ public class UnitSelectionAreaFace : MonoBehaviour
         }
         for (int i = 0; i < (entity.MaxActionPoints - entity.ActionPoints); i++) {
             GameObject.Instantiate(UnavailableActionPointPrefab, PipsHolder.transform);
+        }
+
+        // Update frame color
+        if (entity.ActionPoints > 0 ) {
+            IconFrame.sprite = GoldFramePrefab;
+            PipsHolderFrame.color = GoldColor;
+        } else {
+            IconFrame.sprite = SilverFramePrefab;
+            PipsHolderFrame.color = SilverColor;
         }
 
         // Update Tooltips

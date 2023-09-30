@@ -10,10 +10,16 @@ public class PlayerUnitPreview : MonoBehaviour
 
     public Image Icon;
     public Image IconBackground;
+    public Image IconFrame;
+    public Sprite GoldFramePrefab;
+    public Sprite SilverFramePrefab;
+    public Color GoldColor;
+    public Color SilverColor;
     public ProgressBar MovementBar;
     public ProgressBar ManaBar;
     public ProgressBar HealthBar;
     public GameObject PipsHolder;
+    public Image PipsHolderFrame;
     public GameObject ActionPointPrefab;
     public GameObject UnavailableActionPointPrefab;
 
@@ -48,6 +54,8 @@ public class PlayerUnitPreview : MonoBehaviour
         // Update Pips
         int uPips = entity.MaxActionPoints - entity.ActionPoints;
         if (availablePips != entity.ActionPoints || unavailablePips != uPips) { 
+
+            // Add actual pips
             availablePips = entity.ActionPoints;
             unavailablePips = uPips;
             foreach (Transform child in PipsHolder.transform) {
@@ -58,6 +66,15 @@ public class PlayerUnitPreview : MonoBehaviour
             }
             for (int i = 0; i < uPips; i++) {
                 GameObject.Instantiate(UnavailableActionPointPrefab, PipsHolder.transform);
+            }
+
+            // Update frame color
+            if (availablePips > 0 ) {
+                IconFrame.sprite = GoldFramePrefab;
+                PipsHolderFrame.color = GoldColor;
+            } else {
+                IconFrame.sprite = SilverFramePrefab;
+                PipsHolderFrame.color = SilverColor;
             }
         }
     }
