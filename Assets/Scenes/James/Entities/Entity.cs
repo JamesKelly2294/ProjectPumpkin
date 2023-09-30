@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Selectable))]
-public class Entity : MonoBehaviour
+public class Entity : MonoBehaviour, ISelectable
 {
     public EntityDefinition Definition;
 
@@ -23,7 +23,6 @@ public class Entity : MonoBehaviour
 
     public List<Action> Actions { get; private set; } = new List<Action>();
 
-
     // Start is called before the first frame update
     void Start()
     {
@@ -37,18 +36,26 @@ public class Entity : MonoBehaviour
         Mana = MaxMana;
         ActionPoints = MaxActionPoints;
         Movement = MaxMovement;
+        Position = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
 
         foreach (var actionDefinition in Definition.BaseActions)
         {
             Actions.Add(new Action(actionDefinition, this));
         }
 
-        GridManager.RegisterEntity(this, new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)));
+        GridManager.RegisterEntity(this, Position);
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+    public void OnSelected()
+    {
+    }
+
+    public void OnDeselected()
+    {
     }
 }

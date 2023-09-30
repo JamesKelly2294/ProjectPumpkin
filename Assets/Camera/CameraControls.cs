@@ -19,13 +19,50 @@ public class CameraControls : MonoBehaviour
         DragCamera();
         ZoomCamera();
     }
+
+    public bool CameraIsPanning = false;
+    public bool CameraIsZooming = false;
+
+    private bool _lookingForPanGesture = false;
+    private float _startTime = 0;
+
     void DragCamera()
     {
         if (Input.GetMouseButtonDown(1))
         {
-            _lastMousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+            _lookingForPanGesture = true;
+            _startTime = Time.realtimeSinceStartup;
         }
-        else if (Input.GetMouseButton(1))
+
+        if (!_lookingForPanGesture && !CameraIsPanning)
+        {
+            return;
+        }
+
+        if (!Input.GetMouseButton(1) && !Input.GetMouseButtonUp(1))
+        {
+            if (CameraIsPanning)
+            {
+                Debug.Log("Stopping camera...");
+            }
+            _startTime = 0;
+            _lookingForPanGesture = false;
+            CameraIsPanning = false;
+            return;
+        }
+        
+        if (_lookingForPanGesture)
+        {
+            if (Time.realtimeSinceStartup - _startTime > 0.15f)
+            {
+                _lastMousePosition = _camera.ScreenToWorldPoint(Input.mousePosition);
+                _lookingForPanGesture = false;
+                CameraIsPanning = true;
+                Debug.Log("Panning camera...");
+            }
+        }
+
+        if (CameraIsPanning)
         {
             Vector3 delta = _camera.ScreenToWorldPoint(Input.mousePosition) - _lastMousePosition;
 

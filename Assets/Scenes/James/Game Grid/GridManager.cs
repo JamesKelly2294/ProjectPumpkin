@@ -30,12 +30,12 @@ public class GridManager : MonoBehaviour
     private GameObject _pathGroupGO;
     private GameObject _tileOutlinesGroupGO;
 
-    private Vector2Int? SelectedTilePosition = null;
-    private Vector2Int? HoveredTilePosition = null;
+    public Vector2Int? SelectedTilePosition = null;
+    public Vector2Int? HoveredTilePosition = null;
     private Vector2Int? PathStartPosition = null;
     private Vector2Int? PathEndPosition = null;
 
-    private Selectable SelectedSelectable = null;
+    public Selectable SelectedSelectable { get; private set; }
 
     private const float _tileCenterOffset = 0.5f;
 
@@ -101,21 +101,99 @@ public class GridManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateTileHighlight();
+        UpdateTileSelection();
+    }
+
+    public bool UserInteractionEnabled = true;
+
+    void UpdateTileHighlight()
+    {
+        if (UserInteractionEnabled == false)
+        {
+            _tileHoverGO.SetActive(false);
+            return;
+        }
+
         var cursorWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         HoveredTilePosition = new Vector2Int(Mathf.FloorToInt(cursorWorldPos.x), Mathf.FloorToInt(cursorWorldPos.y));
 
-        if (HoveredTilePosition != null)
+        if (HoveredTilePosition == null)
         {
-            _tileHoverGO.SetActive(true);
-            _tileHoverGO.transform.position = TileCoordinateToWorldPosition(HoveredTilePosition.Value);
-            if (Input.GetMouseButtonDown(0))
+            _tileHoverGO.SetActive(false);
+            return;
+        }
+
+        _tileHoverGO.SetActive(true);
+        _tileHoverGO.transform.position = TileCoordinateToWorldPosition(HoveredTilePosition.Value);
+    }
+
+    void UpdateTileSelection()
+    {
+        if (!Input.GetMouseButtonDown(0))
+        {
+            return;
+        }
+
+        var prospectiveSelectedTilePosition = HoveredTilePosition;
+
+        Selectable newlySelectedObject = null;
+        Selectable newlyDeselectedObject = null;
+
+        if (prospectiveSelectedTilePosition != null)
+        {
+            // Select the selectable at the tile, if one exists
+            var prevSelectable = SelectedSelectable;
+            var selectables = GetSelectables(prospectiveSelectedTilePosition.Value);
+            if (SelectedSelectable != null)
             {
-                SelectTilePosition();
+                var index = selectables.IndexOf(SelectedSelectable);
+                if (index != -1)
+                {
+                    // Cycle through the selectables
+                    SelectedSelectable = selectables[(index + 1) % selectables.Count];
+                }
+                else
+                {
+                    SelectedSelectable = selectables.FirstOrDefault();
+                }
             }
+            else
+            {
+                SelectedSelectable = selectables.FirstOrDefault();
+            }
+
+            if (SelectedSelectable != prevSelectable)
+            {
+                newlyDeselectedObject = prevSelectable;
+                if (SelectedSelectable != null)
+                {
+                    Debug.Log("Selected " + SelectedSelectable.gameObject + ".");
+                    SelectedTilePosition = prospectiveSelectedTilePosition;
+                    _tileSelectionGO.transform.position = TileCoordinateToWorldPosition(prospectiveSelectedTilePosition.Value);
+                    newlySelectedObject = SelectedSelectable;
+                }
+                else
+                {
+                    Debug.Log("Cleared selection.");
+                }
+            }
+
+            _tileSelectionGO.SetActive(SelectedSelectable != null);
         }
         else
         {
-            _tileHoverGO.SetActive(false);
+            _tileSelectionGO.SetActive(false);
+        }
+
+        if (newlyDeselectedObject)
+        {
+            newlyDeselectedObject.Deselect();
+        }
+
+        if (newlySelectedObject)
+        {
+            newlySelectedObject.Select();
         }
     }
 
@@ -168,53 +246,6 @@ public class GridManager : MonoBehaviour
     void SnapEntityToGrid(Entity entity, Vector2Int position)
     {
         entity.transform.position = TileCoordinateToWorldPosition(position);
-    }
-
-    void SelectTilePosition()
-    {
-        var prospectiveSelectedTilePosition = HoveredTilePosition;
-        if (prospectiveSelectedTilePosition != null)
-        {
-            // Select the selectable at the tile, if one exists
-            var prevSelectable = SelectedSelectable;
-            var selectables = GetSelectables(prospectiveSelectedTilePosition.Value);
-            if (SelectedSelectable != null)
-            {
-                var index = selectables.IndexOf(SelectedSelectable);
-                if (index != -1)
-                {
-                    // Cycle through the selectables
-                    SelectedSelectable = selectables[(index+1) % selectables.Count];
-                }
-                else
-                {
-                    SelectedSelectable = selectables.FirstOrDefault();
-                }
-            }
-            else
-            {
-                SelectedSelectable = selectables.FirstOrDefault();
-            }
-
-            if (SelectedSelectable != prevSelectable) { 
-                if (SelectedSelectable != null)
-                {
-                    Debug.Log("Selected " + SelectedSelectable.gameObject + ".");
-                    SelectedTilePosition = prospectiveSelectedTilePosition;
-                    _tileSelectionGO.transform.position = TileCoordinateToWorldPosition(prospectiveSelectedTilePosition.Value);
-                }
-                else
-                {
-                    Debug.Log("Cleared selection.");
-                }
-            }
-
-            _tileSelectionGO.SetActive(SelectedSelectable != null);
-        }
-        else
-        {
-            _tileSelectionGO.SetActive(false);
-        }
     }
 
     void SelectPath()
@@ -282,10 +313,24 @@ public class GridManager : MonoBehaviour
             Destroy(_pathGroupGO.transform.GetChild(i).gameObject);
         }
     }
-    
-    void CalculatePath(Vector3Int startPosition, Vector3Int endPosition)
+
+    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, bool debugVisuals = false) 
     {
+        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, debugVisuals: debugVisuals);
+    }
+
+
+    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, bool debugVisuals=false)
+    {
+        if (startPosition == endPosition)
+        {
+            var quickPath = new List<Vector2Int>();
+            quickPath.Add((Vector2Int)startPosition);
+        }
+
+#if DEBUG
         Debug.Log("Calculate path from " + startPosition + " to " + endPosition);
+#endif
 
         Dictionary<Vector3Int, Vector3Int> visited = new Dictionary<Vector3Int, Vector3Int>();
         Queue<Vector3Int> queue = new Queue<Vector3Int>();
@@ -294,7 +339,6 @@ public class GridManager : MonoBehaviour
 
         foreach (var neighbor in NeighborsForTileAtPosition(startPosition))
         {
-            Debug.Log("Enqueue " + neighbor);
             visited[neighbor] = startPosition;
             queue.Enqueue(neighbor);
         }
@@ -303,7 +347,6 @@ public class GridManager : MonoBehaviour
         while (queue.Count > 0)
         {
             var currentTile = queue.Dequeue();
-            Debug.Log("currentTile " + currentTile);
             if (currentTile == endPosition) { 
                 pathFound = true;
                 break;
@@ -320,12 +363,16 @@ public class GridManager : MonoBehaviour
             }
         }
 
-        if (pathFound)
+        if (!pathFound)
         {
-            Debug.Log("Path found from " + startPosition + " to " + endPosition + "!");
-            var path = BuildPath(startPosition, endPosition, visited);
+            return null;
+        }
 
-            foreach(var node in path)
+        var path = BuildPath(startPosition, endPosition, visited);
+
+        if (debugVisuals)
+        {
+            foreach (var node in path)
             {
                 var pathVisual = Instantiate(PathNodePrefab);
                 pathVisual.transform.position = TileCoordinateToWorldPosition((Vector2Int)node);
@@ -333,23 +380,21 @@ public class GridManager : MonoBehaviour
                 pathVisual.transform.parent = _pathGroupGO.transform;
             }
         }
-        else
-        {
-            Debug.Log("Could not find path from " + startPosition + " to " + endPosition + ".");
-        }
+
+        return path;
     }
 
-    List<Vector3Int> BuildPath(Vector3Int startPosition, Vector3Int endPosition, Dictionary<Vector3Int, Vector3Int> visited)
+    List<Vector2Int> BuildPath(Vector3Int startPosition, Vector3Int endPosition, Dictionary<Vector3Int, Vector3Int> visited)
     {
-        List<Vector3Int> path = new List<Vector3Int>();
+        List<Vector2Int> path = new List<Vector2Int>();
 
         var currentTile = endPosition;
 
         while (currentTile != startPosition) {
-            path.Add(currentTile);
+            path.Add((Vector2Int)currentTile);
             currentTile = visited[currentTile];
         }
-        path.Add(startPosition);
+        path.Add((Vector2Int)startPosition);
 
         path.Reverse();
         return path;

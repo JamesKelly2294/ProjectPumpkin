@@ -96,7 +96,7 @@ GameObject:
   - component: {fileID: 6690614968678920304}
   - component: {fileID: 4891653499143316073}
   m_Layer: 0
-  m_Name: LeafLover
+  m_Name: DruidLeafLover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -148,3 +148,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee77b9717e204dd4283d9b34307b7601, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnDeselected:
+    m_PersistentCalls:
+      m_Calls: []
