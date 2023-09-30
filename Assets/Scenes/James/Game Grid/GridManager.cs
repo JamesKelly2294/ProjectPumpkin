@@ -7,6 +7,18 @@ using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
+public struct TileData
+{
+    public Vector2Int Position;
+
+    public Entity Entity;
+
+    public bool IsEmpty()
+    {
+        return Entity == null;
+    }
+}
+
 public class GridManager : MonoBehaviour
 {
 
@@ -38,6 +50,18 @@ public class GridManager : MonoBehaviour
     public Selectable SelectedSelectable { get; private set; }
 
     private const float _tileCenterOffset = 0.5f;
+
+    public bool UserInteractionEnabled = true;
+
+    private Dictionary<Vector2Int, TileData> _tileData = new();
+    private Dictionary<object, Vector2Int> _objectTilePositions = new();
+
+    public HashSet<Entity> Entities { get { return _entities; } }
+    private HashSet<Entity> _entities = new();
+
+    [Header("Visuals")]
+    public bool ShowTileHover = true;
+    public bool ShowTileSelection = false;
 
     // Start is called before the first frame update
     void Start()
@@ -105,8 +129,6 @@ public class GridManager : MonoBehaviour
         UpdateTileSelection();
     }
 
-    public bool UserInteractionEnabled = true;
-
     void UpdateTileHighlight()
     {
         if (UserInteractionEnabled == false)
@@ -124,7 +146,7 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        _tileHoverGO.SetActive(true);
+        _tileHoverGO.SetActive(true && ShowTileHover);
         _tileHoverGO.transform.position = TileCoordinateToWorldPosition(HoveredTilePosition.Value);
     }
 
@@ -181,7 +203,7 @@ public class GridManager : MonoBehaviour
                 ClearPath();
             }
 
-            _tileSelectionGO.SetActive(SelectedSelectable != null);
+            _tileSelectionGO.SetActive(SelectedSelectable != null && ShowTileSelection);
         }
         else
         {
@@ -199,34 +221,61 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private Dictionary<Entity, Vector2Int> entityPositions = new Dictionary<Entity, Vector2Int>();
-    private Dictionary<Vector2Int, Entity> tileEntities = new Dictionary<Vector2Int, Entity>();
+    public TileData GetTileData(Vector2Int position)
+    {
+        if (_tileData.ContainsKey(position))
+        {
+            return _tileData[position];
+        }
+        else
+        {
+            var tileData = new TileData
+            {
+                Position = position
+            };
+            return tileData;
+        }
+    }
+
+    public void UpdateTileData(TileData newTileData)
+    {
+        if (newTileData.IsEmpty())
+        {
+            if (_tileData.ContainsKey(newTileData.Position))
+            {
+                _tileData.Remove(newTileData.Position);
+            }
+        }
+        else
+        {
+            _tileData[newTileData.Position] = newTileData;
+        }
+    }
 
     // An ordered list of selectables at a given tile.
     public List<Selectable> GetSelectables(Vector2Int position)
     {
         var selectables = new List<Selectable>();
 
-        if (tileEntities.ContainsKey(position))
-        {
-            var entity = tileEntities[position];
-            var selectable = entity.GetComponent<Selectable>();
-            if (selectable != null) { selectables.Add(selectable); }
-        }
+        var tile = GetTileData(position);
+
+        // Get the Entity, if it exists
+        if (tile.Entity != null && tile.Entity.TryGetComponent<Selectable>(out var selectable)) { selectables.Add(selectable); }
 
         return selectables;
     }
 
     public Vector2Int PositionForEntity(Entity entity)
     {
-        return entityPositions[entity];
+        return _objectTilePositions[entity];
     }
 
     public void RegisterEntity(Entity entity, Vector2Int position)
     {
-        if (tileEntities.ContainsKey(position))
+        var tileData = GetTileData(position);
+        if (tileData.Entity != null)
         {
-            Debug.LogError("Cannot register entity " + entity + " at " + position + " as " + tileEntities[position] + " is already occupying that space!");
+            Debug.LogError("Cannot register entity " + entity + " at " + position + " as " + tileData.Entity + " is already occupying that space!");
             return;
         }
 
@@ -236,7 +285,8 @@ public class GridManager : MonoBehaviour
             return;
         }
 
-        entityPositions[entity] = position;
+        _objectTilePositions[entity] = position;
+        _entities.Add(entity);
 
         SnapEntityToGrid(entity, position);
         _setEntityPositions_unsafe(entity, position);
@@ -244,9 +294,20 @@ public class GridManager : MonoBehaviour
         Debug.Log("Registered " + entity + " at " + position + ".");
     }
 
+    public void UnregisterEntity(Entity entity)
+    {
+        var position = _objectTilePositions[entity];
+        _objectTilePositions.Remove(entity);
+        _entities.Remove(entity);
+        
+        var data = GetTileData(position);
+        data.Entity = null;
+        UpdateTileData(data);
+    }
+
     public void SetEntityPosition(Entity entity, Vector2Int position)
     {
-        if (!entityPositions.ContainsKey(entity))
+        if (!_objectTilePositions.ContainsKey(entity))
         {
             Debug.Log("Unable to set position for entity that has not be registered.");
             return;
@@ -257,22 +318,26 @@ public class GridManager : MonoBehaviour
 
     private void _setEntityPositions_unsafe(Entity entity, Vector2Int position)
     {
-        var oldPosition = entityPositions[entity];
-        entityPositions[entity] = position;
-        tileEntities.Remove(oldPosition);
+        var oldPosition = _objectTilePositions[entity];
+        _objectTilePositions[entity] = position;
 
+        var oldTileData = GetTileData(oldPosition);
+        oldTileData.Entity = null;
+        UpdateTileData(oldTileData);
 
-        tileEntities[position] = entity;
+        var newTileData = GetTileData(position);
+        newTileData.Entity = entity;
+        UpdateTileData(newTileData);
     }
 
     public Entity GetEntity(Vector2Int position)
     { 
-        return tileEntities[position];
+        return GetTileData(position).Entity;
     }
 
     public bool HasEntity(Vector2Int position)
     {
-        return tileEntities.ContainsKey(position);
+        return GetTileData(position).Entity != null;
     }
 
     void SnapEntityToGrid(Entity entity, Vector2Int position)

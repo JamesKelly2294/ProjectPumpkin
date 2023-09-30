@@ -66,7 +66,7 @@ public class PlayerInput : MonoBehaviour
             var entityPos = entity.Position;
             var targetPos = highlitedTilePosition;
 
-            var path = _gridManager.CalculatePath(entityPos, targetPos, debugVisuals: true);
+            var path = _gridManager.CalculatePath(entityPos, targetPos, debugVisuals: false);
             entity.Move(path);
         }
     }

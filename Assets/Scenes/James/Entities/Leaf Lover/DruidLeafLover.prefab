@@ -95,6 +95,7 @@ GameObject:
   - component: {fileID: 1990347479255314698}
   - component: {fileID: 6690614968678920304}
   - component: {fileID: 4891653499143316073}
+  - component: {fileID: 8803722516490841046}
   m_Layer: 0
   m_Name: DruidLeafLover
   m_TagString: Untagged
@@ -130,6 +131,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e98d65995142e5e4396e3269193db2c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Owner: 1
   Definition: {fileID: 11400000, guid: 8bb9b663af2de9c41811fec853b0ace1, type: 2}
   GridManager: {fileID: 0}
   Health: 0
@@ -154,3 +156,15 @@ MonoBehaviour:
   OnDeselected:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8803722516490841046
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4242559653279700501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa85f00fea274f27ad241da0b5a270c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

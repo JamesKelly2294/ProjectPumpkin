@@ -7,6 +7,17 @@ using UnityEngine;
 [RequireComponent(typeof(Selectable))]
 public class Entity : MonoBehaviour, ISelectable
 {
+    public enum OwnerKind
+    {
+        Neutral,
+        Player,
+        Enemy,
+        Ally,
+        EnemyAlly
+    }
+
+    public OwnerKind Owner = Entity.OwnerKind.Enemy; // cannot be changed after registration
+
     public EntityDefinition Definition;
 
     public GridManager GridManager;
@@ -45,6 +56,11 @@ public class Entity : MonoBehaviour, ISelectable
         }
 
         GridManager.RegisterEntity(this, new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)));
+    }
+
+    private void OnDestroy()
+    {
+        GridManager.UnregisterEntity(this);
     }
 
     // Update is called once per frame
