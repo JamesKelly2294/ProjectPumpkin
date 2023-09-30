@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cea92640c75c84d80cea4776230658, type: 3}
+  m_Name: Attack
+  m_EditorClassIdentifier: 
+  Name: Attack
+  Description: Attack that stupid fucking bug.
+  FlavorText: '"I hate fucking bugs."'
+  Icon: {fileID: 21300000, guid: 331798cb1fbb44f55bc8c4636f3c940a, type: 3}
+  Color: {r: 0, g: 0, b: 1, a: 1}
+  BaseActionPointCost: 1
+  BaseMagicCost: 2

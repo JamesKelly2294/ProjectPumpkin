@@ -21,6 +21,8 @@ public class Entity : MonoBehaviour
     public int MaxMovement { get { return Definition.BaseMaxMovement; } }
     public int MaxActionPoints { get { return Definition.BaseMaxActionPoints; } }
 
+    public List<Action> Actions { get; private set; } = new List<Action>();
+
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +37,11 @@ public class Entity : MonoBehaviour
         Mana = MaxMana;
         ActionPoints = MaxActionPoints;
         Movement = MaxMovement;
+
+        foreach (var actionDefinition in Definition.BaseActions)
+        {
+            Actions.Add(new Action(actionDefinition, this));
+        }
 
         GridManager.RegisterEntity(this, new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)));
     }
