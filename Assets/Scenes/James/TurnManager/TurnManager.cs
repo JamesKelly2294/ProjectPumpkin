@@ -98,6 +98,23 @@ public class TurnManager : MonoBehaviour
         BlockingEventIsExecuting = anyEntityIsBusy;
     }
 
+    public void SubmitAction(Action a)
+    {
+        if (a == null) { return; }
+
+        var entity = a.Entity;
+        if (entity == null) { return; };
+
+
+        if (entity.Owner != CurrentTeam && a.CanOnlyExecuteOnOwnersTurn)
+        {
+            Debug.Log($"Attempting to submit {a} for {entity}, but it is not their turn.");
+            return;
+        }
+
+        entity.InitiateActionAttempt(a);
+    }
+
     // Start is called before the first frame update
     void Awake()
     {

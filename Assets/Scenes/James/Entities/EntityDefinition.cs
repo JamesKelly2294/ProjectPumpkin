@@ -13,7 +13,7 @@ public class EntityDefinition : ScriptableObject
 
     [Range(1, 100)]
     public int BaseMaxHealth = 10;
-    [Range(1, 20)]
+    [Range(0, 20)]
     public int BaseMaxMana = 10;
     [Range(1, 10)]
     public int BaseMaxActionPoints = 2;

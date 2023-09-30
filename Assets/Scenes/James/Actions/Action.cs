@@ -14,6 +14,30 @@ public class Action
         this.Entity = entity;
     }
 
+    public bool BlocksFromEndingTurn
+    {
+        get
+        {
+            return Definition.BlocksFromEndingTurn;
+        }
+    }
+
+    public bool Targetable
+    {
+        get
+        {
+            return Definition.Targetable;
+        }
+    }
+
+    public bool CanOnlyExecuteOnOwnersTurn
+    {
+        get
+        {
+            return Definition.CanOnlyExecuteOnOwnersTurn;
+        }
+    }
+
     public string Name {
         get {
             return Definition.Name;

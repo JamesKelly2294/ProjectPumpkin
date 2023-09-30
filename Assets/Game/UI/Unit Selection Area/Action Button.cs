@@ -74,6 +74,15 @@ public class ActionButton : MonoBehaviour
     }
 
     public void DoIt() {
-        Action.Entity.InitiateActionAttempt(Action);
+        var tm = FindObjectOfType<TurnManager>();
+
+        if (tm != null)
+        {
+            tm.SubmitAction(Action);
+        }
+        else
+        {
+            Debug.LogError("Attempting to submit action for execution, but unable to find turn manager.");
+        }
     }
 }
