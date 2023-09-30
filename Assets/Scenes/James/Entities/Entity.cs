@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Selectable))]
 public class Entity : MonoBehaviour
 {
     public EntityDefinition Definition;
@@ -34,6 +35,8 @@ public class Entity : MonoBehaviour
         Mana = MaxMana;
         ActionPoints = MaxActionPoints;
         Movement = MaxMovement;
+
+        GridManager.RegisterEntity(this, new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y)));
     }
 
     // Update is called once per frame

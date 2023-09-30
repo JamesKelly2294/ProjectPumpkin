@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
@@ -33,6 +34,8 @@ public class GridManager : MonoBehaviour
     private Vector2Int? HoveredTilePosition = null;
     private Vector2Int? PathStartPosition = null;
     private Vector2Int? PathEndPosition = null;
+
+    private Selectable SelectedSelectable = null;
 
     private const float _tileCenterOffset = 0.5f;
 
@@ -116,14 +119,97 @@ public class GridManager : MonoBehaviour
         }
     }
 
+    private Dictionary<Vector2Int, Entity> entities = new Dictionary<Vector2Int, Entity>();
+
+    // An ordered list of selectables at a given tile.
+    public List<Selectable> GetSelectables(Vector2Int position)
+    {
+        var selectables = new List<Selectable>();
+
+        if (entities.ContainsKey(position))
+        {
+            var entity = entities[position];
+            var selectable = entity.GetComponent<Selectable>();
+            if (selectable != null) { selectables.Add(selectable); }
+        }
+
+        return selectables;
+    }
+
+    public void RegisterEntity(Entity entity, Vector2Int position)
+    {
+        if (entities.ContainsKey(position))
+        {
+            Debug.LogError("Cannot register entity " + entity + " at " + position + " as " + entities[position] + " is already occupying that space!");
+            return;
+        }
+
+        if (!Walkable.HasTile((Vector3Int)position))
+        {
+            Debug.LogError("Cannot register entity " + entity + " at " + position + " as a walkable tile does not exist there!");
+            return;
+        }
+
+        entities[position] = entity;
+        SnapEntityToGrid(entity, position);
+        Debug.Log("Registered " + entity + " at " + position + ".");
+    }
+
+    public Entity GetEntity(Vector2Int position)
+    {
+        return entities[position];
+    }
+
+    public bool HasEntity(Vector2Int position)
+    {
+        return entities.ContainsKey(position);
+    }
+
+    void SnapEntityToGrid(Entity entity, Vector2Int position)
+    {
+        entity.transform.position = TileCoordinateToWorldPosition(position);
+    }
+
     void SelectTilePosition()
     {
-        SelectedTilePosition = HoveredTilePosition;
-
-        if (SelectedTilePosition != null)
+        var prospectiveSelectedTilePosition = HoveredTilePosition;
+        if (prospectiveSelectedTilePosition != null)
         {
-            _tileSelectionGO.SetActive(true);
-            _tileSelectionGO.transform.position = TileCoordinateToWorldPosition(HoveredTilePosition.Value);
+            // Select the selectable at the tile, if one exists
+            var prevSelectable = SelectedSelectable;
+            var selectables = GetSelectables(prospectiveSelectedTilePosition.Value);
+            if (SelectedSelectable != null)
+            {
+                var index = selectables.IndexOf(SelectedSelectable);
+                if (index != -1)
+                {
+                    // Cycle through the selectables
+                    SelectedSelectable = selectables[(index+1) % selectables.Count];
+                }
+                else
+                {
+                    SelectedSelectable = selectables.FirstOrDefault();
+                }
+            }
+            else
+            {
+                SelectedSelectable = selectables.FirstOrDefault();
+            }
+
+            if (SelectedSelectable != prevSelectable) { 
+                if (SelectedSelectable != null)
+                {
+                    Debug.Log("Selected " + SelectedSelectable.gameObject + ".");
+                    SelectedTilePosition = prospectiveSelectedTilePosition;
+                    _tileSelectionGO.transform.position = TileCoordinateToWorldPosition(prospectiveSelectedTilePosition.Value);
+                }
+                else
+                {
+                    Debug.Log("Cleared selection.");
+                }
+            }
+
+            _tileSelectionGO.SetActive(SelectedSelectable != null);
         }
         else
         {
@@ -269,6 +355,12 @@ public class GridManager : MonoBehaviour
         return path;
     }
 
+    bool TileIsWalkable(Vector3Int tilePosition)
+    {
+        return Walkable.HasTile(tilePosition) &&
+            !HasEntity((Vector2Int)tilePosition);
+    }
+
     List<Vector3Int> NeighborsForTileAtPosition(Vector3Int tilePosition, bool includeDiagonal = false)
     {
         var neighborPositions = new List<Vector3Int>();
@@ -277,10 +369,10 @@ public class GridManager : MonoBehaviour
         var eastPos = tilePosition + new Vector3Int(1, 0, 0);
         var southPos = tilePosition + new Vector3Int(0, 1, 0);
         var westPos = tilePosition + new Vector3Int(-1, 0, 0);
-        if (Walkable.HasTile(northPos)) { neighborPositions.Add(northPos); }
-        if (Walkable.HasTile(eastPos)) { neighborPositions.Add(eastPos); }
-        if (Walkable.HasTile(southPos)) { neighborPositions.Add(southPos); }
-        if (Walkable.HasTile(westPos)) { neighborPositions.Add(westPos); }
+        if (TileIsWalkable(northPos)) { neighborPositions.Add(northPos); }
+        if (TileIsWalkable(eastPos)) { neighborPositions.Add(eastPos); }
+        if (TileIsWalkable(southPos)) { neighborPositions.Add(southPos); }
+        if (TileIsWalkable(westPos)) { neighborPositions.Add(westPos); }
 
         if (includeDiagonal)
         {
@@ -288,10 +380,10 @@ public class GridManager : MonoBehaviour
             var southEastPos = tilePosition + new Vector3Int(1, 1, 0);
             var northWestPos = tilePosition + new Vector3Int(-1, -1, 0);
             var southWestPos = tilePosition + new Vector3Int(-1, 1, 0);
-            if (Walkable.HasTile(northEastPos)) { neighborPositions.Add(northEastPos); }
-            if (Walkable.HasTile(southEastPos)) { neighborPositions.Add(southEastPos); }
-            if (Walkable.HasTile(northWestPos)) { neighborPositions.Add(northWestPos); }
-            if (Walkable.HasTile(southWestPos)) { neighborPositions.Add(southWestPos); }
+            if (TileIsWalkable(northEastPos)) { neighborPositions.Add(northEastPos); }
+            if (TileIsWalkable(southEastPos)) { neighborPositions.Add(southEastPos); }
+            if (TileIsWalkable(northWestPos)) { neighborPositions.Add(northWestPos); }
+            if (TileIsWalkable(southWestPos)) { neighborPositions.Add(southWestPos); }
         }
 
         return neighborPositions;
