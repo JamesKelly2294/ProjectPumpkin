@@ -10,19 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35cea92640c75c84d80cea4776230658, type: 3}
-  m_Name: Wait
+  m_Name: Move
   m_EditorClassIdentifier: 
-  Name: Wait
-  Description: Wait until the end of the turn.
-  FlavorText: '"Sometimes the best thing you can do is nothing."'
-  Icon: {fileID: -480043317, guid: 91aa5ae8f43c22d408a0747f0f8aaa3c, type: 3}
-  Color: {r: 0.8207547, g: 0.78721344, b: 0.58459413, a: 1}
+  Name: Move
+  Description: Move to the target.
+  FlavorText: '"I''m a leaf on the wind, watch how I soar."'
+  Icon: {fileID: 21300000, guid: c62dfaefe4be04f56a06a1a6d6371e7c, type: 3}
+  Color: {r: 0.2687344, g: 0.36854753, b: 0.9339623, a: 1}
   BlocksFromEndingTurn: 0
   Targetable: 0
   CanOnlyExecuteOnOwnersTurn: 1
+  CostIsPerTile: 1
   Behaviors:
-  - {fileID: -8405245668000055270, guid: bb9ee3b8afa854244b36a966280d600b, type: 3}
+  - {fileID: 2014976595490307810, guid: fe514485e7b5ec54b8011c8f2ec43d08, type: 3}
   BaseActionPointCost: 0
   BaseMagicCost: 0
-  BaseMovementCost: 0
+  BaseMovementCost: 1
   BaseHealthCost: 0

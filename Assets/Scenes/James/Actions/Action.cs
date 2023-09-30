@@ -14,6 +14,14 @@ public class Action
         this.Entity = entity;
     }
 
+    public bool CostIsPerTile
+    {
+        get
+        {
+            return Definition.CostIsPerTile;
+        }
+    }
+
     public bool BlocksFromEndingTurn
     {
         get

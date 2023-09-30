@@ -16,6 +16,7 @@ public class ActionDefinition : ScriptableObject
     public bool BlocksFromEndingTurn = true; // if the entity can take this action, don't let turn end
     public bool Targetable = false;
     public bool CanOnlyExecuteOnOwnersTurn = true;
+    public bool CostIsPerTile = false;
 
     public List<ActionBehavior> Behaviors;
 

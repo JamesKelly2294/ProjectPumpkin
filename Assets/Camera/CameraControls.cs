@@ -7,6 +7,12 @@ public class CameraControls : MonoBehaviour
     private Camera _camera;
     private Vector3 _lastMousePosition;
 
+    public bool CameraIsPanning = false;
+    public bool CameraIsZooming = false;
+
+    private bool _lookingForPanGesture = false;
+    private float _startTime = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -19,12 +25,6 @@ public class CameraControls : MonoBehaviour
         DragCamera();
         ZoomCamera();
     }
-
-    public bool CameraIsPanning = false;
-    public bool CameraIsZooming = false;
-
-    private bool _lookingForPanGesture = false;
-    private float _startTime = 0;
 
     void DragCamera()
     {

@@ -60,7 +60,7 @@ MonoBehaviour:
   PathNodePrefab: {fileID: 2436387403133853424, guid: 105222be76498f54ca21998e608e0b03, type: 3}
   UserInteractionEnabled: 1
   ShowTileHover: 1
-  ShowTileSelection: 0
+  ShowTileSelection: 1
 --- !u!1001 &2218982308687291820
 PrefabInstance:
   m_ObjectHideFlags: 0
