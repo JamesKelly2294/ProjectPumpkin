@@ -177,6 +177,8 @@ public class GridManager : MonoBehaviour
                 {
                     Debug.Log("Cleared selection.");
                 }
+
+                ClearPath();
             }
 
             _tileSelectionGO.SetActive(SelectedSelectable != null);
@@ -326,6 +328,7 @@ public class GridManager : MonoBehaviour
         {
             var quickPath = new List<Vector2Int>();
             quickPath.Add((Vector2Int)startPosition);
+            return quickPath;
         }
 
 #if DEBUG

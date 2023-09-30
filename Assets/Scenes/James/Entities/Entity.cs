@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 [RequireComponent(typeof(Selectable))]
@@ -57,5 +59,53 @@ public class Entity : MonoBehaviour, ISelectable
 
     public void OnDeselected()
     {
+
+    }
+
+    public void Move(List<Vector2Int> path)
+    {
+        if (moving) { return; }
+        if (path.Count == 0) { return; }
+
+        moving = true;
+        StartCoroutine(MoveAlongPath(path));
+    }
+
+    bool moving = false;
+
+    IEnumerator MoveAlongPath(List<Vector2Int> path)
+    {
+        Vector2Int destinationNode = path.Last();
+        Vector2Int currentNode = path.First();
+        path.RemoveAt(0);
+
+
+        var t = 0.0f;
+        var speed = 7.5f; // meters per second
+        var timeToWalkAcrossTile = 1 / speed;
+
+        while (Position != destinationNode)
+        {
+            t += Time.deltaTime;
+            float progress = t / timeToWalkAcrossTile;
+
+            var direction = new Vector3(currentNode.x - Position.x, currentNode.y - Position.y, 0.0f).normalized;
+            transform.position = (Vector3Int)Position + (direction * progress) + new Vector3(0.5f, 0.5f, 0.0f);
+
+            if (t > timeToWalkAcrossTile) {
+                Position = currentNode;
+
+                if (path.Count > 0)
+                {
+                    t = 0.0f;
+                    currentNode = path.First();
+                    path.RemoveAt(0);
+                }
+            }
+
+            yield return null;
+        }
+
+        moving = false;
     }
 }
