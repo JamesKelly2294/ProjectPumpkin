@@ -1,3 +1,4 @@
+using info.jacobingalls.jamkit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using UnityEngine;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 [RequireComponent(typeof(Selectable))]
+[RequireComponent(typeof(PubSubSender))]
 public class Entity : MonoBehaviour, ISelectable
 {
     public enum OwnerKind
@@ -47,7 +49,31 @@ public class Entity : MonoBehaviour, ISelectable
     public int ActionPoints;
     public int Movement;
 
-    public bool IsWaiting; // a unit can "wait", ending its turn
+    public bool IsWaiting // a unit can "wait", ending its turn
+    {
+        get { return _isWaiting; }
+        private set
+        {
+            if (_isWaiting == value) { return; }
+            _isWaiting = value;
+            _pubSubSender.Publish("entity.is_waiting.changed", _isWaiting);
+        }
+    }
+    [SerializeField]
+    private bool _isWaiting = false;
+
+    public bool IsBusy // if a unit is "busy", they are actively executing an action, and UI should be disabled
+    {
+        get { return _isBusy; }
+        private set
+        {
+            if (_isBusy == value) { return; }
+            _isBusy = value;
+            _pubSubSender.Publish("entity.is_busy.changed", _isBusy);
+        }
+    }
+    [SerializeField]
+    private bool _isBusy = false;
 
     public bool CanAffordAnyAction
     {
@@ -66,10 +92,10 @@ public class Entity : MonoBehaviour, ISelectable
     {
         var actionAttempt = new ActionCostAnalysis
         {
-            CanAffordHealthCost = a.HealthCost >= Health,
-            CanAffordManaCost = a.MagicCost >= Mana,
-            CanAffordActionPointCost = a.ActionPointCost >= ActionPoints,
-            CanAffordMovementCost = a.MovementCost >= Movement,
+            CanAffordHealthCost = Health >= a.HealthCost,
+            CanAffordManaCost = Mana >= a.MagicCost,
+            CanAffordActionPointCost = ActionPoints >= a.ActionPointCost,
+            CanAffordMovementCost = Movement >= a.MovementCost,
         };
 
         return actionAttempt;
@@ -145,9 +171,12 @@ public class Entity : MonoBehaviour, ISelectable
 
     public List<Action> Actions { get; private set; } = new List<Action>();
 
+    private PubSubSender _pubSubSender;
+
     // Start is called before the first frame update
     void Start()
     {
+        _pubSubSender = GetComponent<PubSubSender>();
         if (GridManager == null)
         {
             // PANIK, try to find one
