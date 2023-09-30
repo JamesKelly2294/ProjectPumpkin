@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cea92640c75c84d80cea4776230658, type: 3}
+  m_Name: Wait
+  m_EditorClassIdentifier: 
+  Name: Wait
+  Description: Wait until the end of the turn.
+  FlavorText: '"Sometimes the best thing you can do is nothing."'
+  Icon: {fileID: 21300000, guid: c62dfaefe4be04f56a06a1a6d6371e7c, type: 3}
+  Color: {r: 0.8207547, g: 0.78721344, b: 0.58459413, a: 1}
+  BlocksFromEndingTurn: 0
+  Targetable: 0
+  Behaviors:
+  - {fileID: -8405245668000055270, guid: bb9ee3b8afa854244b36a966280d600b, type: 3}
+  BaseActionPointCost: 0
+  BaseMagicCost: 0
+  BaseMovementCost: 0
+  BaseHealthCost: 0

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
 using static UnityEngine.RuleTile.TilingRuleOutput;
@@ -131,8 +132,9 @@ public class GridManager : MonoBehaviour
 
     void UpdateTileHighlight()
     {
-        if (UserInteractionEnabled == false)
+        if (UserInteractionEnabled == false || EventSystem.current.IsPointerOverGameObject())
         {
+            HoveredTilePosition = null;
             _tileHoverGO.SetActive(false);
             return;
         }
@@ -152,7 +154,7 @@ public class GridManager : MonoBehaviour
 
     void UpdateTileSelection()
     {
-        if (!Input.GetMouseButtonDown(0))
+        if (!Input.GetMouseButtonDown(0) || EventSystem.current.IsPointerOverGameObject())
         {
             return;
         }

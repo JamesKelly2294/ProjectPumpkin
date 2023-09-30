@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 [CreateAssetMenu(fileName = "ActionDefinition", menuName = "Entity/Action", order = 1)]
 public class ActionDefinition : ScriptableObject
@@ -12,9 +13,20 @@ public class ActionDefinition : ScriptableObject
     public Sprite Icon = null;
     public Color Color = Color.blue;
 
-    [Range(1, 5)]
+    public bool BlocksFromEndingTurn = true; // if the entity can take this action, don't let turn end
+    public bool Targetable = false;
+
+    public List<ActionBehavior> Behaviors;
+
+    [Range(0, 5)]
     public int BaseActionPointCost = 1;
 
-    [Range(1, 50)]
-    public int BaseMagicCost = 2;
+    [Range(0, 50)]
+    public int BaseMagicCost = 0;
+
+    [Range(0, 10)]
+    public int BaseMovementCost = 0;
+
+    [Range(0, 10)]
+    public int BaseHealthCost = 0;
 }

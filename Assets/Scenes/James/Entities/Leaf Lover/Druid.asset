@@ -22,4 +22,5 @@ MonoBehaviour:
   BaseMaxActionPoints: 2
   BaseMaxMovement: 4
   BaseActions:
+  - {fileID: 11400000, guid: 59490ca2d68410341be263cdf6eaf4f4, type: 2}
   - {fileID: 11400000, guid: 83f6124ae90234f4f91696cc59ba1b84, type: 2}

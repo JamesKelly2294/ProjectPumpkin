@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 [RequireComponent(typeof(Selectable))]
 public class Entity : MonoBehaviour, ISelectable
@@ -16,6 +19,23 @@ public class Entity : MonoBehaviour, ISelectable
         EnemyAlly
     }
 
+    public struct ActionCostAnalysis
+    {
+        public bool CanAffordHealthCost;
+        public bool CanAffordManaCost;
+        public bool CanAffordActionPointCost;
+        public bool CanAffordMovementCost;
+
+        public bool CanBeExecuted {
+            get {
+                return CanAffordHealthCost &&
+                CanAffordManaCost &&
+                CanAffordActionPointCost &&
+                CanAffordMovementCost;
+            }
+        }
+    }
+
     public OwnerKind Owner = Entity.OwnerKind.Enemy; // cannot be changed after registration
 
     public EntityDefinition Definition;
@@ -26,6 +46,90 @@ public class Entity : MonoBehaviour, ISelectable
     public int Mana;
     public int ActionPoints;
     public int Movement;
+
+    public bool IsWaiting; // a unit can "wait", ending its turn
+
+    public bool CanAffordAnyAction
+    {
+        get
+        {
+            var canAffordASpecificAction = Actions.Any(a => CanAffordAction(a));
+            var canMove = Movement > 0;
+
+            var canTakeAnyAction = canMove || canAffordASpecificAction;
+
+            return !IsWaiting && canTakeAnyAction; 
+        }
+    }
+
+    public ActionCostAnalysis CreateActionCostAnalysis(Action a)
+    {
+        var actionAttempt = new ActionCostAnalysis
+        {
+            CanAffordHealthCost = a.HealthCost >= Health,
+            CanAffordManaCost = a.MagicCost >= Mana,
+            CanAffordActionPointCost = a.ActionPointCost >= ActionPoints,
+            CanAffordMovementCost = a.MovementCost >= Movement,
+        };
+
+        return actionAttempt;
+    }
+
+    public bool CanAffordAction(Action a)
+    {
+        return CreateActionCostAnalysis(a).CanBeExecuted;
+    }
+
+    public void ExecuteAction(Action a, Vector2Int? target = null, bool ignoringCost = false)
+    {
+        Debug.Log($"Executing {a}...");
+
+        if (!ignoringCost && !CanAffordAction(a)) {
+            Debug.LogError($"Unable to execute {a} for {this} - cannot afford it.");
+        }
+
+        var recipes = a.BehaviorRecipes.GroupBy(r => r.gameObject).Select(y => y.First()).ToList();
+        List<ActionBehavior> behaviors = new();
+
+        foreach (var recipe in recipes)
+        {
+            var go = Instantiate(recipe);
+            go.transform.parent = transform;
+            go.transform.name = $"{a.Name} Behavior";
+            foreach (var b in go.GetComponents<ActionBehavior>())
+            {
+                behaviors.Add(b);
+            }
+        }
+
+        var context = new Action.ExecutionContext();
+        if (target != null)
+        {
+            var data = GridManager.GetTileData(target.Value);
+        }
+        context.source = this;
+        context.target = null;
+
+        var canExecuteAllBehaviors = behaviors.All(b => b.CanExecute(context));
+
+        if (!ignoringCost)
+        {
+            PayCostForAction(a);
+        }
+
+        foreach (var behavior in behaviors)
+        {
+            behavior.Execute(context);
+        }
+    }
+
+    private void PayCostForAction(Action a)
+    {
+        Health -= a.HealthCost;
+        Mana -= a.MagicCost;
+        ActionPoints -= a.ActionPointCost;
+        Movement -= a.MovementCost;
+    }
 
     public Vector2Int Position { get { return GridManager.PositionForEntity(this); } }
 

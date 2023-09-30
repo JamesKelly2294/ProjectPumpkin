@@ -68,7 +68,7 @@ public class TurnManager : MonoBehaviour
     }
     public bool EntityCanDoMoreThisTurn(Entity entity)
     {
-        return false;
+        return entity.CanAffordAnyAction;
     }
 
     public List<Entity> EntitiesThatCanTakeAction(Entity.OwnerKind team)
@@ -79,7 +79,7 @@ public class TurnManager : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _pubSubSender = GetComponent<PubSubSender>();
         _gridManager = FindObjectOfType<GridManager>();

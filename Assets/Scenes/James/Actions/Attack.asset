@@ -17,5 +17,11 @@ MonoBehaviour:
   FlavorText: '"I hate bugs."'
   Icon: {fileID: 21300000, guid: 331798cb1fbb44f55bc8c4636f3c940a, type: 3}
   Color: {r: 1, g: 0.23113209, b: 0.23113209, a: 1}
+  BlocksFromEndingTurn: 1
+  Targetable: 0
+  Behaviors:
+  - {fileID: 3196293187638663207, guid: fd57ed0a3be74264c86198a703e435ce, type: 3}
   BaseActionPointCost: 1
-  BaseMagicCost: 2
+  BaseMagicCost: 0
+  BaseMovementCost: 0
+  BaseHealthCost: 0

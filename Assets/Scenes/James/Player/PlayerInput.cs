@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerInput : MonoBehaviour
 {
     private GridManager _gridManager;
+    private TurnManager _turnManager;
     private CameraControls _cameraControls;
     private Selectable _selectable;
 
@@ -13,6 +15,7 @@ public class PlayerInput : MonoBehaviour
     void Start()
     {
         _gridManager = FindObjectOfType<GridManager>();
+        _turnManager = FindObjectOfType<TurnManager>();
         _cameraControls = FindObjectOfType<CameraControls>();
 
         SelectableDidChange();
@@ -37,7 +40,15 @@ public class PlayerInput : MonoBehaviour
 
     private void TakePrimaryAction()
     {
-        throw new NotImplementedException();
+        // THIS IS A TEST
+        //Debug.Log("Taking primary action!");
+
+        //var entity = SelectedEntity();
+
+        //if (entity != null)
+        //{
+        //    entity.ExecuteAction(entity.Actions.First(), ignoringCost: true);
+        //}
     }
 
     private bool CanTakeSecondaryAction()
