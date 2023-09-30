@@ -8,6 +8,8 @@ public class UnitSelectionArea : MonoBehaviour
     public Entity Entity;
 
     public ActionButtons ActionButtons;
+    public UnitSelectionAreaStats UnitSelectionAreaStats;
+    public UnitSelectionAreaFace unitSelectionAreaFace;
 
     private bool setOnce = true;
 
@@ -31,5 +33,7 @@ public class UnitSelectionArea : MonoBehaviour
         if (Entity == null) { return; }
 
         ActionButtons.SetEntity(Entity);
+        UnitSelectionAreaStats.SetEntity(Entity);
+        unitSelectionAreaFace.SetEntity(Entity);
     }
 }

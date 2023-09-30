@@ -885,6 +885,9 @@ MonoBehaviour:
   MovementText: {fileID: 6115984391474207339}
   ManaText: {fileID: 4316071792314329865}
   HealthText: {fileID: 7346997447297636772}
+  MovementBar: {fileID: 6219061549223530313}
+  ManaBar: {fileID: 9068168070270137455}
+  HealthBar: {fileID: 8743874951935060019}
 --- !u!1 &5005807028274742977
 GameObject:
   m_ObjectHideFlags: 0
@@ -1949,6 +1952,10 @@ PrefabInstance:
       propertyPath: m_IgnoreLayout
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 721442526762700051, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
+      propertyPath: isIndeterminate
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 721442526762700053, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
       propertyPath: m_Name
       value: ProgressBar
@@ -2066,6 +2073,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
+--- !u!114 &6219061549223530313 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 721442526762700051, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
+  m_PrefabInstance: {fileID: 6651147737197658714}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d8fbe9451a2745faa2197fee4e67c94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &6219061549223530316 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 721442526762700054, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
@@ -2742,6 +2760,10 @@ PrefabInstance:
       propertyPath: m_IgnoreLayout
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 721442526762700051, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
+      propertyPath: isIndeterminate
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 721442526762700053, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
       propertyPath: m_Name
       value: ProgressBar
@@ -2859,6 +2881,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
+--- !u!114 &8743874951935060019 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 721442526762700051, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
+  m_PrefabInstance: {fileID: 8312360505562588448}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d8fbe9451a2745faa2197fee4e67c94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8743874951935060022 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 721442526762700054, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
@@ -2935,6 +2968,10 @@ PrefabInstance:
     - target: {fileID: 721442526762700048, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
       propertyPath: m_IgnoreLayout
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 721442526762700051, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
+      propertyPath: isIndeterminate
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 721442526762700053, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
       propertyPath: m_Name
@@ -3058,3 +3095,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 721442526762700054, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
   m_PrefabInstance: {fileID: 8636653903304243580}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &9068168070270137455 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 721442526762700051, guid: 8e96f6cf5fe8a43cfb43bd7705823a27, type: 3}
+  m_PrefabInstance: {fileID: 8636653903304243580}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d8fbe9451a2745faa2197fee4e67c94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
