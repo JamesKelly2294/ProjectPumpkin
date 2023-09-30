@@ -16,6 +16,6 @@ MonoBehaviour:
   Description: Attack that stupid bug.
   FlavorText: '"I hate bugs."'
   Icon: {fileID: 21300000, guid: 331798cb1fbb44f55bc8c4636f3c940a, type: 3}
-  Color: {r: 0, g: 0, b: 1, a: 1}
+  Color: {r: 1, g: 0.23113209, b: 0.23113209, a: 1}
   BaseActionPointCost: 1
   BaseMagicCost: 2

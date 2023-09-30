@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 816038561257032280}
   - component: {fileID: 5056840568152645246}
   - component: {fileID: 4931842704504148947}
+  - component: {fileID: 3499890339112660627}
   m_Layer: 5
   m_Name: TooltipAmountRow
   m_TagString: Untagged
@@ -240,6 +241,19 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &3499890339112660627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1743883629805712433}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbb5ba16b9fbf4a1f99befa42d056920, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Amount: {fileID: 2497786379711143018}
 --- !u!1 &6041941923950466572
 GameObject:
   m_ObjectHideFlags: 0
