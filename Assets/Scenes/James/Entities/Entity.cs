@@ -152,6 +152,23 @@ public class Entity : MonoBehaviour, ISelectable
     public void InitiateActionAttempt(Action a) {
         // TODO
         ExecuteAction(a);
+
+        StartCoroutine(test());
+    }
+
+    IEnumerator test()
+    {
+        IsBusy = true;
+        Debug.Log($"{this} is busy.");
+        var t = 0.0f;
+
+        while (t < 2.0f)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+        IsBusy = false;
+        Debug.Log($"{this} is no longer busy.");
     }
 
     private void PayCostForAction(Action a)
