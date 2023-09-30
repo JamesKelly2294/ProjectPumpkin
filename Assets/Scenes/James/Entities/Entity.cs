@@ -123,6 +123,11 @@ public class Entity : MonoBehaviour, ISelectable
         }
     }
 
+    public void InitiateActionAttempt(Action a) {
+        // TODO
+        ExecuteAction(a);
+    }
+
     private void PayCostForAction(Action a)
     {
         Health -= a.HealthCost;

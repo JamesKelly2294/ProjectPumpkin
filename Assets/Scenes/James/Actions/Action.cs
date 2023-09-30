@@ -6,12 +6,12 @@ public class Action
 {
     public ActionDefinition Definition;
 
-    private Entity _entity;
+    public Entity Entity { get; private set; }
 
     public Action(ActionDefinition definition, Entity entity)
     {
         this.Definition = definition;
-        this._entity = entity;
+        this.Entity = entity;
     }
 
     public string Name {

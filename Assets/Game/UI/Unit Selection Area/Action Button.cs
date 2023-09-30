@@ -69,4 +69,8 @@ public class ActionButton : MonoBehaviour
         }
 
     }
+
+    public void DoIt() {
+        Action.Entity.InitiateActionAttempt(Action);
+    }
 }
