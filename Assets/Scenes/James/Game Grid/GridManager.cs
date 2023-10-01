@@ -201,13 +201,13 @@ public class GridManager : MonoBehaviour
         entity.transform.position = TileCoordinateToWorldPosition(position);
     }
 
-    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, int range = 0, bool debugVisuals = false) 
+    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, int range = 0, bool debugVisuals = false, bool ignoringObstacles = false) 
     {
-        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, range:range, debugVisuals: debugVisuals);
+        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, range:range, debugVisuals: debugVisuals, ignoringObstacles: ignoringObstacles);
     }
 
 
-    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, int range = 0, bool debugVisuals=false)
+    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, int range = 0, bool debugVisuals=false, bool ignoringObstacles = false)
     {
         if (startPosition == endPosition)
         {
@@ -219,7 +219,7 @@ public class GridManager : MonoBehaviour
         Dictionary<Vector3Int, Vector3Int> visited = new Dictionary<Vector3Int, Vector3Int>();
         Queue<Vector3Int> queue = new Queue<Vector3Int>();
 
-        foreach (var neighbor in NeighborsForTileAtPosition(startPosition))
+        foreach (var neighbor in NeighborsForTileAtPosition(startPosition, ignoringObstacles: ignoringObstacles))
         {
             visited[neighbor] = startPosition;
             queue.Enqueue(neighbor);
@@ -235,7 +235,7 @@ public class GridManager : MonoBehaviour
             }
             else
             {
-                var neighbors = NeighborsForTileAtPosition(currentTile);
+                var neighbors = NeighborsForTileAtPosition(currentTile, ignoringObstacles: ignoringObstacles);
                 foreach (var neighbor in neighbors)
                 {
                     if (visited.ContainsKey(neighbor)) { continue; }
@@ -260,7 +260,7 @@ public class GridManager : MonoBehaviour
         return path;
     }
 
-    public HashSet<Vector2Int> BFS(Vector3Int startPosition, int range)
+    public HashSet<Vector2Int> BFS(Vector3Int startPosition, int range, bool ignoringObstacles = false)
     {
         if (range < 0)
         {
@@ -278,7 +278,7 @@ public class GridManager : MonoBehaviour
         Dictionary<Vector3Int, int> visited = new Dictionary<Vector3Int, int>();
         Queue<Vector3Int> queue = new Queue<Vector3Int>();
 
-        foreach (var neighbor in NeighborsForTileAtPosition(startPosition))
+        foreach (var neighbor in NeighborsForTileAtPosition(startPosition, ignoringObstacles: ignoringObstacles))
         {
             visited[neighbor] = 1;
             queue.Enqueue(neighbor);
@@ -293,7 +293,7 @@ public class GridManager : MonoBehaviour
             }
             else
             {
-                var neighbors = NeighborsForTileAtPosition(currentTile);
+                var neighbors = NeighborsForTileAtPosition(currentTile, ignoringObstacles: ignoringObstacles);
                 foreach (var neighbor in neighbors)
                 {
                     if (visited.ContainsKey(neighbor)) { continue; }
@@ -331,13 +331,19 @@ public class GridManager : MonoBehaviour
         return path;
     }
 
-    bool TileIsWalkable(Vector3Int tilePosition)
+    bool TileIsWalkable(Vector3Int tilePosition, bool ignoringObstacles)
     {
-        return Walkable.HasTile(tilePosition) &&
-            !HasEntity((Vector2Int)tilePosition);
+        var tileExists = Walkable.HasTile(tilePosition);
+
+        var obstaclesInTheWay = false;
+        if (!ignoringObstacles) {
+            obstaclesInTheWay = HasEntity((Vector2Int)tilePosition);
+        }
+
+        return tileExists && !obstaclesInTheWay;
     }
 
-    List<Vector3Int> NeighborsForTileAtPosition(Vector3Int tilePosition, bool includeDiagonal = false)
+    List<Vector3Int> NeighborsForTileAtPosition(Vector3Int tilePosition, bool includeDiagonal = false, bool ignoringObstacles = false)
     {
         var neighborPositions = new List<Vector3Int>();
 
@@ -345,10 +351,10 @@ public class GridManager : MonoBehaviour
         var eastPos = tilePosition + new Vector3Int(1, 0, 0);
         var southPos = tilePosition + new Vector3Int(0, 1, 0);
         var westPos = tilePosition + new Vector3Int(-1, 0, 0);
-        if (TileIsWalkable(northPos)) { neighborPositions.Add(northPos); }
-        if (TileIsWalkable(eastPos)) { neighborPositions.Add(eastPos); }
-        if (TileIsWalkable(southPos)) { neighborPositions.Add(southPos); }
-        if (TileIsWalkable(westPos)) { neighborPositions.Add(westPos); }
+        if (TileIsWalkable(northPos, ignoringObstacles)) { neighborPositions.Add(northPos); }
+        if (TileIsWalkable(eastPos, ignoringObstacles)) { neighborPositions.Add(eastPos); }
+        if (TileIsWalkable(southPos, ignoringObstacles)) { neighborPositions.Add(southPos); }
+        if (TileIsWalkable(westPos, ignoringObstacles)) { neighborPositions.Add(westPos); }
 
         if (includeDiagonal)
         {
@@ -356,10 +362,10 @@ public class GridManager : MonoBehaviour
             var southEastPos = tilePosition + new Vector3Int(1, 1, 0);
             var northWestPos = tilePosition + new Vector3Int(-1, -1, 0);
             var southWestPos = tilePosition + new Vector3Int(-1, 1, 0);
-            if (TileIsWalkable(northEastPos)) { neighborPositions.Add(northEastPos); }
-            if (TileIsWalkable(southEastPos)) { neighborPositions.Add(southEastPos); }
-            if (TileIsWalkable(northWestPos)) { neighborPositions.Add(northWestPos); }
-            if (TileIsWalkable(southWestPos)) { neighborPositions.Add(southWestPos); }
+            if (TileIsWalkable(northEastPos, ignoringObstacles)) { neighborPositions.Add(northEastPos); }
+            if (TileIsWalkable(southEastPos, ignoringObstacles)) { neighborPositions.Add(southEastPos); }
+            if (TileIsWalkable(northWestPos, ignoringObstacles)) { neighborPositions.Add(northWestPos); }
+            if (TileIsWalkable(southWestPos, ignoringObstacles)) { neighborPositions.Add(southWestPos); }
         }
 
         return neighborPositions;

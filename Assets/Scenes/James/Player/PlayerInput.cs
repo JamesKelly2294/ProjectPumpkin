@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.EventSystems;
+using static GridRangeIndicator.Configuration;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
 using static UnityEngine.GraphicsBuffer;
 
@@ -408,10 +409,25 @@ public class PlayerInput : MonoBehaviour
         }
 
         int range = selectedEntity.Range(selectedAction);
+        bool ignoringEntities = false;
+
+        Dictionary<Entity.OwnerKind, OwnerAlignment> ownerToAlignmentMapping = null;
+        if (selectedAction.Targetable && selectedAction.Kind == Action.ActionKind.Attack) {
+            ownerToAlignmentMapping = new();
+
+            foreach (Entity.OwnerKind ownerKind in Enum.GetValues(typeof(Entity.OwnerKind)))
+            {
+                if (ownerKind == selectedEntity.Owner) { ownerToAlignmentMapping[ownerKind] = OwnerAlignment.Good; }
+                else { ownerToAlignmentMapping[ownerKind] = OwnerAlignment.Bad; }
+            }
+        }
+
         GridRangeIndicator.Configuration configuration = new GridRangeIndicator.Configuration
         {
             range = range,
-            origin = selectedEntity.Position
+            origin = selectedEntity.Position,
+            ownerToAlignmentMapping = ownerToAlignmentMapping,
+            ignoringEntities = true,
         };
 
         _gridRangeIndicator.gameObject.SetActive(true);

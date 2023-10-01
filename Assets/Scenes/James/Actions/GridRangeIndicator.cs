@@ -1,12 +1,23 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GridRangeIndicator : MonoBehaviour
 {
     public struct Configuration : IEquatable<Configuration>
     {
+        public enum OwnerAlignment
+        {
+            Good,
+            Bad,
+            Neutral
+        }
+
         public Vector2Int origin;
         public int range;
+        public bool ignoringEntities;
+
+        public Dictionary<Entity.OwnerKind, OwnerAlignment> ownerToAlignmentMapping;
 
         public override bool Equals(object? obj) => obj is Configuration other && this.Equals(other);
 
@@ -29,6 +40,9 @@ public class GridRangeIndicator : MonoBehaviour
 
     public Color ReachablePathNodeColor = Color.green;
     public Color UnreachablePathNodeColor = Color.red;
+
+    public Color AlliedEntityColor = Color.green;
+    public Color EnemyyEntityColor = Color.red;
 
     private GameObject _pathStartGO;
     private GameObject _pathEndGO;
@@ -119,12 +133,39 @@ public class GridRangeIndicator : MonoBehaviour
         _tileOutlineContainerGO.SetActive(active);
     }
 
-    public GameObject CreateTileOutline(GridManager gridManager, int x, int y)
+    public GameObject CreateTileOutline(GridManager gridManager, int x, int y, Configuration configuration)
     {
         var tileOutline = Instantiate(TileOutlinePrefab);
         tileOutline.transform.position = gridManager.TileCoordinateToWorldPosition(new Vector2Int(x, y));
         tileOutline.transform.name = "(" + x + ", " + y + ")";
         tileOutline.transform.parent = _tileOutlineContainerGO.transform;
+
+        var ownerToAlignmentMapping = configuration.ownerToAlignmentMapping;
+        if (ownerToAlignmentMapping != null)
+        {
+            var entity = gridManager.GetTileData(new Vector2Int(x, y)).Entity;
+            if (entity != null)
+            {
+                var alignment = Configuration.OwnerAlignment.Neutral;
+
+                if (ownerToAlignmentMapping.ContainsKey(entity.Owner))
+                {
+                    alignment = ownerToAlignmentMapping[entity.Owner];
+                }
+
+                switch (alignment)
+                {
+                    case Configuration.OwnerAlignment.Good:
+                        tileOutline.GetComponent<SpriteRenderer>().color = AlliedEntityColor;
+                        break;
+                    case Configuration.OwnerAlignment.Bad:
+                        tileOutline.GetComponent<SpriteRenderer>().color = EnemyyEntityColor;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
 
         return tileOutline;
     }
@@ -161,11 +202,11 @@ public class GridRangeIndicator : MonoBehaviour
         _cachedRangeConfiguration = configuration;
         ClearRangeVisuals(purgeCache: false);
 
-        var tiles = gridManager.BFS((Vector3Int)configuration.origin, configuration.range);
+        var tiles = gridManager.BFS((Vector3Int)configuration.origin, configuration.range, ignoringObstacles: configuration.ignoringEntities);
         int i = 0;
         foreach (var tile in tiles)
         { 
-            CreateTileOutline(gridManager, tile.x, tile.y);
+            CreateTileOutline(gridManager, tile.x, tile.y, configuration);
         }
     }
 
