@@ -33,9 +33,15 @@ public class UnitSelectionAreaStats : MonoBehaviour
     }
 
     public void SetEntity(Entity entity) {
-        MovementPane.preferredWidth = Mathf.Min(entity.MaxMovement, Entity.TheoreticalMovementMax) * 20f;
-        MovementBar.SetProgress((float)entity.Movement / (float)entity.MaxMovement);
-        MovementText.text = "" + entity.Movement + " / " + entity.MaxMovement;
+        if (entity.MaxMovement > 0) {
+            MovementPane.gameObject.SetActive(true);
+            MovementPane.preferredWidth = Mathf.Min(entity.MaxMovement, Entity.TheoreticalMovementMax) * 20f;
+            MovementBar.SetProgress((float)entity.Movement / (float)entity.MaxMovement);
+            MovementText.text = "" + entity.Movement + " / " + entity.MaxMovement;
+        } else {
+            MovementPane.gameObject.SetActive(false);
+            MovementText.text = "-";
+        }
         
         if (entity.MaxMana > 0) {
             ManaPane.gameObject.SetActive(true);

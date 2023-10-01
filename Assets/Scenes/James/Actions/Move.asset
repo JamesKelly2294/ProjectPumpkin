@@ -16,7 +16,7 @@ MonoBehaviour:
   Description: Move to the target.
   FlavorText: '"I''m a leaf on the wind, watch how I soar."'
   Icon: {fileID: 21300000, guid: b3a52f0be3bd7429b83747b510a61606, type: 3}
-  Color: {r: 0.41568628, g: 0.9882353, b: 0.40784314, a: 1}
+  Color: {r: 0.21747543, g: 0.5849056, b: 0.21244211, a: 1}
   BlocksFromEndingTurn: 0
   Targetable: 1
   CanOnlyExecuteOnOwnersTurn: 1

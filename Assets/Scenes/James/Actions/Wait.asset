@@ -15,16 +15,18 @@ MonoBehaviour:
   Name: Wait
   Description: Wait until the end of the turn.
   FlavorText: '"Sometimes the best thing you can do... is nothing."'
-  Icon: {fileID: -480043317, guid: 91aa5ae8f43c22d408a0747f0f8aaa3c, type: 3}
-  Color: {r: 0.8207547, g: 0.78721344, b: 0.58459413, a: 1}
+  Icon: {fileID: 21300000, guid: d3a6d3904b8844ad4a92aaed496e6cb0, type: 3}
+  Color: {r: 0.2123236, g: 0.14618191, b: 0.4245283, a: 1}
   BlocksFromEndingTurn: 0
   Targetable: 0
   CanOnlyExecuteOnOwnersTurn: 1
   CostIsPerTile: 0
   CanExecuteWhileWaiting: 1
+  RangeIsDrivenByMovementCost: 0
   Behaviors:
   - {fileID: -8405245668000055270, guid: bb9ee3b8afa854244b36a966280d600b, type: 3}
   BaseActionPointCost: 0
   BaseMagicCost: 0
   BaseMovementCost: 0
   BaseHealthCost: 0
+  BaseRange: 1

@@ -15,16 +15,14 @@ MonoBehaviour:
   Name: Attack
   Description: Attack that stupid bug.
   FlavorText: '"I hate bugs."'
-  Icon: {fileID: 21300000, guid: 331798cb1fbb44f55bc8c4636f3c940a, type: 3}
-  Color: {r: 1, g: 0.23113209, b: 0.23113209, a: 1}
+  Icon: {fileID: 21300000, guid: 99e81d8a3c23c4aa6a29a8a09cd1ca6d, type: 3}
+  Color: {r: 0.6886792, g: 0.25663045, b: 0.25663045, a: 1}
   BlocksFromEndingTurn: 1
   Targetable: 1
   CanOnlyExecuteOnOwnersTurn: 1
   CostIsPerTile: 0
   CanExecuteWhileWaiting: 0
   RangeIsDrivenByMovementCost: 0
-  DeferCostPayment: 0
-  Kind: 1
   Behaviors:
   - {fileID: 3196293187638663207, guid: fd57ed0a3be74264c86198a703e435ce, type: 3}
   BaseActionPointCost: 1
