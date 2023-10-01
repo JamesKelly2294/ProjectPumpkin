@@ -140,25 +140,7 @@ public class PlayerInput : MonoBehaviour
         _selectable = SelectedSelectable;
     }
 
-    private bool CanTakePrimaryAction()
-    {
-        return false;
-    }
-
-    private void TakePrimaryAction()
-    {
-        // THIS IS A TEST
-        //Debug.Log("Taking primary action!");
-
-        //var entity = SelectedEntity();
-
-        //if (entity != null)
-        //{
-        //    entity.ExecuteAction(entity.Actions.First(), ignoringCost: true);
-        //}
-    }
-
-    private bool CanTakeSecondaryAction()
+    private bool CanExecuteAction()
     {
         return SelectedEntity() != null && 
             !CameraControlsTakingPriority() &&
@@ -171,9 +153,9 @@ public class PlayerInput : MonoBehaviour
         return _cameraControls.CameraIsPanning;
     }
 
-    private void TakeSecondaryAction()
+    private void ExecuteSelectedAction()
     {
-        Debug.Log("Taking secondary action!");
+        Debug.Log("Executing selected action!");
 
         var highlitedTilePosition = HoveredTilePosition.Value;
 
@@ -206,14 +188,9 @@ public class PlayerInput : MonoBehaviour
 
         if (SkipUpdate) { return; }
 
-        if (CanTakePrimaryAction() && Input.GetMouseButtonUp(0))
+        if (CanExecuteAction() && Input.GetMouseButtonUp(1))
         {
-            TakePrimaryAction();
-        }
-
-        if (CanTakeSecondaryAction() && Input.GetMouseButtonUp(1))
-        {
-            TakeSecondaryAction();
+            ExecuteSelectedAction();
         }
     }
 
