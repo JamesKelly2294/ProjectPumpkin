@@ -16,8 +16,10 @@ public class UnitSelectionAreaFace : MonoBehaviour
     public Image IconFrame;
     public Sprite GoldFramePrefab;
     public Sprite SilverFramePrefab;
+    public Sprite RubyFramePrefab;
     public Color GoldColor;
     public Color SilverColor;
+    public Color RubyColor;
     public TextMeshProUGUI TooltipName;
     public TextMeshProUGUI TooltipDescription;
     public TextMeshProUGUI TooltipFlavorText;
@@ -60,7 +62,10 @@ public class UnitSelectionAreaFace : MonoBehaviour
         }
 
         // Update frame color
-        if (entity.ActionPoints > 0) {
+        if (entity.Owner != Entity.OwnerKind.Player) {
+            IconFrame.sprite = RubyFramePrefab;
+            PipsHolderFrame.color = RubyColor;
+        } else if (entity.ActionPoints > 0) {
             IconFrame.sprite = GoldFramePrefab;
             PipsHolderFrame.color = GoldColor;
         } else {

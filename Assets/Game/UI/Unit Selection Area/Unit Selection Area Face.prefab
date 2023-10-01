@@ -389,8 +389,10 @@ MonoBehaviour:
   IconFrame: {fileID: 9218721499747297632}
   GoldFramePrefab: {fileID: 21300000, guid: 31b5f35adaa0e4c4ea289d915e9ccf7f, type: 3}
   SilverFramePrefab: {fileID: 21300000, guid: 7e98089cd25ef41c4a1819b7a1e54144, type: 3}
+  RubyFramePrefab: {fileID: 21300000, guid: 9ee8ccb6dde094998ab462bfe615aca1, type: 3}
   GoldColor: {r: 1, g: 0.83921576, b: 0.427451, a: 1}
   SilverColor: {r: 0.2924528, g: 0.2924528, b: 0.2924528, a: 1}
+  RubyColor: {r: 1, g: 0, b: 0, a: 1}
   TooltipName: {fileID: 3860506138450185664}
   TooltipDescription: {fileID: 1598891663271849351}
   TooltipFlavorText: {fileID: 6134871861867903693}
