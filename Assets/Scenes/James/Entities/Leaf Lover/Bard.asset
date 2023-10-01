@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2cc81903d598148af665746556f951, type: 3}
   m_Name: Bard
   m_EditorClassIdentifier: 
-  Name: Bard
+  Name: Melody Humblestrum
+  ClassName: Bard
   Description: Want to hear a song from my latest EP?
   FlavorText: Brings a lute to a sword party; everytime
   Icon: {fileID: 21300000, guid: a4d4b4922a01946fea597f7770a16dd0, type: 3}

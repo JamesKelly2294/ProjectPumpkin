@@ -55,6 +55,14 @@ public class Entity : MonoBehaviour, ISelectable
         }
     }
 
+    public string ClassName
+    {
+        get
+        {
+            return Definition.ClassName;
+        }
+    }
+
     public int Health
     {
         get { return _health; }
@@ -124,6 +132,11 @@ public class Entity : MonoBehaviour, ISelectable
     [SerializeField]
     private bool _isWaiting = false;
 
+    public void SetWaiting(bool waiting)
+    {
+        IsWaiting = waiting;
+    }
+
     public bool IsBusy // if a unit is "busy", they are actively executing an action, and UI should be disabled
     {
         get { return _isBusy; }
@@ -136,6 +149,11 @@ public class Entity : MonoBehaviour, ISelectable
     }
     [SerializeField]
     private bool _isBusy = false;
+
+    public void SetBusy(bool busy)
+    {
+        IsBusy = busy;
+    }
 
     public bool CanAffordAnyAction
     {
@@ -178,54 +196,6 @@ public class Entity : MonoBehaviour, ISelectable
         return CreateActionCostAnalysis(a).CanBeExecuted;
     }
 
-    public void ExecuteAction(Action a, Vector2Int? target = null, bool ignoringCost = false)
-    {
-        Debug.Log($"Executing {a}...");
-
-        if (!ignoringCost && !CanAffordAction(a)) {
-            Debug.LogError($"Unable to execute {a} for {this} - cannot afford it.");
-        }
-
-        var recipes = a.BehaviorRecipes.GroupBy(r => r.gameObject).Select(y => y.First()).ToList();
-        List<ActionBehavior> behaviors = new();
-
-        foreach (var recipe in recipes)
-        {
-            var go = Instantiate(recipe);
-            go.transform.parent = transform;
-            go.transform.name = $"{a.Name} Behavior";
-            foreach (var b in go.GetComponents<ActionBehavior>())
-            {
-                behaviors.Add(b);
-            }
-        }
-
-        var context = new Action.ExecutionContext();
-        if (target != null)
-        {
-            var data = GridManager.GetTileData(target.Value);
-        }
-        context.action = a;
-        context.source = this;
-        context.target = null;
-
-        var canExecuteAllBehaviors = behaviors.All(b => b.CanExecute(context));
-
-        if (!ignoringCost)
-        {
-            PayCostForAction(a);
-        }
-
-        foreach (var behavior in behaviors)
-        {
-            behavior.Execute(context);
-        }
-    }
-
-    public void InitiateActionAttempt(Action a) {
-        ExecuteAction(a);
-    }
-
     IEnumerator test()
     {
         IsBusy = true;
@@ -241,7 +211,7 @@ public class Entity : MonoBehaviour, ISelectable
         Debug.Log($"{this} is no longer busy.");
     }
 
-    private void PayCostForAction(Action a)
+    public void PayCostForAction(Action a)
     {
         Health -= a.HealthCost;
         Mana -= a.MagicCost;
@@ -301,20 +271,35 @@ public class Entity : MonoBehaviour, ISelectable
     {
 
     }
+    public int Range(Action a)
+    {
+        int range;
+        if (a.RangeIsDrivenByMovementCost)
+        {
+            range = Movement / a.MovementCost;
+        }
+        else
+        {
+            range = a.Range;
+        }
+        return range;
+    }
 
-    public void Move(List<Vector2Int> path)
+    public delegate void MoveCompleted(Entity e);
+
+    public void Move(List<Vector2Int> path, MoveCompleted completionHandler)
     {
         if (moving) { return; }
         if (path == null) { return; }
         if (path.Count == 0) { return; }
 
         moving = true;
-        StartCoroutine(MoveAlongPath(path));
+        StartCoroutine(MoveAlongPath(path, completionHandler));
     }
 
     bool moving = false;
 
-    IEnumerator MoveAlongPath(List<Vector2Int> path)
+    IEnumerator MoveAlongPath(List<Vector2Int> path, MoveCompleted completionHandler)
     {
         Vector2Int destinationNode = path.Last();
         Vector2Int currentNode = path.First();
@@ -349,5 +334,6 @@ public class Entity : MonoBehaviour, ISelectable
         GridManager.SetEntityPosition(this, destinationNode);
 
         moving = false;
+        completionHandler(this);
     }
 }

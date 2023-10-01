@@ -28,7 +28,7 @@ public class UnitSelectionArea : MonoBehaviour
         Entity = entity;
         if (Entity == null) { return; }
 
-        Name.text = Entity.Name;
+        Name.text = Entity.ClassName.Length == 0 ? Entity.Name : $"{Entity.Name}, {Entity.ClassName}";
         ActionButtons.SetEntity(Entity);
         UnitSelectionAreaStats.SetEntity(Entity);
         unitSelectionAreaFace.SetEntity(Entity);

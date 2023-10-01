@@ -62,13 +62,23 @@ public class UnitSelectionAreaFace : MonoBehaviour
         }
 
         // Update frame color
-        if (entity.Owner != Entity.OwnerKind.Player) {
+        if (entity.Owner != Entity.OwnerKind.Player)
+        {
             IconFrame.sprite = RubyFramePrefab;
             PipsHolderFrame.color = RubyColor;
-        } else if (entity.ActionPoints > 0) {
+        }
+        else if (entity.IsWaiting)
+        {
+            IconFrame.sprite = SilverFramePrefab;
+            PipsHolderFrame.color = SilverColor;
+        }
+        else if (entity.ActionPoints > 0)
+        {
             IconFrame.sprite = GoldFramePrefab;
             PipsHolderFrame.color = GoldColor;
-        } else {
+        }
+        else
+        {
             IconFrame.sprite = SilverFramePrefab;
             PipsHolderFrame.color = SilverColor;
         }

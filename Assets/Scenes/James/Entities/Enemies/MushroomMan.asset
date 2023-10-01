@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2cc81903d598148af665746556f951, type: 3}
   m_Name: MushroomMan
   m_EditorClassIdentifier: 
-  Name: Mushrrom Man
+  Name: Mushroom Man
+  ClassName: 
   Description: A Magical Mushroom Man doin' his own thing.
   FlavorText: Here for the <i>vibes</i>
   Icon: {fileID: 21300000, guid: e3e4ab6f3a5fc4b968835ca51acd11ed, type: 3}

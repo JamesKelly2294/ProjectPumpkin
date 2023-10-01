@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using info.jacobingalls.jamkit;
+using UnityEngine.EventSystems;
 
-public class PlayerUnitPreview : MonoBehaviour
+[RequireComponent(typeof(PubSubSender))]
+public class PlayerUnitPreview : MonoBehaviour, IPointerClickHandler
 {
     public Entity Entity;
 
@@ -24,6 +26,7 @@ public class PlayerUnitPreview : MonoBehaviour
     public GameObject UnavailableActionPointPrefab;
 
     private int availablePips = 0, unavailablePips;
+    private bool isWaiting = false;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,11 @@ public class PlayerUnitPreview : MonoBehaviour
     void Update()
     {
         UpdateProgress(Entity);
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        GetComponent<PubSubSender>().Publish("entity.select.requested", Entity);
     }
 
     public void SetEntity(Entity entity) {
@@ -53,11 +61,12 @@ public class PlayerUnitPreview : MonoBehaviour
 
         // Update Pips
         int uPips = entity.MaxActionPoints - entity.ActionPoints;
-        if (availablePips != entity.ActionPoints || unavailablePips != uPips) { 
+        if (availablePips != entity.ActionPoints || unavailablePips != uPips || isWaiting != entity.IsWaiting) { 
 
             // Add actual pips
             availablePips = entity.ActionPoints;
             unavailablePips = uPips;
+            isWaiting = entity.IsWaiting;
             foreach (Transform child in PipsHolder.transform) {
                 Destroy(child.gameObject);
             }
@@ -69,7 +78,7 @@ public class PlayerUnitPreview : MonoBehaviour
             }
 
             // Update frame color
-            if (availablePips > 0 ) {
+            if (availablePips > 0 && !entity.IsWaiting) {
                 IconFrame.sprite = GoldFramePrefab;
                 PipsHolderFrame.color = GoldColor;
             } else {

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class MoveBehavior : ActionBehavior
 {
@@ -12,6 +13,38 @@ public class MoveBehavior : ActionBehavior
     public override void Execute(Action.ExecutionContext context)
     {
         Debug.Log("Executing " + context);
+
+        context.source.SetBusy(true);
+        var startPosition = context.source.Position;
+        Vector2Int endPosition;
+        var tileData = context.target;
+
+        if (tileData != null)
+        {
+            endPosition = tileData.Value.Position;
+        }
+        else
+        {
+            Debug.LogError("Invalid configuration for MoveBehavior - missing target");
+            return;
+        }
+
+        var path = context.gridManager.CalculatePath(startPosition, endPosition, context.range);
+
+        if (!context.ignoringCost && context.action.CostIsPerTile)
+        {
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                context.source.PayCostForAction(context.action);
+            }
+        }
+
+        context.source.Move(path, MoveCompleted);
+    }
+
+    private void MoveCompleted(Entity e )
+    {
+        e.SetBusy(false);
     }
 }
 

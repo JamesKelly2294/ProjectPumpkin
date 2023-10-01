@@ -1,14 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class GridRangeIndicator : MonoBehaviour
 {
-    public struct Configuration
+    public struct Configuration : IEquatable<Configuration>
     {
         public Vector2Int origin;
         public int range;
+
+        public override bool Equals(object? obj) => obj is Configuration other && this.Equals(other);
+
+        public bool Equals(Configuration p) => origin == p.origin && range == p.range;
+
+        public override int GetHashCode() => (origin, range).GetHashCode();
+
+        public static bool operator ==(Configuration lhs, Configuration rhs) => lhs.Equals(rhs);
+
+        public static bool operator !=(Configuration lhs, Configuration rhs) => !(lhs == rhs);
     }
 
     public GameObject TileOutlinePrefab;
@@ -19,14 +27,22 @@ public class GridRangeIndicator : MonoBehaviour
     public GameObject PathEndPrefab;
     public GameObject PathNodePrefab;
 
+    public Color ReachablePathNodeColor = Color.green;
+    public Color UnreachablePathNodeColor = Color.red;
+
     private GameObject _pathStartGO;
     private GameObject _pathEndGO;
     private GameObject _pathGroupGO;
 
-
     private GameObject _tileOutlineContainerGO;
 
-    public void Start()
+    private Vector2Int? PathStartPosition = null;
+    private Vector2Int? PathEndPosition = null;
+
+    private Configuration? _cachedPathConfiguration;
+    private Configuration? _cachedRangeConfiguration;
+
+    public void Awake()
     {
         _pathStartGO = Instantiate(PathStartPrefab);
         _pathStartGO.transform.name = "Path Start";
@@ -40,22 +56,67 @@ public class GridRangeIndicator : MonoBehaviour
 
         _pathGroupGO = new GameObject("Path");
         _pathGroupGO.transform.parent = transform;
+
+        _tileOutlineContainerGO = new GameObject("Tile Outline Container");
+        _tileOutlineContainerGO.transform.parent = transform;
     }
 
-    void ClearPathVisuals()
+    public void ClearRangeVisuals()
     {
-        //foreach (var node in path)
-        //{
-        //    var pathVisual = Instantiate(PathNodePrefab);
-        //    pathVisual.transform.position = TileCoordinateToWorldPosition((Vector2Int)node);
-        //    pathVisual.transform.name = "(" + node.x + ", " + node.y + ")";
-        //    pathVisual.transform.parent = _pathGroupGO.transform;
-        //}
+        for (int i = 0; i < _tileOutlineContainerGO.transform.childCount; i++)
+        {
+            Destroy(_tileOutlineContainerGO.transform.GetChild(i).gameObject);
+        }
+        _cachedRangeConfiguration = null;
+    }
+
+    public void ClearPathVisuals()
+    {
+        _pathStartGO.SetActive(false);
+        _pathEndGO.SetActive(false);
 
         for (int i = 0; i < _pathGroupGO.transform.childCount; i++)
         {
             Destroy(_pathGroupGO.transform.GetChild(i).gameObject);
         }
+
+        PathStartPosition = null;
+        PathEndPosition = null;
+        _cachedPathConfiguration = null;
+    }
+
+    public void HidePath()
+    {
+        SetPathActive(false);
+
+    }
+
+    public void ShowPath()
+    {
+        SetPathActive(true);
+    }
+
+    public void SetPathActive(bool active)
+    {
+        _pathStartGO.SetActive(active);
+        _pathEndGO.SetActive(active);
+        _pathGroupGO.SetActive(active);
+    }
+
+    public void HideRange()
+    {
+        SetRangeActive(false);
+
+    }
+
+    public void ShowRange()
+    {
+        SetRangeActive(true);
+    }
+
+    public void SetRangeActive(bool active)
+    {
+        _tileOutlineContainerGO.SetActive(active);
     }
 
     public GameObject CreateTileOutline(GridManager gridManager, int x, int y)
@@ -68,41 +129,82 @@ public class GridRangeIndicator : MonoBehaviour
         return tileOutline;
     }
 
-    public void Visualize(GridManager gridManager, Configuration configuration)
+    public GameObject CreatePathTile(GridManager gridManager, int x, int y, int index, Configuration configuration)
     {
-        if (_tileOutlineContainerGO == null)
+        var tileOutline = Instantiate(PathNodePrefab);
+        tileOutline.transform.position = gridManager.TileCoordinateToWorldPosition(new Vector2Int(x, y));
+        tileOutline.transform.name = "(" + x + ", " + y + ")";
+        tileOutline.transform.parent = _pathGroupGO.transform;
+
+        var sprite = tileOutline.GetComponent<SpriteRenderer>();
+        if (sprite != null)
         {
-            _tileOutlineContainerGO = new GameObject();
-            _tileOutlineContainerGO.transform.parent = transform;
-            _tileOutlineContainerGO.transform.name = "Tile Outline Container";
+            bool reachable = index <= configuration.range;
+            sprite.color = reachable ? ReachablePathNodeColor : UnreachablePathNodeColor;
         }
 
-        var minX = configuration.origin.x - configuration.range;
-        var maxX = configuration.origin.x + configuration.range;
-        var minY = configuration.origin.y - configuration.range;
-        var maxY = configuration.origin.y + configuration.range;
+        return tileOutline;
+    }
 
-        var width = maxX - minX + 1;
-        var height = maxY - minY + 1;
+    public void VisualizeRange(Configuration configuration, GridManager gridManager)
+    {
+        if (_cachedRangeConfiguration != null)
+        {
+            var cachedConfig = _cachedRangeConfiguration.Value;
 
-        //var tiles = gridManager.Walkable.GetTilesBlock(new BoundsInt(minX, minY, 0, width, height, 1));
+            if (cachedConfig.Equals(configuration))
+            {
+                return;
+            }
+        }
 
-        //for (int i = 0; i < tiles.Length; i++)
-        //{
-        //    var x = (i % width) + minX;
-        //    var y = (i / width) + minY;
-        //    var tile = tiles[i];
-        //    if (tile != null)
-        //    {
-        //        CreateTileOutline(gridManager, x, y);
-        //    }
-        //}
+        _cachedRangeConfiguration = configuration;
+        ClearRangeVisuals();
 
         var tiles = gridManager.BFS((Vector3Int)configuration.origin, configuration.range);
-
+        int i = 0;
         foreach (var tile in tiles)
         { 
             CreateTileOutline(gridManager, tile.x, tile.y);
+        }
+    }
+
+    public void VisualizePath(Vector2Int startPosition, Vector2Int endPosition, Configuration configuration, GridManager gridManager)
+    {
+        var sameConfig = false;
+        if (_cachedPathConfiguration != null)
+        {
+            var cachedConfig = _cachedPathConfiguration.Value;
+            sameConfig = cachedConfig.Equals(configuration);
+        }
+
+        if (PathStartPosition == startPosition && endPosition == PathEndPosition && sameConfig)
+        {
+            return;
+        }
+
+        ClearPathVisuals();
+
+        if (startPosition == null || endPosition == null)
+        {
+            return;
+        }
+
+        _cachedPathConfiguration = configuration;
+
+        PathStartPosition = startPosition;
+        PathEndPosition = endPosition;
+
+        if (PathStartPosition != null && PathEndPosition != null)
+        {
+            var path = gridManager.CalculatePath((Vector3Int)PathStartPosition.Value, (Vector3Int)PathEndPosition.Value);
+
+            int i = 0;
+            foreach (var tile in path)
+            {
+                CreatePathTile(gridManager, tile.x, tile.y, i, configuration);
+                i += 1;
+            }
         }
     }
 }

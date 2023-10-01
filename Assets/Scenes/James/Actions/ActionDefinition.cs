@@ -6,6 +6,7 @@ using UnityEngine.Events;
 [CreateAssetMenu(fileName = "ActionDefinition", menuName = "Entity/Action", order = 1)]
 public class ActionDefinition : ScriptableObject
 {
+
     public string Name = "Action";
     public string Description = "Description of the action.";
     public string FlavorText = "\"Flavor text for the action.\"";
@@ -19,6 +20,8 @@ public class ActionDefinition : ScriptableObject
     public bool CostIsPerTile = false;
     public bool CanExecuteWhileWaiting = false;
     public bool RangeIsDrivenByMovementCost = false;
+    public bool DeferCostPayment = false;
+    public Action.ActionKind Kind = Action.ActionKind.Other;
 
     public List<ActionBehavior> Behaviors;
 

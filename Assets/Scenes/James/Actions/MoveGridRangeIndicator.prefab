@@ -48,3 +48,5 @@ MonoBehaviour:
   PathStartPrefab: {fileID: 2436387403133853424, guid: d4914fe685ff77943a07f6c7e6883539, type: 3}
   PathEndPrefab: {fileID: 2436387403133853424, guid: 6024e2152402f074fb0da6e1bcc1f299, type: 3}
   PathNodePrefab: {fileID: 2436387403133853424, guid: 105222be76498f54ca21998e608e0b03, type: 3}
+  ReachablePathNodeColor: {r: 0.40780056, g: 0.735849, b: 0.2950338, a: 0.48235294}
+  UnreachablePathNodeColor: {r: 0.6981132, g: 0.32637158, b: 0.2799039, a: 0.42745098}

@@ -42,12 +42,13 @@ public class EndTurnButton : MonoBehaviour
 
         if (_turnManager.CurrentTeam == Entity.OwnerKind.Player)
         {
-            Button.interactable = true;
+            Button.interactable = !_turnManager.BlockingEventIsExecuting;
             if (_turnManager.CurrentTeamEntitiesThatCanTakeAction.Count > 0)
             {
                 _entityWithAvailableActions = _turnManager.CurrentTeamEntitiesThatCanTakeAction.First();
                 EndTurnButtonImage.color = PlayerTurnStillWorkToDoColor;
-                EndTurnButtonLabel.text = $"{_entityWithAvailableActions.Name} ready!";
+                var name = _entityWithAvailableActions.ClassName.Length == 0 ? _entityWithAvailableActions.Name : _entityWithAvailableActions.ClassName;
+                EndTurnButtonLabel.text = $"{name} ready!";
             }
             else
             {

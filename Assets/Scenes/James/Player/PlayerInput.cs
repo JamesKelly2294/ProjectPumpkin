@@ -1,11 +1,21 @@
+using info.jacobingalls.jamkit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
+using static UnityEngine.GraphicsBuffer;
 
+public class ActionSelectionRequest
+{
+    public Action Action;
+    public Entity Entity;
+}
+
+[RequireComponent(typeof(PubSubSender))]
 public class PlayerInput : MonoBehaviour
 {
     [Header("User Interaction")]
@@ -30,9 +40,6 @@ public class PlayerInput : MonoBehaviour
     private GameObject _tileHoverGO;
     private GameObject _tileOutlinesGroupGO;
 
-    private Vector2Int? PathStartPosition = null;
-    private Vector2Int? PathEndPosition = null;
-
     private GridManager _gridManager;
     private TurnManager _turnManager;
     private CameraControls _cameraControls;
@@ -40,7 +47,7 @@ public class PlayerInput : MonoBehaviour
 
     private GridRangeIndicator _gridRangeIndicator;
 
-    private Action SelectedAction
+    public Action SelectedAction
     {
         get
         {
@@ -51,6 +58,8 @@ public class PlayerInput : MonoBehaviour
             if (_selectedAction == value) { return; }
             _selectedAction = value;
 
+            GetComponent<PubSubSender>().Publish("player_input.selected_action.changed", SelectedAction);
+
             if (_selectedAction == null)
             {
                 Debug.Log($"No longer selecting an action.");
@@ -59,8 +68,6 @@ public class PlayerInput : MonoBehaviour
             {
                 Debug.Log($"Selected action {_selectedAction.Name} for {_selectedAction.Entity.Name}.");
             }
-
-            UpdateSelectedActionVisuals();
         }
     }
     private Action _selectedAction;
@@ -84,6 +91,9 @@ public class PlayerInput : MonoBehaviour
         _gridManager = FindObjectOfType<GridManager>();
         _turnManager = FindObjectOfType<TurnManager>();
         _cameraControls = FindObjectOfType<CameraControls>();
+
+        _gridRangeIndicator = Instantiate(GridRangeIndicatorPrefab).GetComponent<GridRangeIndicator>();
+        _gridRangeIndicator.transform.parent = transform;
 
         SelectableDidChange();
     }
@@ -154,27 +164,39 @@ public class PlayerInput : MonoBehaviour
 
     private void ExecuteSelectedAction()
     {
-        Debug.Log("Executing selected action!");
-
-        var highlitedTilePosition = HoveredTilePosition.Value;
-
         var entity = SelectedEntity();
 
-        if (entity != null)
+        if (entity == null || SelectedAction == null || !entity.CanAffordAction(SelectedAction))
         {
-            var entityPos = entity.Position;
-            var targetPos = highlitedTilePosition;
-
-            var path = _gridManager.CalculatePath(entityPos, targetPos, debugVisuals: false);
-            entity.Move(path);
+            return;
         }
+        Debug.Log("Executing selected action!");
+
+        var context = new Action.ExecutionContext();
+        TileData? data = null;
+        if (HoveredTilePosition != null)
+        {
+            data = _gridManager.GetTileData(HoveredTilePosition.Value);
+        }
+        context.action = SelectedAction;
+        context.source = entity;
+        context.range = entity.Range(SelectedAction);
+        context.gridManager = _gridManager;
+        context.target = data;
+
+        _turnManager.SubmitAction(SelectedAction, context);
     }
 
-    private bool SkipUpdate
+    public void RequestActionSelection(PubSubListenerEvent e)
     {
-        get
+        ActionSelectionRequest asr = e.value as ActionSelectionRequest;
+
+        SelectedSelectable = asr.Entity.GetComponent<Selectable>();
+        SelectedAction = asr.Action;
+
+        if (!asr.Action.Targetable)
         {
-            return _selectable == null;
+            ExecuteSelectedAction();
         }
     }
 
@@ -185,7 +207,27 @@ public class PlayerInput : MonoBehaviour
         UpdateTileHighlight();
         UpdateTileSelection();
 
-        if (SkipUpdate) { return; }
+        if (SelectedAction != null)
+        {
+            var entity = SelectedEntity();
+            if (!entity.CanAffordAction(SelectedAction))
+            {
+                Debug.Log("Nullifying action");
+                SelectedAction = null;
+            }
+            else
+            {
+                Debug.Log("UpdateSelectedActionRangeVisuals");
+                UpdateSelectedActionRangeVisuals();
+                UpdateSelectedActionPathVisuals();
+            }
+        }
+
+        if (SelectedAction == null || SelectedEntity() == null || SelectedEntity().IsBusy || !SelectedAction.Targetable)
+        {
+            _gridRangeIndicator.ClearRangeVisuals();
+            _gridRangeIndicator.ClearPathVisuals();
+        }
 
         if (CanExecuteAction() && Input.GetMouseButtonUp(1))
         {
@@ -323,98 +365,66 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    void UpdateSelectedActionVisuals()
+    void UpdateSelectedActionPathVisuals()
     {
-        if (_gridRangeIndicator != null)
-        {
-            Destroy(_gridRangeIndicator.gameObject);
-            _gridRangeIndicator = null;
-        }
-
         var selectedEntity = SelectedEntity();
         var selectedAction = SelectedAction;
         if (selectedAction == null || selectedEntity == null)
         {
+            _gridRangeIndicator.gameObject.SetActive(false);
             return;
         }
 
-        _gridRangeIndicator = Instantiate(GridRangeIndicatorPrefab).GetComponent<GridRangeIndicator>();
-        _gridRangeIndicator.transform.parent = transform;
-
-        int range;
-        if (selectedAction.RangeIsDrivenByMovementCost)
+        if (selectedAction.Kind != Action.ActionKind.Movement)
         {
-            range = selectedEntity.Movement / selectedAction.MovementCost;
+            _gridRangeIndicator.HidePath();
+            return;
         }
-        else
+        _gridRangeIndicator.ShowPath();
+
+        Vector2Int? startPosition = SelectedEntity() != null ? SelectedEntity().Position : null;
+        var endPosition = HoveredTilePosition;
+
+        if (startPosition == null || endPosition == null) { return; }
+
+        int range = selectedEntity.Range(selectedAction);
+        GridRangeIndicator.Configuration configuration = new GridRangeIndicator.Configuration
         {
-            range = selectedAction.Range;
+            range = range,
+            origin = startPosition.Value
+        };
+        _gridRangeIndicator.gameObject.SetActive(true);
+        _gridRangeIndicator.VisualizePath(startPosition.Value, endPosition.Value, configuration, _gridManager);
+    }
+
+    void UpdateSelectedActionRangeVisuals()
+    {
+        var selectedEntity = SelectedEntity();
+        var selectedAction = SelectedAction;
+        if (selectedAction == null || selectedEntity == null)
+        {
+            _gridRangeIndicator.gameObject.SetActive(false);
+            return;
         }
 
+        int range = selectedEntity.Range(selectedAction);
         GridRangeIndicator.Configuration configuration = new GridRangeIndicator.Configuration
         {
             range = range,
             origin = selectedEntity.Position
         };
 
-        _gridRangeIndicator.Visualize(_gridManager, configuration);
+        _gridRangeIndicator.gameObject.SetActive(true);
+        _gridRangeIndicator.VisualizeRange(configuration, _gridManager);
     }
 
-    //void SelectPath()
-    //{
-    //    ClearPath();
-    //    if (PathStartPosition == null || (HoveredTilePosition == PathStartPosition && PathEndPosition == null))
-    //    {
-    //        SelectPathStartPosition(HoveredTilePosition);
-    //    }
-    //    else
-    //    {
-    //        SelectPathEndPosition(HoveredTilePosition);
-    //    }
+    public void RequestSelectEntity(PubSubListenerEvent e)
+    {
+        var entity = e.value as Entity;
 
-    //    if (PathStartPosition != null && PathEndPosition != null)
-    //    {
-    //        CalculatePath((Vector3Int)PathStartPosition.Value, (Vector3Int)PathEndPosition.Value);
-    //    }
-    //}
-
-    //void SelectPathStartPosition(Vector2Int? position)
-    //{
-    //    if (position == PathStartPosition)
-    //    {
-    //        position = null;
-    //    }
-
-    //    PathStartPosition = position;
-
-    //    if (PathStartPosition != null)
-    //    {
-    //        _pathStartGO.transform.position = TileCoordinateToWorldPosition(PathStartPosition.Value);
-    //        _pathStartGO.SetActive(true);
-    //    }
-    //    else
-    //    {
-    //        _pathStartGO.SetActive(false);
-    //    }
-    //}
-
-    //void SelectPathEndPosition(Vector2Int? position)
-    //{
-    //    if (position == PathEndPosition || position == PathStartPosition)
-    //    {
-    //        position = null;
-    //    }
-
-    //    PathEndPosition = position;
-
-    //    if (PathEndPosition != null)
-    //    {
-    //        _pathEndGO.transform.position = TileCoordinateToWorldPosition(PathEndPosition.Value);
-    //        _pathEndGO.SetActive(true);
-    //    }
-    //    else
-    //    {
-    //        _pathEndGO.SetActive(false);
-    //    }
-    //}
+        if (entity != null)
+        {
+            Select(entity.GetComponent<Selectable>());
+        }
+    }
 }

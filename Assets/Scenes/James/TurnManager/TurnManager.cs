@@ -2,7 +2,10 @@ using info.jacobingalls.jamkit;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
+using static UnityEngine.GraphicsBuffer;
 
 [RequireComponent(typeof(PubSubSender))]
 public class TurnManager : MonoBehaviour
@@ -107,21 +110,65 @@ public class TurnManager : MonoBehaviour
         BlockingEventIsExecuting = anyEntityIsBusy;
     }
 
-    public void SubmitAction(Action a)
+    public void SubmitAction(Action a, Action.ExecutionContext context)
     {
         if (a == null) { return; }
 
-        var entity = a.Entity;
-        if (entity == null) { return; };
-
-
-        if (entity.Owner != CurrentTeam && a.CanOnlyExecuteOnOwnersTurn)
+        if (BlockingEventIsExecuting)
         {
-            Debug.Log($"Attempting to submit {a} for {entity}, but it is not their turn.");
             return;
         }
 
-        entity.InitiateActionAttempt(a);
+        if (context.source.Owner != CurrentTeam && a.CanOnlyExecuteOnOwnersTurn)
+        {
+            Debug.Log($"Attempting to submit {a} for {context.source}, but it is not their turn.");
+            return;
+        }
+
+        if (!context.ignoringCost && !context.source.CanAffordAction(a))
+        {
+            return;
+        }
+
+        ExecuteAction(a, context);
+    }
+
+    private void ExecuteAction(Action a, Action.ExecutionContext context)
+    {
+        Debug.Log($"Executing {a}...");
+
+        var entity = context.source;
+
+        if (!context.ignoringCost && !entity.CanAffordAction(a))
+        {
+            Debug.LogError($"Unable to execute {a} for {this} - cannot afford it.");
+        }
+
+        var recipes = a.BehaviorRecipes.GroupBy(r => r.gameObject).Select(y => y.First()).ToList();
+        List<ActionBehavior> behaviors = new();
+
+        foreach (var recipe in recipes)
+        {
+            var go = Instantiate(recipe);
+            go.transform.parent = transform;
+            go.transform.name = $"{a.Name} Behavior";
+            foreach (var b in go.GetComponents<ActionBehavior>())
+            {
+                behaviors.Add(b);
+            }
+        }
+
+        var canExecuteAllBehaviors = behaviors.All(b => b.CanExecute(context));
+
+        if (!context.ignoringCost && !context.action.DeferCostPayment)
+        {
+            entity.PayCostForAction(a);
+        }
+
+        foreach (var behavior in behaviors)
+        {
+            behavior.Execute(context);
+        }
     }
 
     public void EndTeamTurn()

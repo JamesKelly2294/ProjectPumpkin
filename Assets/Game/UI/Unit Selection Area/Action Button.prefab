@@ -206,6 +206,7 @@ GameObject:
   - component: {fileID: 8480970469083992270}
   - component: {fileID: 2304567484694746408}
   - component: {fileID: 4077692942692424336}
+  - component: {fileID: 231617190169223364}
   m_Layer: 5
   m_Name: Action Button
   m_TagString: Untagged
@@ -330,6 +331,7 @@ MonoBehaviour:
   Button: {fileID: 8158388576414298152}
   CanvasGroup: {fileID: 561641704853764171}
   PipsCanvasGroup: {fileID: 8046560268674915651}
+  Outline: {fileID: 7979087649388389397}
 --- !u!114 &4077692942692424336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,6 +409,34 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - Key: player_input.selected_action.changed
+    Delegate:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2304567484694746408}
+          m_TargetAssemblyTypeName: ActionButton, Assembly-CSharp
+          m_MethodName: UpdateSelectionOutline
+          m_Mode: 0
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &231617190169223364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621517537572997010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa85f00fea274f27ad241da0b5a270c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &55190333998705102
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1761,6 +1791,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3912254128442737253, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
       insertIndex: -1
       addedObject: {fileID: 561641704853764171}
+    - targetCorrespondingSourceObject: {fileID: 3912254128442737253, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7979087649388389397}
   m_SourcePrefab: {fileID: 100100000, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
 --- !u!114 &5829609025606191293 stripped
 MonoBehaviour:
@@ -1835,6 +1868,21 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &7979087649388389397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5829609025606191424}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 0.8773585, g: 0.7852083, b: 0.18623178, a: 0.8509804}
+  m_EffectDistance: {x: 2.5, y: 2.5}
+  m_UseGraphicAlpha: 1
 --- !u!114 &8158388576414298152 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1699435735390550797, guid: 627675551f649400ea30c1b4edb70f23, type: 3}

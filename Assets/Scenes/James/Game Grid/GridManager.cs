@@ -201,13 +201,13 @@ public class GridManager : MonoBehaviour
         entity.transform.position = TileCoordinateToWorldPosition(position);
     }
 
-    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, bool debugVisuals = false) 
+    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, int range = 0, bool debugVisuals = false) 
     {
-        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, debugVisuals: debugVisuals);
+        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, range:range, debugVisuals: debugVisuals);
     }
 
 
-    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, bool debugVisuals=false)
+    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, int range = 0, bool debugVisuals=false)
     {
         if (startPosition == endPosition)
         {
@@ -247,10 +247,15 @@ public class GridManager : MonoBehaviour
 
         if (!pathFound)
         {
-            return null;
+            return new List<Vector2Int>();
         }
 
         var path = BuildPath(startPosition, endPosition, visited);
+
+        if (range > 0)
+        {
+            path = path.GetRange(0, Mathf.Min(range + 1, path.Count));
+        }
 
         return path;
     }
@@ -260,7 +265,7 @@ public class GridManager : MonoBehaviour
         if (range < 0)
         {
             Debug.LogError("Bruh.");
-            return null;
+            return new HashSet<Vector2Int>();
         }
 
         if (range == 0)

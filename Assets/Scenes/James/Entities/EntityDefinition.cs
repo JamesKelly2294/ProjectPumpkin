@@ -6,6 +6,7 @@ using UnityEngine;
 public class EntityDefinition : ScriptableObject
 {
     public string Name = "Entity";
+    public string ClassName = "";
     public string Description = "Description of the entity.";
     public string FlavorText = "\"Flavor text for the entity.\"";
     public Sprite Icon;

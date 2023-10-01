@@ -4,7 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Diagnostics.CodeAnalysis;
+using info.jacobingalls.jamkit;
 
+[RequireComponent(typeof(PubSubSender))]
 public class ActionButton : MonoBehaviour
 {
 
@@ -29,11 +31,20 @@ public class ActionButton : MonoBehaviour
     public Button Button;
     public CanvasGroup CanvasGroup;
     public CanvasGroup PipsCanvasGroup;
+    public Outline Outline;
+
+    private PlayerInput _playerInput;
 
     // Start is called before the first frame update
     void Start()
     {
         turnManager = FindObjectOfType<TurnManager>();
+
+        _playerInput = FindObjectOfType<PlayerInput>();
+        if (_playerInput != null )
+        {
+            Outline.enabled = _playerInput.SelectedAction == Action;
+        }
     }
 
     // Update is called once per frame
@@ -109,18 +120,20 @@ public class ActionButton : MonoBehaviour
     }
 
     public void DoIt() {
-        var tm = FindObjectOfType<TurnManager>();
+        var actionSelectionRequest = new ActionSelectionRequest()
+        {
+            Action = Action,
+            Entity = Action.Entity,
+        };
 
-        if (tm != null)
-        {
-            tm.SubmitAction(Action);
-        }
-        else
-        {
-            Debug.LogError("Attempting to submit action for execution, but unable to find turn manager.");
-        }
+        GetComponent<PubSubSender>().Publish("entity.action.selection.requested", actionSelectionRequest);
     }
 
+    public void UpdateSelectionOutline(PubSubListenerEvent e)
+    {
+        var a = e.value as Action;
+        Outline.enabled = a == Action;
+    }
 
     public void ConsiderDisabiling() {
 
