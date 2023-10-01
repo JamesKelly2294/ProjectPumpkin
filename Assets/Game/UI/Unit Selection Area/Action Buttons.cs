@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ActionButtons : MonoBehaviour
 {
 
     public ActionButton ActionButtonPrefab;
+    private List<Action> actions;
 
     // Start is called before the first frame update
     void Start()
@@ -21,14 +23,17 @@ public class ActionButtons : MonoBehaviour
 
     public void SetEntity(Entity entity) {
         if (entity == null) { return; }
+        if (actions == null || !entity.Actions.SequenceEqual(actions)) { 
+            actions = entity.Actions;
 
-        foreach (Transform child in gameObject.transform) {
-            Destroy(child.gameObject);
-        }
+            foreach (Transform child in gameObject.transform) {
+                Destroy(child.gameObject);
+            }
 
-        foreach(Action action in entity.Actions) {
-            ActionButton actionButton = GameObject.Instantiate(ActionButtonPrefab, gameObject.transform);
-            actionButton.SetAction(action);
+            foreach(Action action in actions) {
+                ActionButton actionButton = GameObject.Instantiate(ActionButtonPrefab, gameObject.transform);
+                actionButton.SetAction(action);
+            }
         }
     }
 }

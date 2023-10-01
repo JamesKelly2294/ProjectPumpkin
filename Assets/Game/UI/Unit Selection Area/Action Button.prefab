@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 834677029889411054}
   - component: {fileID: 2251130017934627102}
   - component: {fileID: 4416706186523712185}
+  - component: {fileID: 8046560268674915651}
   m_Layer: 5
   m_Name: Pips
   m_TagString: Untagged
@@ -102,6 +103,18 @@ MonoBehaviour:
   m_Spacing: {x: 2, y: 2}
   m_Constraint: 1
   m_ConstraintCount: 3
+--- !u!225 &8046560268674915651
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1618454252862015020}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4981891405962819971
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,6 +203,7 @@ GameObject:
   - component: {fileID: 7120920655798351875}
   - component: {fileID: 8480970469083992270}
   - component: {fileID: 2304567484694746408}
+  - component: {fileID: 4077692942692424336}
   m_Layer: 5
   m_Name: Action Button
   m_TagString: Untagged
@@ -307,6 +321,54 @@ MonoBehaviour:
   PipsHolder: {fileID: 1618454252862015020}
   ActionPipPrefab: {fileID: 3896614161344702201, guid: 904542e1ebe324107995823803e3fbb2, type: 3}
   ManaPipPrefab: {fileID: 2828648031136030720, guid: 07ad7bb7b89f8468481d5cf287420681, type: 3}
+  Button: {fileID: 8158388576414298152}
+  CanvasGroup: {fileID: 561641704853764171}
+  PipsCanvasGroup: {fileID: 8046560268674915651}
+--- !u!114 &4077692942692424336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7621517537572997010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3e1e1583edd74c4f9c6fcd2a572cbfc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Subscriptions:
+  - Key: turnManager.blockingEventIsExecuting.changed
+    Delegate:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2304567484694746408}
+          m_TargetAssemblyTypeName: ActionButton, Assembly-CSharp
+          m_MethodName: ConsiderDisabiling
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - Key: turnManager.currentTeam.changed
+    Delegate:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2304567484694746408}
+          m_TargetAssemblyTypeName: ActionButton, Assembly-CSharp
+          m_MethodName: ConsiderDisabiling
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1001 &1918800950496875123
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1267,6 +1329,22 @@ PrefabInstance:
     m_TransformParent: {fileID: 4256088195189961721}
     m_Modifications:
     - target: {fileID: 1699435735390550797, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.a
+      value: 0.30588236
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699435735390550797, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.b
+      value: 0.4056604
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699435735390550797, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.g
+      value: 0.4056604
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699435735390550797, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
+      propertyPath: m_Colors.m_DisabledColor.r
+      value: 0.4056604
+      objectReference: {fileID: 0}
+    - target: {fileID: 1699435735390550797, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
@@ -1438,6 +1516,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3912254128442737253, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1366374004046522511}
+    - targetCorrespondingSourceObject: {fileID: 3912254128442737253, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 561641704853764171}
   m_SourcePrefab: {fileID: 100100000, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
 --- !u!114 &5829609025606191293 stripped
 MonoBehaviour:
@@ -1500,3 +1581,26 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!225 &561641704853764171
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5829609025606191424}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &8158388576414298152 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1699435735390550797, guid: 627675551f649400ea30c1b4edb70f23, type: 3}
+  m_PrefabInstance: {fileID: 7398834622505257765}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5829609025606191424}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3d1978f3f42b714c815501cf8932b7c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

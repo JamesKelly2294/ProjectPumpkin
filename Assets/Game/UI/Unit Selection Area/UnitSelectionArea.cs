@@ -11,8 +11,6 @@ public class UnitSelectionArea : MonoBehaviour
     public UnitSelectionAreaStats UnitSelectionAreaStats;
     public UnitSelectionAreaFace unitSelectionAreaFace;
 
-    private bool setOnce = true;
-
     // Start is called before the first frame update
     void Start()
     {
@@ -22,10 +20,7 @@ public class UnitSelectionArea : MonoBehaviour
     // Update is called once per frame
     void Update()
     {   
-        if (setOnce) {
-            SetEntity(Entity);
-            setOnce = false;
-        }
+        SetEntity(Entity);
     }
 
     public void SetEntity(Entity entity) {

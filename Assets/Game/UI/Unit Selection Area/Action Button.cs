@@ -20,11 +20,15 @@ public class ActionButton : MonoBehaviour
     public GameObject PipsHolder;
     public GameObject ActionPipPrefab;
     public GameObject ManaPipPrefab;
+    private TurnManager turnManager;
+    public Button Button;
+    public CanvasGroup CanvasGroup;
+    public CanvasGroup PipsCanvasGroup;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        turnManager = FindObjectOfType<TurnManager>();
     }
 
     // Update is called once per frame
@@ -36,6 +40,8 @@ public class ActionButton : MonoBehaviour
     public void SetAction(Action action) {
         Action = action;
         if (Action == null) { return; }
+        ConsiderDisabiling();
+
         Icon.sprite = Action.Definition.Icon;
         IconBackground.color = Action.Definition.Color;
         TooltipTitle.text = Action.Definition.Name;
@@ -85,4 +91,28 @@ public class ActionButton : MonoBehaviour
             Debug.LogError("Attempting to submit action for execution, but unable to find turn manager.");
         }
     }
+
+    public void ConsiderDisabiling() {
+
+        // Computer Science, amiright?
+        if (turnManager == null) { turnManager = FindObjectOfType<TurnManager>(); }
+        if (turnManager == null) { return; }
+
+        bool disabled = turnManager.BlockingEventIsExecuting;
+        disabled |= (turnManager.CurrentTeam != Entity.OwnerKind.Player);
+        disabled |= !Action.Entity.CanAffordAction(Action);
+
+        Button.interactable = !disabled;
+        CanvasGroup.alpha = disabled ? 0.5f : 1f;
+        PipsCanvasGroup.alpha = disabled ? 0.5f : 1f;
+    }
+
+    Color AdjustBrightness(Color color, float factor)
+    {
+        float h, s, v;
+        Color.RGBToHSV(color, out h, out s, out v);
+        v = Mathf.Clamp01(v * factor);
+        return Color.HSVToRGB(h, s, v);
+    }
+
 }
