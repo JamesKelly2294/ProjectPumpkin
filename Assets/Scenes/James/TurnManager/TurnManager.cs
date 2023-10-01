@@ -115,6 +115,11 @@ public class TurnManager : MonoBehaviour
         entity.InitiateActionAttempt(a);
     }
 
+    public void EndTeamTurn()
+    {
+        CurrentTurn += 1;
+    }
+
     // Start is called before the first frame update
     void Awake()
     {
