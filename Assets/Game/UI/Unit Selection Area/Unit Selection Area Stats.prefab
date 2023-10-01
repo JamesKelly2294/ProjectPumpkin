@@ -888,6 +888,9 @@ MonoBehaviour:
   MovementBar: {fileID: 6219061549223530313}
   ManaBar: {fileID: 9068168070270137455}
   HealthBar: {fileID: 8743874951935060019}
+  MovementPane: {fileID: 8205365110585316185}
+  ManaPane: {fileID: 5487274925880839230}
+  HealthPane: {fileID: 3755982112623788152}
 --- !u!1 &5005807028274742977
 GameObject:
   m_ObjectHideFlags: 0
