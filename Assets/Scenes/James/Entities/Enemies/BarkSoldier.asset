@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de2cc81903d598148af665746556f951, type: 3}
-  m_Name: Druid
+  m_Name: BarkSoldier
   m_EditorClassIdentifier: 
-  Name: Druid
-  Description: One with the trees.
-  FlavorText: '"Nobody cares for the trees anymore."'
-  Icon: {fileID: 21300000, guid: b9cb634a729664e57ba35076b935e905, type: 3}
-  Color: {r: 0.015940156, g: 0.1981132, b: 0, a: 1}
-  BaseMaxHealth: 10
-  BaseMaxMana: 15
-  BaseMaxActionPoints: 2
+  Name: Bark Soldier
+  Description: Basic Bark grunt.
+  FlavorText: Born from a recently felled tree, the stump gained consciousness and
+    was recruited into the Bark Army. Just a stump; what's the worst that could happen?
+  Icon: {fileID: 21300000, guid: d594a1b4f787842748975cf1c4f4597e, type: 3}
+  Color: {r: 0.34117648, g: 0.0033064226, b: 0, a: 1}
+  BaseMaxHealth: 5
+  BaseMaxMana: 1
+  BaseMaxActionPoints: 1
   BaseMaxMovement: 3
   BaseActions:
   - {fileID: 11400000, guid: c3d93b4c89b641f48823cdb72c620a4f, type: 2}

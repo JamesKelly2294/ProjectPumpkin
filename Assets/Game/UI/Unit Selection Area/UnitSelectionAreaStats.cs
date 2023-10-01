@@ -44,7 +44,7 @@ public class UnitSelectionAreaStats : MonoBehaviour
             ManaText.text = "" + entity.Mana + " / " + entity.MaxMana;
         } else {
             ManaPane.gameObject.SetActive(false);
-            ManaText.text = "N/A";
+            ManaText.text = "-";
         }
 
         HealthPane.preferredWidth = Mathf.Min(entity.MaxHealth, Entity.TheoreticalHealthMax) * 20f;

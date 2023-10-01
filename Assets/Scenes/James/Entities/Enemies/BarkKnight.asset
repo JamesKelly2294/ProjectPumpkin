@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de2cc81903d598148af665746556f951, type: 3}
-  m_Name: Druid
+  m_Name: BarkKnight
   m_EditorClassIdentifier: 
-  Name: Druid
-  Description: One with the trees.
-  FlavorText: '"Nobody cares for the trees anymore."'
-  Icon: {fileID: 21300000, guid: b9cb634a729664e57ba35076b935e905, type: 3}
-  Color: {r: 0.015940156, g: 0.1981132, b: 0, a: 1}
-  BaseMaxHealth: 10
-  BaseMaxMana: 15
-  BaseMaxActionPoints: 2
-  BaseMaxMovement: 3
+  Name: Bark Knight
+  Description: A promoted Bark Soldier; hits harder, and can take a lot more damage.
+  FlavorText: Finally, time for the tree's to hit back.
+  Icon: {fileID: 21300000, guid: 1ef312ef55ff54331b3435f924c1ea3a, type: 3}
+  Color: {r: 0.34117648, g: 0.0033064226, b: 0, a: 1}
+  BaseMaxHealth: 20
+  BaseMaxMana: 5
+  BaseMaxActionPoints: 3
+  BaseMaxMovement: 2
   BaseActions:
   - {fileID: 11400000, guid: c3d93b4c89b641f48823cdb72c620a4f, type: 2}
   - {fileID: 11400000, guid: 83f6124ae90234f4f91696cc59ba1b84, type: 2}

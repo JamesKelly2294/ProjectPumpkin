@@ -9,7 +9,7 @@ using UnityEngine;
 [RequireComponent(typeof(PubSubSender))]
 public class Entity : MonoBehaviour, ISelectable
 {
-    public static int TheoreticalHealthMax = 20;
+    public static int TheoreticalHealthMax = 30;
     public static int TheoreticalManaMax = 20;
     public static int TheoreticalActionPointMax = 5;
     public static int TheoreticalMovementMax = 8;
