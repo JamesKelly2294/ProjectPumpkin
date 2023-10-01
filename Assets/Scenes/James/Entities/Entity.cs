@@ -205,6 +205,7 @@ public class Entity : MonoBehaviour, ISelectable
         {
             var data = GridManager.GetTileData(target.Value);
         }
+        context.action = a;
         context.source = this;
         context.target = null;
 
@@ -330,7 +331,7 @@ public class Entity : MonoBehaviour, ISelectable
             float progress = t / timeToWalkAcrossTile;
 
             var direction = new Vector3(currentNode.x - Position.x, currentNode.y - Position.y, 0.0f).normalized;
-            transform.position = (Vector3Int)Position + (direction * progress) + new Vector3(0.5f, 0.5f, 0.0f);
+            transform.position = (Vector3Int)Position + (direction * progress) + new Vector3(0.5f, 0.5f, 0.0f); // ew, becky. ew.
 
             if (t > timeToWalkAcrossTile) {
                 GridManager.SetEntityPosition(this, currentNode);

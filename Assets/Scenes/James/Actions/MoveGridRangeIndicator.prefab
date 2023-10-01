@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &732373113378622183
+--- !u!1 &5950560729337268427
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,22 +8,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7208157833224882789}
-  - component: {fileID: 2014976595490307810}
+  - component: {fileID: 4189011435758590846}
+  - component: {fileID: 6357850481072718042}
   m_Layer: 0
-  m_Name: MoveBehavior
+  m_Name: MoveGridRangeIndicator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7208157833224882789
+--- !u!4 &4189011435758590846
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 732373113378622183}
+  m_GameObject: {fileID: 5950560729337268427}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -32,16 +32,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2014976595490307810
+--- !u!114 &6357850481072718042
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 732373113378622183}
+  m_GameObject: {fileID: 5950560729337268427}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 22776e568c859704db24aaf8eca8e212, type: 3}
+  m_Script: {fileID: 11500000, guid: 995215c9a12b30e4b895137851acc97f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GridRangeIndicatorPrefab: {fileID: 5950560729337268427, guid: 86e9b3deed7244642917bce92ead7d61, type: 3}
+  TileOutlinePrefab: {fileID: 2436387403133853424, guid: 0b6f01d2f6170324fbb0b785de70b465, type: 3}
+  PathStartPrefab: {fileID: 2436387403133853424, guid: d4914fe685ff77943a07f6c7e6883539, type: 3}
+  PathEndPrefab: {fileID: 2436387403133853424, guid: 6024e2152402f074fb0da6e1bcc1f299, type: 3}
+  PathNodePrefab: {fileID: 2436387403133853424, guid: 105222be76498f54ca21998e608e0b03, type: 3}

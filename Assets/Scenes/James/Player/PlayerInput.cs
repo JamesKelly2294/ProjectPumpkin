@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class PlayerInput : MonoBehaviour
 {
@@ -18,6 +19,8 @@ public class PlayerInput : MonoBehaviour
     public GameObject TileSelectionPrefab;
     public GameObject TileOutlinePrefab;
     public GameObject TileHoverPrefab;
+
+    public GameObject GridRangeIndicatorPrefab;
 
     public bool ShowTileHover = true;
     public bool ShowTileSelection = false;
@@ -34,6 +37,33 @@ public class PlayerInput : MonoBehaviour
     private TurnManager _turnManager;
     private CameraControls _cameraControls;
     private Selectable _selectable;
+
+    private GridRangeIndicator _gridRangeIndicator;
+
+    private Action SelectedAction
+    {
+        get
+        {
+            return _selectedAction;
+        }
+        set
+        {
+            if (_selectedAction == value) { return; }
+            _selectedAction = value;
+
+            if (_selectedAction == null)
+            {
+                Debug.Log($"No longer selecting an action.");
+            }
+            else
+            {
+                Debug.Log($"Selected action {_selectedAction.Name} for {_selectedAction.Entity.Name}.");
+            }
+
+            UpdateSelectedActionVisuals();
+        }
+    }
+    private Action _selectedAction;
 
     // Start is called before the first frame update
     void Start()
@@ -54,37 +84,6 @@ public class PlayerInput : MonoBehaviour
         _gridManager = FindObjectOfType<GridManager>();
         _turnManager = FindObjectOfType<TurnManager>();
         _cameraControls = FindObjectOfType<CameraControls>();
-
-        var vertExtent = Camera.main.orthographicSize;
-        var horzExtent = vertExtent * Screen.width / Screen.height;
-
-        // Calculations assume map is position at the origin
-        var cameraMinX = Mathf.RoundToInt(transform.position.x - horzExtent);
-        var cameraMaxX = Mathf.RoundToInt(transform.position.x + horzExtent);
-        var cameraMinY = Mathf.RoundToInt(transform.position.y - vertExtent);
-        var cameraMaxY = Mathf.RoundToInt(transform.position.y + vertExtent);
-
-        var minX = cameraMinX;
-        var minY = cameraMinY;
-        var width = cameraMaxX - cameraMinX + 1;
-        var height = cameraMaxY - cameraMinY + 1;
-        var tiles = _gridManager.Walkable.GetTilesBlock(new BoundsInt(minX, minY, 0, width, height, 1));
-
-        for (int i = 0; i < tiles.Length; i++)
-        {
-            var x = (i % width) + minX;
-            var y = (i / width) + minY;
-            var tile = tiles[i];
-            if (tile != null)
-            {
-                var tileOutline = Instantiate(TileOutlinePrefab);
-                tileOutline.transform.position = _gridManager.TileCoordinateToWorldPosition(new Vector2Int(x, y));
-                tileOutline.transform.name = "(" + x + ", " + y + ")";
-                tileOutline.transform.parent = _tileOutlinesGroupGO.transform;
-            }
-        }
-
-
 
         SelectableDidChange();
     }
@@ -305,9 +304,60 @@ public class PlayerInput : MonoBehaviour
         if (selectionDidChange)
         {
             UpdateSelectableVisuals();
+            UpdateDefaultSelectedAction();
         }
 
         return selectionDidChange;
+    }
+
+    void UpdateDefaultSelectedAction()
+    {
+        var selectedEntity = SelectedEntity();
+        if (selectedEntity != null)
+        {
+            SelectedAction = selectedEntity.Actions.FirstOrDefault();
+        }
+        else
+        {
+            SelectedAction = null;
+        }
+    }
+
+    void UpdateSelectedActionVisuals()
+    {
+        if (_gridRangeIndicator != null)
+        {
+            Destroy(_gridRangeIndicator.gameObject);
+            _gridRangeIndicator = null;
+        }
+
+        var selectedEntity = SelectedEntity();
+        var selectedAction = SelectedAction;
+        if (selectedAction == null || selectedEntity == null)
+        {
+            return;
+        }
+
+        _gridRangeIndicator = Instantiate(GridRangeIndicatorPrefab).GetComponent<GridRangeIndicator>();
+        _gridRangeIndicator.transform.parent = transform;
+
+        int range;
+        if (selectedAction.RangeIsDrivenByMovementCost)
+        {
+            range = selectedEntity.Movement / selectedAction.MovementCost;
+        }
+        else
+        {
+            range = selectedAction.Range;
+        }
+
+        GridRangeIndicator.Configuration configuration = new GridRangeIndicator.Configuration
+        {
+            range = range,
+            origin = selectedEntity.Position
+        };
+
+        _gridRangeIndicator.Visualize(_gridManager, configuration);
     }
 
     //void SelectPath()

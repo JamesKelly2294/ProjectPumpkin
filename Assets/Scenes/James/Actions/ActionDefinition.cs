@@ -18,6 +18,7 @@ public class ActionDefinition : ScriptableObject
     public bool CanOnlyExecuteOnOwnersTurn = true;
     public bool CostIsPerTile = false;
     public bool CanExecuteWhileWaiting = false;
+    public bool RangeIsDrivenByMovementCost = false;
 
     public List<ActionBehavior> Behaviors;
 
@@ -32,4 +33,7 @@ public class ActionDefinition : ScriptableObject
 
     [Range(0, 10)]
     public int BaseHealthCost = 0;
+
+    [Range(0, 10)]
+    public int BaseRange = 1;
 }

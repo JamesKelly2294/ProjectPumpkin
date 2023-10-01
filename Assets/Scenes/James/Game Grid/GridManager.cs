@@ -42,15 +42,6 @@ public class GridManager : MonoBehaviour
     public Tilemap Walls;
     public Tilemap Walkable;
 
-    [Header("Pathing")]
-    public GameObject PathStartPrefab;
-    public GameObject PathEndPrefab;
-    public GameObject PathNodePrefab;
-
-    private GameObject _pathStartGO;
-    private GameObject _pathEndGO;
-    private GameObject _pathGroupGO;
-
     private const float _tileCenterOffset = 0.5f;
 
     private Dictionary<Vector2Int, TileData> _tileData = new();
@@ -64,18 +55,7 @@ public class GridManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _pathStartGO = Instantiate(PathStartPrefab);
-        _pathStartGO.transform.name = "Path Start";
-        _pathStartGO.transform.parent = transform;
-        _pathStartGO.SetActive(false);
 
-        _pathEndGO = Instantiate(PathEndPrefab);
-        _pathEndGO.transform.name = "Path End";
-        _pathEndGO.transform.parent = transform;
-        _pathEndGO.SetActive(false);
-
-        _pathGroupGO = new GameObject("Path");
-        _pathGroupGO.transform.parent = transform;
     }
 
     // Update is called once per frame
@@ -221,14 +201,6 @@ public class GridManager : MonoBehaviour
         entity.transform.position = TileCoordinateToWorldPosition(position);
     }
 
-    void ClearPath()
-    {
-        for (int i = 0; i < _pathGroupGO.transform.childCount; i++)
-        {
-            Destroy(_pathGroupGO.transform.GetChild(i).gameObject);
-        }
-    }
-
     public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, bool debugVisuals = false) 
     {
         return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, debugVisuals: debugVisuals);
@@ -244,14 +216,8 @@ public class GridManager : MonoBehaviour
             return quickPath;
         }
 
-#if DEBUG
-        Debug.Log("Calculate path from " + startPosition + " to " + endPosition);
-#endif
-
         Dictionary<Vector3Int, Vector3Int> visited = new Dictionary<Vector3Int, Vector3Int>();
         Queue<Vector3Int> queue = new Queue<Vector3Int>();
-
-        ClearPath();
 
         foreach (var neighbor in NeighborsForTileAtPosition(startPosition))
         {
@@ -286,18 +252,62 @@ public class GridManager : MonoBehaviour
 
         var path = BuildPath(startPosition, endPosition, visited);
 
-        if (debugVisuals)
+        return path;
+    }
+
+    public HashSet<Vector2Int> BFS(Vector3Int startPosition, int range)
+    {
+        if (range < 0)
         {
-            foreach (var node in path)
+            Debug.LogError("Bruh.");
+            return null;
+        }
+
+        if (range == 0)
+        {
+            var quickPath = new HashSet<Vector2Int>();
+            quickPath.Add((Vector2Int)startPosition);
+            return quickPath;
+        }
+
+        Dictionary<Vector3Int, int> visited = new Dictionary<Vector3Int, int>();
+        Queue<Vector3Int> queue = new Queue<Vector3Int>();
+
+        foreach (var neighbor in NeighborsForTileAtPosition(startPosition))
+        {
+            visited[neighbor] = 1;
+            queue.Enqueue(neighbor);
+        }
+
+        while (queue.Count > 0)
+        {
+            var currentTile = queue.Dequeue();
+            if (visited[currentTile] > range)
             {
-                var pathVisual = Instantiate(PathNodePrefab);
-                pathVisual.transform.position = TileCoordinateToWorldPosition((Vector2Int)node);
-                pathVisual.transform.name = "(" + node.x + ", " + node.y + ")";
-                pathVisual.transform.parent = _pathGroupGO.transform;
+                break;
+            }
+            else
+            {
+                var neighbors = NeighborsForTileAtPosition(currentTile);
+                foreach (var neighbor in neighbors)
+                {
+                    if (visited.ContainsKey(neighbor)) { continue; }
+                    visited[neighbor] = visited[currentTile] + 1;
+                    queue.Enqueue(neighbor);
+                }
             }
         }
 
-        return path;
+        HashSet<Vector2Int> results = new();
+        foreach (var (position, distance) in visited)
+        {
+            if (distance <= range)
+            {
+                results.Add((Vector2Int)position);
+            }
+        }
+
+        return results;
     }
 
     List<Vector2Int> BuildPath(Vector3Int startPosition, Vector3Int endPosition, Dictionary<Vector3Int, Vector3Int> visited)

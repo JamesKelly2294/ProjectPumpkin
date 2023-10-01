@@ -50,6 +50,7 @@ MonoBehaviour:
   TileSelectionPrefab: {fileID: 2436387403133853424, guid: 5a8170b7867707e4fbce03ec649aea21, type: 3}
   TileOutlinePrefab: {fileID: 2436387403133853424, guid: 0b6f01d2f6170324fbb0b785de70b465, type: 3}
   TileHoverPrefab: {fileID: 2436387403133853424, guid: 954b665cb765a654cb68f32c23072395, type: 3}
+  GridRangeIndicatorPrefab: {fileID: 5950560729337268427, guid: 86e9b3deed7244642917bce92ead7d61, type: 3}
   ShowTileHover: 1
   ShowTileSelection: 0
 --- !u!114 &5347780000587633163

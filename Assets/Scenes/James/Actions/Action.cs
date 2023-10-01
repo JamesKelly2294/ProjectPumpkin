@@ -108,6 +108,22 @@ public class Action
         }
     }
 
+    public int Range
+    {
+        get
+        {
+            return Definition.BaseRange;
+        }
+    }
+
+    public bool RangeIsDrivenByMovementCost
+    {
+        get
+        {
+            return Definition.RangeIsDrivenByMovementCost;
+        }
+    }
+
     public List<ActionBehavior> BehaviorRecipes
     {
         get
@@ -118,6 +134,7 @@ public class Action
 
     public struct ExecutionContext
     {
+        public Action action;
         public Entity source;
         public TileData? target;
 

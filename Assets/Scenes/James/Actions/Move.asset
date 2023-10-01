@@ -22,9 +22,11 @@ MonoBehaviour:
   CanOnlyExecuteOnOwnersTurn: 1
   CostIsPerTile: 1
   CanExecuteWhileWaiting: 0
+  RangeIsDrivenByMovementCost: 1
   Behaviors:
   - {fileID: 2014976595490307810, guid: fe514485e7b5ec54b8011c8f2ec43d08, type: 3}
   BaseActionPointCost: 0
   BaseMagicCost: 0
   BaseMovementCost: 1
   BaseHealthCost: 0
+  BaseRange: 0
