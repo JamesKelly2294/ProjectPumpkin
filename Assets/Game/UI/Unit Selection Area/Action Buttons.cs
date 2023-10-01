@@ -32,7 +32,9 @@ public class ActionButtons : MonoBehaviour
 
             foreach(Action action in actions) {
                 ActionButton actionButton = GameObject.Instantiate(ActionButtonPrefab, gameObject.transform);
+                actionButton.gameObject.SetActive(false);
                 actionButton.SetAction(action);
+                actionButton.gameObject.SetActive(true);
             }
         }
     }

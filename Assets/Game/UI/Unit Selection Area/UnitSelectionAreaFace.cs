@@ -24,10 +24,12 @@ public class UnitSelectionAreaFace : MonoBehaviour
     public TooltipAmount TooltipActionPointsAmount;
     private int availablePips = 0, unavailablePips;
 
+    private TurnManager _turnManager;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        _turnManager = FindObjectOfType<TurnManager>();
     }
 
     // Update is called once per frame
@@ -58,7 +60,7 @@ public class UnitSelectionAreaFace : MonoBehaviour
         }
 
         // Update frame color
-        if (entity.ActionPoints > 0 ) {
+        if (entity.ActionPoints > 0) {
             IconFrame.sprite = GoldFramePrefab;
             PipsHolderFrame.color = GoldColor;
         } else {

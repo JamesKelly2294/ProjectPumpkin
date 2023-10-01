@@ -12,6 +12,6 @@ public class WaitBehavior : ActionBehavior
 
     public override void Execute(Action.ExecutionContext context)
     {
-        Debug.Log("Executing " + context);
+        context.source.ToggleWait();
     }
 }

@@ -44,6 +44,15 @@ public class Entity : MonoBehaviour, ISelectable
 
     public GridManager GridManager;
 
+
+    public string Name
+    {
+        get
+        {
+            return Definition.Name;
+        }
+    }
+
     public int Health;
     public int Mana;
     public int ActionPoints;
@@ -101,6 +110,16 @@ public class Entity : MonoBehaviour, ISelectable
         return actionAttempt;
     }
 
+    public void NewTurnBegan()
+    {
+        IsWaiting = false;
+    }
+
+    public void ToggleWait()
+    {
+        IsWaiting = !IsWaiting;
+    }
+
     public bool CanAffordAction(Action a)
     {
         return CreateActionCostAnalysis(a).CanBeExecuted;
@@ -150,10 +169,7 @@ public class Entity : MonoBehaviour, ISelectable
     }
 
     public void InitiateActionAttempt(Action a) {
-        // TODO
         ExecuteAction(a);
-
-        StartCoroutine(test());
     }
 
     IEnumerator test()

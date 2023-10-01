@@ -93,8 +93,11 @@ public class PlayerInput : MonoBehaviour
     {
         if (SelectedSelectable == null)
         {
-            _entitySelectionGO.transform.parent = transform;
-            _entitySelectionGO.gameObject.SetActive(false);
+            if (_entitySelectionGO != null)
+            {
+                _entitySelectionGO.transform.parent = transform;
+                _entitySelectionGO.gameObject.SetActive(false);
+            }
             return;
         }
 
@@ -199,11 +202,7 @@ public class PlayerInput : MonoBehaviour
         if (UserInteractionEnabled == false) { return; }
 
         UpdateTileHighlight();
-        var tileSelectionDidChange = UpdateTileSelection();
-        if (tileSelectionDidChange)
-        {
-            UpdateSelectableVisuals();
-        }
+        UpdateTileSelection();
 
         if (SkipUpdate) { return; }
 
@@ -248,59 +247,73 @@ public class PlayerInput : MonoBehaviour
         }
 
         var prospectiveSelectedTilePosition = HoveredTilePosition;
-
-        Selectable newlySelectedObject = null;
-        Selectable newlyDeselectedObject = null;
-
-        bool selectionDidChange = false;
         if (prospectiveSelectedTilePosition != null)
         {
             // Select the selectable at the tile, if one exists
             var prevSelectable = SelectedSelectable;
             var selectables = _gridManager.GetSelectables(prospectiveSelectedTilePosition.Value);
+            Selectable prospectiveSelectable = null;
             if (SelectedSelectable != null)
             {
                 var index = selectables.IndexOf(SelectedSelectable);
                 if (index != -1)
                 {
                     // Cycle through the selectables
-                    SelectedSelectable = selectables[(index + 1) % selectables.Count];
+                    prospectiveSelectable = selectables[(index + 1) % selectables.Count];
                 }
                 else
                 {
-                    SelectedSelectable = selectables.FirstOrDefault();
+                    prospectiveSelectable = selectables.FirstOrDefault();
                 }
             }
             else
             {
-                SelectedSelectable = selectables.FirstOrDefault();
+                prospectiveSelectable = selectables.FirstOrDefault();
             }
 
-            if (SelectedSelectable != prevSelectable)
+            return Select(prospectiveSelectable);
+        }
+
+        return false;
+    }
+
+    public bool Select(Selectable selectable)
+    {
+        var positionForSelectable = _gridManager.PositionForSelectable(selectable);
+
+        Selectable newlySelectedObject = null;
+        Selectable newlyDeselectedObject = null;
+
+        bool selectionDidChange = false;
+        var prevSelectable = SelectedSelectable;
+
+        if (selectable != prevSelectable)
+        {
+            selectionDidChange = true;
+            newlyDeselectedObject = prevSelectable;
+            SelectedSelectable = selectable;
+            if (selectable != null)
             {
-                selectionDidChange = true;
-                newlyDeselectedObject = prevSelectable;
-                if (SelectedSelectable != null)
+                if (positionForSelectable != null)
                 {
-                    Debug.Log("Selected " + SelectedSelectable.gameObject + ".");
-                    SelectedTilePosition = prospectiveSelectedTilePosition;
-                    _tileSelectionGO.transform.position = _gridManager.TileCoordinateToWorldPosition(prospectiveSelectedTilePosition.Value);
-                    newlySelectedObject = SelectedSelectable;
+                    SelectedTilePosition = positionForSelectable;
+                    _tileSelectionGO.transform.position = _gridManager.TileCoordinateToWorldPosition(positionForSelectable.Value);
+                    _tileSelectionGO.SetActive(true);
                 }
                 else
                 {
-                    Debug.Log("Cleared selection.");
+                    SelectedTilePosition = null;
+                    _tileSelectionGO.SetActive(false);
                 }
-
-                //ClearPath();
+                newlySelectedObject = SelectedSelectable;
             }
+            else
+            {
+                Debug.Log("Cleared selection.");
+            }
+        }
 
-            _tileSelectionGO.SetActive(SelectedSelectable != null && ShowTileSelection);
-        }
-        else
-        {
-            _tileSelectionGO.SetActive(false);
-        }
+        _tileSelectionGO.SetActive(SelectedTilePosition != null && ShowTileSelection);
 
         if (newlyDeselectedObject)
         {
@@ -310,6 +323,11 @@ public class PlayerInput : MonoBehaviour
         if (newlySelectedObject)
         {
             newlySelectedObject.Select();
+        }
+
+        if (selectionDidChange)
+        {
+            UpdateSelectableVisuals();
         }
 
         return selectionDidChange;

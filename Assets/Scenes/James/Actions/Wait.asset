@@ -14,12 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Name: Wait
   Description: Wait until the end of the turn.
-  FlavorText: '"Sometimes the best thing you can do is nothing."'
+  FlavorText: '"Sometimes the best thing you can do... is nothing."'
   Icon: {fileID: -480043317, guid: 91aa5ae8f43c22d408a0747f0f8aaa3c, type: 3}
   Color: {r: 0.8207547, g: 0.78721344, b: 0.58459413, a: 1}
   BlocksFromEndingTurn: 0
   Targetable: 0
   CanOnlyExecuteOnOwnersTurn: 1
+  CostIsPerTile: 0
+  CanExecuteWhileWaiting: 1
   Behaviors:
   - {fileID: -8405245668000055270, guid: bb9ee3b8afa854244b36a966280d600b, type: 3}
   BaseActionPointCost: 0

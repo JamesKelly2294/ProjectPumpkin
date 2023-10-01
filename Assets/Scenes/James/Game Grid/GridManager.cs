@@ -18,6 +18,21 @@ public struct TileData
     {
         return Entity == null;
     }
+
+    public List<Selectable> Selectables
+    {
+        get
+        {
+            var selectables = new List<Selectable>();
+
+            if (Entity != null && Entity.TryGetComponent<Selectable>(out var entitySelectable))
+            {
+               selectables.Add(entitySelectable);
+            }
+
+            return selectables;
+        }
+    }
 }
 
 public class GridManager : MonoBehaviour
@@ -110,6 +125,20 @@ public class GridManager : MonoBehaviour
         if (tile.Entity != null && tile.Entity.TryGetComponent<Selectable>(out var selectable)) { selectables.Add(selectable); }
 
         return selectables;
+    }
+
+    public Vector2Int? PositionForSelectable(Selectable selectable)
+    {
+        // This whole method is gross.
+        foreach(var (pos, tile) in _tileData)
+        {
+            foreach (var s in tile.Selectables)
+            {
+                if (s == selectable) { return pos; }
+            }
+        }
+
+        return null;
     }
 
     public Vector2Int PositionForEntity(Entity entity)

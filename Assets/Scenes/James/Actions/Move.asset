@@ -15,12 +15,13 @@ MonoBehaviour:
   Name: Move
   Description: Move to the target.
   FlavorText: '"I''m a leaf on the wind, watch how I soar."'
-  Icon: {fileID: 21300000, guid: c62dfaefe4be04f56a06a1a6d6371e7c, type: 3}
-  Color: {r: 0.2687344, g: 0.36854753, b: 0.9339623, a: 1}
+  Icon: {fileID: 21300000, guid: b3a52f0be3bd7429b83747b510a61606, type: 3}
+  Color: {r: 0.41568628, g: 0.9882353, b: 0.40784314, a: 1}
   BlocksFromEndingTurn: 0
   Targetable: 0
   CanOnlyExecuteOnOwnersTurn: 1
   CostIsPerTile: 1
+  CanExecuteWhileWaiting: 0
   Behaviors:
   - {fileID: 2014976595490307810, guid: fe514485e7b5ec54b8011c8f2ec43d08, type: 3}
   BaseActionPointCost: 0

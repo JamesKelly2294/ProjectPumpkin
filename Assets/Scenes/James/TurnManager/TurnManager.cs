@@ -7,6 +7,8 @@ using UnityEngine;
 [RequireComponent(typeof(PubSubSender))]
 public class TurnManager : MonoBehaviour
 {
+    public List<Entity.OwnerKind> TurnOrder = new List<Entity.OwnerKind> { Entity.OwnerKind.Player, Entity.OwnerKind.Enemy, Entity.OwnerKind.Neutral, };
+
     public int CurrentTurn
     {
         get { return _currentTurn; }
@@ -15,6 +17,7 @@ public class TurnManager : MonoBehaviour
             if (_currentTurn == value) { return; }
             _currentTurn = value;
             _pubSubSender.Publish("turnManager.currentTurn.changed", _currentTurn);
+            _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
         }
     }
     [SerializeField]
@@ -27,7 +30,8 @@ public class TurnManager : MonoBehaviour
             if (_currentTeam == value) { return; }
             _currentTeam = value;
             _pubSubSender.Publish("turnManager.currentTeam.changed", _currentTeam);
-        } 
+            _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
+        }
     }
     [SerializeField]
     private Entity.OwnerKind _currentTeam = Entity.OwnerKind.Player;
@@ -39,7 +43,8 @@ public class TurnManager : MonoBehaviour
             if (_currentTeamCanTakeAction == value) { return; }
             _currentTeamCanTakeAction = value;
             _pubSubSender.Publish("turnManager.currentTeamCanTakeAction.changed", _currentTeamCanTakeAction);
-        } 
+            _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
+        }
     }
     [SerializeField]
     private bool _currentTeamCanTakeAction = false;
@@ -50,8 +55,11 @@ public class TurnManager : MonoBehaviour
         private set
         {
             if (_currentTeamEntitiesThatCanTakeAction == value) { return; }
+            if (_currentTeamEntitiesThatCanTakeAction.Count == value.Count && _currentTeamEntitiesThatCanTakeAction.SequenceEqual(value)) { return; }
+
             _currentTeamEntitiesThatCanTakeAction = value;
             _pubSubSender.Publish("turnManager.currentTeamEntitiesThatCanTakeAction.changed", _currentTeamEntitiesThatCanTakeAction);
+            _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
         }
     }
     [SerializeField]
@@ -65,6 +73,7 @@ public class TurnManager : MonoBehaviour
             if (_blockingEventIsExecuting == value) { return; }
             _blockingEventIsExecuting = value;
             _pubSubSender.Publish("turnManager.blockingEventIsExecuting.changed", BlockingEventIsExecuting);
+            _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
         }
     }
     [SerializeField]
@@ -117,7 +126,31 @@ public class TurnManager : MonoBehaviour
 
     public void EndTeamTurn()
     {
-        CurrentTurn += 1;
+        var currentTeamIndex = TurnOrder.IndexOf(CurrentTeam);
+
+        if (currentTeamIndex == -1) {
+            Debug.LogError("Error - the current team is not part of the TurnOrder array. We don't know whose turn is next!");
+        }
+
+        if (currentTeamIndex == TurnOrder.Count - 1)
+        {
+            _currentTeam = TurnOrder[0];
+            _currentTurn += 1;
+
+            _pubSubSender.Publish("turnManager.currentTurn.changed", _currentTurn);
+            _pubSubSender.Publish("turnManager.currentTeam.changed", _currentTurn);
+            _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
+        }
+        else
+        {
+            CurrentTeam = TurnOrder[currentTeamIndex + 1];
+        }
+
+        var currentTeamEntities = OwnedEntities(CurrentTeam);
+        foreach ( var entity in currentTeamEntities )
+        {
+            entity.NewTurnBegan();
+        }
     }
 
     // Start is called before the first frame update
@@ -131,7 +164,6 @@ public class TurnManager : MonoBehaviour
     void Update()
     {
         var currentTeamEntities = OwnedEntities(CurrentTeam);
-
         CurrentTeamEntitiesThatCanTakeAction = currentTeamEntities.Where(e => EntityCanDoMoreThisTurn(e)).ToList();
         CurrentTeamCanTakeAction = CurrentTeamEntitiesThatCanTakeAction.Count > 0;
     }

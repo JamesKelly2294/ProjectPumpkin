@@ -17,6 +17,7 @@ public class ActionDefinition : ScriptableObject
     public bool Targetable = false;
     public bool CanOnlyExecuteOnOwnersTurn = true;
     public bool CostIsPerTile = false;
+    public bool CanExecuteWhileWaiting = false;
 
     public List<ActionBehavior> Behaviors;
 

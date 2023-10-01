@@ -22,6 +22,14 @@ public class Action
         }
     }
 
+    public bool CanExecuteWhileWaiting
+    {
+        get 
+        { 
+            return Definition.CanExecuteWhileWaiting; 
+        }
+    }
+
     public bool BlocksFromEndingTurn
     {
         get
@@ -88,7 +96,7 @@ public class Action
     {
         get
         {
-            return Definition.BaseMagicCost;
+            return Definition.BaseMovementCost;
         }
     }
 
