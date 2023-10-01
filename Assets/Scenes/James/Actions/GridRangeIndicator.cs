@@ -61,16 +61,16 @@ public class GridRangeIndicator : MonoBehaviour
         _tileOutlineContainerGO.transform.parent = transform;
     }
 
-    public void ClearRangeVisuals()
+    public void ClearRangeVisuals(bool purgeCache = true)
     {
         for (int i = 0; i < _tileOutlineContainerGO.transform.childCount; i++)
         {
             Destroy(_tileOutlineContainerGO.transform.GetChild(i).gameObject);
         }
-        _cachedRangeConfiguration = null;
+        if (purgeCache) { _cachedRangeConfiguration = null; }
     }
 
-    public void ClearPathVisuals()
+    public void ClearPathVisuals(bool purgeCache = true)
     {
         _pathStartGO.SetActive(false);
         _pathEndGO.SetActive(false);
@@ -82,7 +82,7 @@ public class GridRangeIndicator : MonoBehaviour
 
         PathStartPosition = null;
         PathEndPosition = null;
-        _cachedPathConfiguration = null;
+        if (purgeCache) { _cachedPathConfiguration = null; }
     }
 
     public void HidePath()
@@ -98,8 +98,8 @@ public class GridRangeIndicator : MonoBehaviour
 
     public void SetPathActive(bool active)
     {
-        _pathStartGO.SetActive(active);
-        _pathEndGO.SetActive(active);
+        //_pathStartGO.SetActive(active);
+        //_pathEndGO.SetActive(active);
         _pathGroupGO.SetActive(active);
     }
 
@@ -159,7 +159,7 @@ public class GridRangeIndicator : MonoBehaviour
         }
 
         _cachedRangeConfiguration = configuration;
-        ClearRangeVisuals();
+        ClearRangeVisuals(purgeCache: false);
 
         var tiles = gridManager.BFS((Vector3Int)configuration.origin, configuration.range);
         int i = 0;
@@ -183,7 +183,7 @@ public class GridRangeIndicator : MonoBehaviour
             return;
         }
 
-        ClearPathVisuals();
+        ClearPathVisuals(purgeCache: false);
 
         if (startPosition == null || endPosition == null)
         {
