@@ -11,6 +11,15 @@ public class Action
         Other
     }
 
+    public enum ActionTarget
+    {
+        None,
+        Walkable,
+        Entity,
+        AllyEntity,
+        EnemyEntity,
+    }
+
     public ActionDefinition Definition;
 
     public Entity Entity { get; private set; }
@@ -61,11 +70,19 @@ public class Action
         }
     }
 
+    public ActionTarget Target
+    {
+        get
+        {
+            return Definition.Target;
+        }
+    }
+
     public bool Targetable
     {
         get
         {
-            return Definition.Targetable;
+            return Definition.Target != ActionTarget.None;
         }
     }
 

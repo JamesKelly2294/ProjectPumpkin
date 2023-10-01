@@ -192,6 +192,12 @@ public class PlayerInput : MonoBehaviour
     {
         ActionSelectionRequest asr = e.value as ActionSelectionRequest;
 
+        if (asr.Entity.Owner != Entity.OwnerKind.Player)
+        {
+            SelectedAction = null;
+            return;
+        }
+
         SelectedSelectable = asr.Entity.GetComponent<Selectable>();
         SelectedAction = asr.Action;
 
@@ -358,7 +364,7 @@ public class PlayerInput : MonoBehaviour
         var selectedEntity = SelectedEntity();
         if (selectedEntity != null)
         {
-            SelectedAction = selectedEntity.Actions.FirstOrDefault();
+            SelectedAction = selectedEntity.Owner == Entity.OwnerKind.Player ? selectedEntity.Actions.FirstOrDefault() : null;
         }
         else
         {
@@ -414,7 +420,7 @@ public class PlayerInput : MonoBehaviour
         Dictionary<Entity.OwnerKind, OwnerAlignment> ownerToAlignmentMapping = null;
         if (selectedAction.Targetable && selectedAction.Kind == Action.ActionKind.Attack) {
             ownerToAlignmentMapping = new();
-
+            ignoringEntities = true;
             foreach (Entity.OwnerKind ownerKind in Enum.GetValues(typeof(Entity.OwnerKind)))
             {
                 if (ownerKind == selectedEntity.Owner) { ownerToAlignmentMapping[ownerKind] = OwnerAlignment.Good; }
@@ -427,7 +433,7 @@ public class PlayerInput : MonoBehaviour
             range = range,
             origin = selectedEntity.Position,
             ownerToAlignmentMapping = ownerToAlignmentMapping,
-            ignoringEntities = true,
+            ignoringEntities = ignoringEntities,
         };
 
         _gridRangeIndicator.gameObject.SetActive(true);

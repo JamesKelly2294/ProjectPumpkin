@@ -15,14 +15,13 @@ public class ActionDefinition : ScriptableObject
     public Color Color = Color.blue;
 
     public bool BlocksFromEndingTurn = true; // if the entity can take this action, don't let turn end
-    public bool Targetable = false;
     public bool CanOnlyExecuteOnOwnersTurn = true;
     public bool CostIsPerTile = false;
     public bool CanExecuteWhileWaiting = false;
     public bool RangeIsDrivenByMovementCost = false;
     public bool DeferCostPayment = false;
     public Action.ActionKind Kind = Action.ActionKind.Other;
-
+    public Action.ActionTarget Target = Action.ActionTarget.None;
     public List<ActionBehavior> Behaviors;
 
     [Range(0, 5)]

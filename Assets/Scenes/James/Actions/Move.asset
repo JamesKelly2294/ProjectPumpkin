@@ -18,13 +18,13 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: b3a52f0be3bd7429b83747b510a61606, type: 3}
   Color: {r: 0.21747543, g: 0.5849056, b: 0.21244211, a: 1}
   BlocksFromEndingTurn: 0
-  Targetable: 1
   CanOnlyExecuteOnOwnersTurn: 1
   CostIsPerTile: 1
   CanExecuteWhileWaiting: 0
   RangeIsDrivenByMovementCost: 1
   DeferCostPayment: 1
   Kind: 0
+  Target: 1
   Behaviors:
   - {fileID: 2014976595490307810, guid: fe514485e7b5ec54b8011c8f2ec43d08, type: 3}
   BaseActionPointCost: 0
