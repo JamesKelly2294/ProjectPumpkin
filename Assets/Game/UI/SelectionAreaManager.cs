@@ -10,7 +10,7 @@ public class SelectionAreaManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _gridManager = FindObjectOfType<GridManager>();
+        _playerInput = FindObjectOfType<PlayerInput>();
         OnSelectableChanged();
     }
 
@@ -20,11 +20,11 @@ public class SelectionAreaManager : MonoBehaviour
         
     }
 
-    private GridManager _gridManager;
+    private PlayerInput _playerInput;
 
     public void OnSelectableChanged()
     {
-        var selectable = _gridManager.SelectedSelectable;
+        var selectable = _playerInput.SelectedSelectable;
 
         if (selectable != null)
         {

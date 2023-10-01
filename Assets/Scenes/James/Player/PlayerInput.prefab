@@ -45,6 +45,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e059847c0d5f49f48974a33c0a99a7c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UserInteractionEnabled: 1
+  EntitySelectionPrefab: {fileID: 2343410504194762298, guid: bba9f418964940d4a9fd93a1376837c1, type: 3}
+  TileSelectionPrefab: {fileID: 2436387403133853424, guid: 5a8170b7867707e4fbce03ec649aea21, type: 3}
+  TileOutlinePrefab: {fileID: 2436387403133853424, guid: 0b6f01d2f6170324fbb0b785de70b465, type: 3}
+  TileHoverPrefab: {fileID: 2436387403133853424, guid: 954b665cb765a654cb68f32c23072395, type: 3}
+  ShowTileHover: 1
+  ShowTileSelection: 0
 --- !u!114 &5347780000587633163
 MonoBehaviour:
   m_ObjectHideFlags: 0

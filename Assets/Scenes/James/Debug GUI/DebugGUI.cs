@@ -16,13 +16,12 @@ public class DebugGUI : MonoBehaviour
     public TextMeshProUGUI CurrentTeamEntityCountLabel;
     public TextMeshProUGUI CurrentTeamIsDoneLabel;
 
-
-    private GridManager _gridManager;
+    private PlayerInput _playerInput;
     private TurnManager _turnManager;
 
     public void OnSelectableChanged()
     {
-        var selectable = _gridManager.SelectedSelectable;
+        var selectable = _playerInput.SelectedSelectable;
 
         if (selectable != null)
         {
@@ -50,7 +49,7 @@ public class DebugGUI : MonoBehaviour
 
     public void Start()
     {
-        _gridManager = FindObjectOfType<GridManager>();
+        _playerInput = FindObjectOfType<PlayerInput>();
         OnSelectableChanged();
 
         _turnManager = FindObjectOfType<TurnManager>();

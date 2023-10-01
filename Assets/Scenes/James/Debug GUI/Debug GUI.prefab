@@ -215,8 +215,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EntityIcon: {fileID: 6938094739326113837}
   EntityLabel: {fileID: 4773088996445560644}
-  CurrentTurnLabel: {fileID: 964428559600441852}
-  CurrentTeamLabel: {fileID: 4825807931344964173}
+  CurrentTurnLabel: {fileID: 4825807931344964173}
+  CurrentTeamLabel: {fileID: 964428559600441852}
   CurrentTeamEntityCountLabel: {fileID: 177703588208955042}
   CurrentTeamIsDoneLabel: {fileID: 7477043630883686714}
 --- !u!114 &7788394993250129922
