@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class UnitSelectionArea : MonoBehaviour
 {
 
     public Entity Entity;
-
+    public TextMeshProUGUI Name;
     public ActionButtons ActionButtons;
     public UnitSelectionAreaStats UnitSelectionAreaStats;
     public UnitSelectionAreaFace unitSelectionAreaFace;
@@ -27,6 +28,7 @@ public class UnitSelectionArea : MonoBehaviour
         Entity = entity;
         if (Entity == null) { return; }
 
+        Name.text = Entity.Name;
         ActionButtons.SetEntity(Entity);
         UnitSelectionAreaStats.SetEntity(Entity);
         unitSelectionAreaFace.SetEntity(Entity);
