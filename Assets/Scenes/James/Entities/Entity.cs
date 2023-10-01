@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
@@ -12,6 +13,11 @@ using static UnityEditor.Timeline.TimelinePlaybackControls;
 [RequireComponent(typeof(PubSubSender))]
 public class Entity : MonoBehaviour, ISelectable
 {
+    public static int TheoreticalHealthMax = 20;
+    public static int TheoreticalManaMax = 20;
+    public static int TheoreticalActionPointMax = 5;
+    public static int TheoreticalMovementMax = 8;
+
     public enum OwnerKind
     {
         Neutral,

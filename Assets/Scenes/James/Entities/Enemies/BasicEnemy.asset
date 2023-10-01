@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: Basic Enemy
   Description: A filthy bug.
   FlavorText: '"Tcht."'
-  Icon: {fileID: 21300000, guid: 25f870a1f950b4fca9ca077af097e301, type: 3}
+  Icon: {fileID: 21300000, guid: e3e4ab6f3a5fc4b968835ca51acd11ed, type: 3}
   Color: {r: 0.34117648, g: 0.0033064226, b: 0, a: 1}
   BaseMaxHealth: 2
   BaseMaxMana: 0
