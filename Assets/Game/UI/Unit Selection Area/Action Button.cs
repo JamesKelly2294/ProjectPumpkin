@@ -100,6 +100,7 @@ public class ActionButton : MonoBehaviour
 
         bool disabled = turnManager.BlockingEventIsExecuting;
         disabled |= (turnManager.CurrentTeam != Entity.OwnerKind.Player);
+        disabled |= (Action.Entity.Owner != Entity.OwnerKind.Player);
         disabled |= !Action.Entity.CanAffordAction(Action);
 
         Button.interactable = !disabled;
