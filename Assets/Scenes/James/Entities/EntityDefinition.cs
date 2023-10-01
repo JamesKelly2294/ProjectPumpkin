@@ -17,7 +17,7 @@ public class EntityDefinition : ScriptableObject
     public int BaseMaxMana = 10;
     [Range(1, 10)]
     public int BaseMaxActionPoints = 2;
-    [Range(1, 20)]
+    [Range(0, 20)]
     public int BaseMaxMovement = 4;
 
     public List<ActionDefinition> BaseActions = new List<ActionDefinition>();

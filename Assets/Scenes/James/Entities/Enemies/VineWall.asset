@@ -21,7 +21,7 @@ MonoBehaviour:
   BaseMaxHealth: 30
   BaseMaxMana: 0
   BaseMaxActionPoints: 1
-  BaseMaxMovement: 1
+  BaseMaxMovement: 0
   BaseActions:
   - {fileID: 11400000, guid: c3d93b4c89b641f48823cdb72c620a4f, type: 2}
   - {fileID: 11400000, guid: 83f6124ae90234f4f91696cc59ba1b84, type: 2}
