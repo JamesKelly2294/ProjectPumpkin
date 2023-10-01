@@ -55,10 +55,61 @@ public class Entity : MonoBehaviour, ISelectable
         }
     }
 
-    public int Health;
-    public int Mana;
-    public int ActionPoints;
-    public int Movement;
+    public int Health
+    {
+        get { return _health; }
+        private set
+        {
+            if (_health == value) { return; }
+            _health = value;
+            _pubSubSender.Publish("entity.health.changed", _health);
+            _pubSubSender.Publish("entity.resources.changed", _health);
+        }
+    }
+    [SerializeField]
+    private int _health;
+
+    public int Mana
+    {
+        get { return _mana; }
+        private set
+        {
+            if (_mana == value) { return; }
+            _mana = value;
+            _pubSubSender.Publish("entity.mana.changed", _mana);
+            _pubSubSender.Publish("entity.resources.changed", _mana);
+        }
+    }
+    [SerializeField]
+    private int _mana;
+
+    public int ActionPoints
+    {
+        get { return _actionPoints; }
+        private set
+        {
+            if (_actionPoints == value) { return; }
+            _actionPoints = value;
+            _pubSubSender.Publish("entity.action_points.changed", _actionPoints);
+            _pubSubSender.Publish("entity.resources.changed", _actionPoints);
+        }
+    }
+    [SerializeField]
+    private int _actionPoints;
+
+    public int Movement
+    {
+        get { return _movement; }
+        private set
+        {
+            if (_movement == value) { return; }
+            _movement = value;
+            _pubSubSender.Publish("entity.movement.changed", _movement);
+            _pubSubSender.Publish("entity.resources.changed", _movement);
+        }
+    }
+    [SerializeField]
+    private int _movement;
 
     public bool IsWaiting // a unit can "wait", ending its turn
     {
@@ -90,7 +141,7 @@ public class Entity : MonoBehaviour, ISelectable
     {
         get
         {
-            var canAffordASpecificAction = Actions.Any(a => CanAffordAction(a));
+            var canAffordASpecificAction = Actions.Any(a => CanAffordAction(a) && a.BlocksFromEndingTurn);
             var canMove = Movement > 0;
 
             var canTakeAnyAction = canMove || canAffordASpecificAction;
