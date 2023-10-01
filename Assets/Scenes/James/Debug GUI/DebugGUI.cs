@@ -68,7 +68,7 @@ public class DebugGUI : MonoBehaviour
 
     public void OnTurnTeamChanged()
     {
-        CurrentTurnLabel.text = _turnManager.CurrentTeam + "'s Turn";
+        CurrentTeamLabel.text = _turnManager.CurrentTeam + "'s Turn";
     }
 
     public void OnTeamCanTakeActionChanged()
