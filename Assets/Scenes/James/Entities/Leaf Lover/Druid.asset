@@ -15,7 +15,7 @@ MonoBehaviour:
   Name: Druid
   Description: One with the trees.
   FlavorText: '"Nobody cares for the trees anymore."'
-  Icon: {fileID: 21300000, guid: 25f870a1f950b4fca9ca077af097e301, type: 3}
+  Icon: {fileID: 21300000, guid: d594a1b4f787842748975cf1c4f4597e, type: 3}
   Color: {r: 0.027919993, g: 0.33962262, b: 0, a: 1}
   BaseMaxHealth: 10
   BaseMaxMana: 10
