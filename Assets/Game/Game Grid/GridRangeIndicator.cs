@@ -36,6 +36,7 @@ public class GridRangeIndicator : MonoBehaviour
 
     public Color AlliedEntityColor = Color.green;
     public Color EnemyyEntityColor = Color.red;
+    public Color AttackBaseColor = Color.red;
 
     private GameObject _pathStartGO;
     private GameObject _pathEndGO;
@@ -157,6 +158,11 @@ public class GridRangeIndicator : MonoBehaviour
                     default:
                         break;
                 }
+            }
+            else
+            {
+                // FIXME, HACK, NEEDS MORE INFO CONFIGURATION
+                tileOutline.GetComponent<SpriteRenderer>().color = AttackBaseColor;
             }
         }
 

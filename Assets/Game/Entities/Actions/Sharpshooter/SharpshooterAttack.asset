@@ -32,4 +32,4 @@ MonoBehaviour:
   BaseMagicCost: 0
   BaseMovementCost: 0
   BaseHealthCost: 0
-  BaseRange: 1
+  BaseRange: 5

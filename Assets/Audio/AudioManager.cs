@@ -150,7 +150,7 @@ public class AudioManager : MonoBehaviour
     {
         if(_instance != null && _instance != this)
         {
-            Debug.LogError("Only one audio manager can exist. Destroying one instance.");
+            Debug.LogWarning("Only one audio manager can exist. Destroying one instance.");
             Destroy(this.gameObject);
             return;
         }

@@ -74,7 +74,6 @@ public class TeamAIManager : MonoBehaviour
 
         AnalyzeSituation();
         TakeAction();
-        _cooldownTimer = CooldownDuration;
     }
 
     bool SelectEntity()
@@ -348,5 +347,10 @@ public class TeamAIManager : MonoBehaviour
 
         Debug.Log($"AI Decision - {_selectedEntity} takes action {actionDecision.Name}");
         _turnManager.SubmitAction(actionDecision, context);
+
+        if (actionDecision != waitAction)
+        {
+            _cooldownTimer = CooldownDuration;
+        }
     }
 }

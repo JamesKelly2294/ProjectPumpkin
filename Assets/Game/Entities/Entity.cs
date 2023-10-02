@@ -375,6 +375,15 @@ public class Entity : MonoBehaviour, ISelectable
         completionHandler(this);
     }
 
+    void PlayItemPickupAudio()
+    {
+        AudioManager.Instance.Play("SFX/ItemPickup",
+            pitchMin: 0.9f, pitchMax: 1.1f,
+            volumeMin: 0.7f, volumeMax: 0.7f,
+            position: transform.position,
+            minDistance: 10, maxDistance: 20);
+    }
+
     public void EnterTile(Vector2Int tilePosition)
     {
         var enteredTileData = GridManager.SetEntityPosition(this, tilePosition);
@@ -384,14 +393,20 @@ public class Entity : MonoBehaviour, ISelectable
             if (TryGetComponent<Inventory>(out var inventory))
             {
                 var items = new List<Item> (enteredTileData.Value.Items);
+                var itemPickedUp = false;
                 items.ForEach(i => { 
                     var successfullyPickedUp = inventory.PickupItem(i);
                     if (successfullyPickedUp)
                     {
+                        itemPickedUp = true;
                         GridManager.UnregisterItem(i);
                         Destroy(i.gameObject);
                     }
                 });
+                if(itemPickedUp)
+                {
+                    PlayItemPickupAudio();
+                }
             }
         }
     }

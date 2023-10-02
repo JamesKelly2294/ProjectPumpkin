@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c41cf80029352441b39ad9e2522d7a4, type: 3}
-  m_Name: ItemPiickup
+  m_Name: Mossy
   m_EditorClassIdentifier: 
-  id: SFX/ItemPickup
+  id: SFX/MossySuck
   audioMixerGroup: {fileID: 4674431572857700961, guid: a0420a807fa813e4cb71d6b63902ac1c, type: 2}
   audioClips:
-  - {fileID: 8300000, guid: 7d3d80d23e1974954b36258af5a6dd83, type: 3}
+  - {fileID: 8300000, guid: 4f600366371ef44beacc4159dc076c5b, type: 3}

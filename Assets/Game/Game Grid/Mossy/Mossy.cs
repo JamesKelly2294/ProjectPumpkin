@@ -37,6 +37,15 @@ public class Mossy : MonoBehaviour
 
     }
 
+    void PlaySuckAudio()
+    {
+        AudioManager.Instance.Play("SFX/MossySuck",
+            pitchMin: 0.6f, pitchMax: 0.7f,
+            volumeMin: 0.7f, volumeMax: 0.7f,
+            position: transform.position,
+            minDistance: 10, maxDistance: 20);
+    }
+
     public void EvaluateWinState()
     {
         if (_collectedCrystals >= _globalCrystalCount)
@@ -56,6 +65,7 @@ public class Mossy : MonoBehaviour
             {
                 var inventory = tileData.Entity.GetComponent<Inventory>();
 
+                var suckedThisTurn = false;
                 if (inventory.Items.Count > 0)
                 {
                     _collectedCrystals += inventory.Items.Where(i => i.Name.Contains("Crystal")).Count();
@@ -66,8 +76,13 @@ public class Mossy : MonoBehaviour
                     GetComponent<PubSubSender>().Publish("points.gained", _collectedCrystals * 10);
 
                     inventory.RemoveAllItems();
-
+                    suckedThisTurn = true;
                     EvaluateWinState();
+                }
+
+                if (suckedThisTurn)
+                {
+                    PlaySuckAudio();
                 }
             }
         }
