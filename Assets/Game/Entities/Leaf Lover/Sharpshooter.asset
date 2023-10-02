@@ -20,7 +20,7 @@ MonoBehaviour:
   Color: {r: 0.23529412, g: 0.16774146, b: 0, a: 1}
   BaseMaxHealth: 15
   BaseMaxMana: 5
-  BaseMaxActionPoints: 3
+  BaseMaxActionPoints: 2
   BaseMaxMovement: 4
   MoveSpeed: 5
   BaseActions:
