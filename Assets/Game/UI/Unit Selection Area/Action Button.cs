@@ -22,6 +22,8 @@ public class ActionButton : MonoBehaviour
     public TooltipAmount MovementCostPrefab;
     public TextMeshProUGUI TooltipCostText;
     public GameObject TooltipCostsHolder;
+    public TextMeshProUGUI TooltipDealsText;
+    public GameObject TooltipDealsHolder;
     public GameObject PipsHolder;
     public GameObject ActionPipPrefab;
     public GameObject ManaPipPrefab;
@@ -116,6 +118,20 @@ public class ActionButton : MonoBehaviour
         {
             TooltipAmount tooltipAmount = GameObject.Instantiate(MovementCostPrefab, TooltipCostsHolder.transform);
             tooltipAmount.Amount.text = "" + Action.MovementCost;
+        }
+
+        // Add deals to Tooltip
+        foreach (Transform child in TooltipDealsHolder.transform) {
+            Destroy(child.gameObject);
+        }
+        if (Action.Damage > 0) {
+            TooltipDealsHolder.SetActive(true);
+            TooltipDealsText.gameObject.SetActive(true);
+            TooltipAmount tooltipAmount = GameObject.Instantiate(HealthCostPrefab, TooltipDealsHolder.transform);
+            tooltipAmount.Amount.text = "" + Action.Damage;
+        } else {
+            TooltipDealsHolder.SetActive(false);
+            TooltipDealsText.gameObject.SetActive(false);
         }
     }
 
