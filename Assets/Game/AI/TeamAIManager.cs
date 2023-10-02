@@ -151,13 +151,29 @@ public class TeamAIManager : MonoBehaviour
     Action.ExecutionContext GetMoveActionExecutionContextForSelectedEntity(Action a)
     {
         var context = new Action.ExecutionContext();
+        int range = _selectedEntity.Range(a);
+        List<Vector2Int> walkPath = null;
 
         // Step One: Try to find a direct path to the target
         var path = _gridManager.CalculatePath(_selectedEntity.Position, _aggroTarget.Position, range: AggroRange, alwaysIncludeTarget: true);
 
-        List<Vector2Int> walkPath = null;
-        int range = _selectedEntity.Range(a);
-        if (path.Count > 1)
+        // Step Two: Try to find a path to the target assuming we can walk through entities.
+        // If we can, walk as far along that path as we can.
+        if (path.Count == 0) { 
+            path = _gridManager.CalculatePath(_selectedEntity.Position, _aggroTarget.Position, range: AggroRange, ignoringObstacles:true);
+            walkPath = new List<Vector2Int>();
+            foreach (var pos in path)
+            {
+                var tileData = _gridManager.GetTileData(pos);
+                if (tileData.Entity == null || tileData.Entity == _selectedEntity)
+                {
+                    walkPath.Add(pos);
+                }
+            }
+            range = Mathf.Min(walkPath.Count, range + 1);
+            walkPath = walkPath.GetRange(0, range);
+        }
+        else
         {
             range = Mathf.Min(path.Count - 1, range + 1);
             walkPath = path.GetRange(0, range);
@@ -211,8 +227,20 @@ public class TeamAIManager : MonoBehaviour
         }
 
         Action.ExecutionContext context;
-        if (actionDecision == moveAction) { context = GetMoveActionExecutionContextForSelectedEntity(actionDecision); }
-        else { context = GetGenericActionExecutionContext(actionDecision); }
+        if (actionDecision == moveAction) 
+        { 
+            context = GetMoveActionExecutionContextForSelectedEntity(actionDecision);
+
+            // If we have decided to but can't move, fall back to waiting
+            if (context.range == 1) { 
+                actionDecision = waitAction; 
+                context = GetGenericActionExecutionContext(actionDecision);
+            }
+        }
+        else 
+        { 
+            context = GetGenericActionExecutionContext(actionDecision);
+        }
 
         if (!actionDecision.Validate(context)) {
             Debug.LogError("Decided on an invalid action " + actionDecision.Name);

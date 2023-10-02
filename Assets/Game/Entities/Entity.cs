@@ -211,6 +211,7 @@ public class Entity : MonoBehaviour, ISelectable
     public void NewTurnBegan()
     {
         Movement = MaxMovement;
+        ActionPoints = MaxActionPoints;
         IsWaiting = false;
     }
 

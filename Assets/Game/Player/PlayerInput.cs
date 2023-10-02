@@ -189,6 +189,12 @@ public class PlayerInput : MonoBehaviour
         _turnManager.SubmitAction(SelectedAction, context);
     }
 
+    public void TurnDidChange()
+    {
+        SelectedAction = null;
+        UpdateDefaultSelectedAction();
+    }
+
     public void RequestActionSelection(PubSubListenerEvent e)
     {
         ActionSelectionRequest asr = e.value as ActionSelectionRequest;
@@ -236,8 +242,16 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
-                UpdateSelectedActionRangeVisuals();
-                UpdateSelectedActionPathVisuals();
+                if (_turnManager.CurrentTeam == Entity.OwnerKind.Player)
+                {
+                    UpdateSelectedActionRangeVisuals();
+                    UpdateSelectedActionPathVisuals();
+                }
+                else
+                {
+                    _gridRangeIndicator.HidePath();
+                    _gridRangeIndicator.HideRange();
+                }
             }
         }
 

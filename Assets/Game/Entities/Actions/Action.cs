@@ -183,7 +183,7 @@ public class Action
         public TileData? target;
         public bool ignoringCost;
 
-        public override string ToString() => $"<ExecutionContext: source={source}, target={target}>";
+        public override string ToString() => $"<ExecutionContext: action={action.Name} source={source.Name}, target={target}>";
     }
 
     public bool Validate(Action.ExecutionContext context)

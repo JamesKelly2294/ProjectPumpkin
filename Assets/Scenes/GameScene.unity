@@ -428,14 +428,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.size
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Key
       value: entity.is_busy.changed
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Key
+      value: turnManager.currentTeam.changed
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
@@ -443,7 +451,15 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 723750845}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 723750845}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
@@ -451,15 +467,31 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: UpdateDefaultSelectedAction
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: TurnDidChange
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: PlayerInput, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerInput, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6393965263993604590, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
@@ -1439,18 +1471,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 700154186250235075, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
-      propertyPath: sounds.Array.size
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 700154186250235075, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
-      propertyPath: sounds.Array.data[10]
-      value: 
-      objectReference: {fileID: 11400000, guid: 0a3d0fd884a334e13b011fe660e983c5, type: 2}
-    - target: {fileID: 700154186250235075, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
-      propertyPath: sounds.Array.data[11]
-      value: 
-      objectReference: {fileID: 11400000, guid: 3cd1cd3df3e614c3c8702bd7638bb19e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
