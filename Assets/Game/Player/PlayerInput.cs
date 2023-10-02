@@ -75,7 +75,7 @@ public class PlayerInput : MonoBehaviour
     private Action _selectedAction;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _tileSelectionGO = Instantiate(TileSelectionPrefab);
         _tileSelectionGO.transform.name = "Tile Selection";
@@ -96,7 +96,10 @@ public class PlayerInput : MonoBehaviour
 
         _gridRangeIndicator = Instantiate(GridRangeIndicatorPrefab).GetComponent<GridRangeIndicator>();
         _gridRangeIndicator.transform.parent = transform;
+    }
 
+    private void Start()
+    {
         SelectableDidChange();
     }
 
@@ -431,7 +434,7 @@ public class PlayerInput : MonoBehaviour
         }
     }
 
-    void UpdateSelectedActionPathVisuals()
+    void UpdateSelectedActionPathVisuals(bool forceRefresh = false)
     {
         var selectedEntity = SelectedEntity();
         var selectedAction = SelectedAction;
@@ -439,6 +442,11 @@ public class PlayerInput : MonoBehaviour
         {
             _gridRangeIndicator.gameObject.SetActive(false);
             return;
+        }
+
+        if (forceRefresh)
+        {
+            _gridRangeIndicator.ClearPathVisuals(purgeCache: true);
         }
 
         if (selectedAction.Kind != Action.ActionKind.Movement || !selectedAction.Targetable)
@@ -463,7 +471,7 @@ public class PlayerInput : MonoBehaviour
         _gridRangeIndicator.VisualizePath(startPosition.Value, endPosition.Value, configuration, _gridManager);
     }
 
-    void UpdateSelectedActionRangeVisuals()
+    void UpdateSelectedActionRangeVisuals(bool forceRefresh = false)
     {
         var selectedEntity = SelectedEntity();
         var selectedAction = SelectedAction;
@@ -471,6 +479,11 @@ public class PlayerInput : MonoBehaviour
         {
             _gridRangeIndicator.gameObject.SetActive(false);
             return;
+        }
+
+        if (forceRefresh)
+        {
+            _gridRangeIndicator.ClearRangeVisuals(purgeCache: true);
         }
 
         if (!selectedAction.Targetable)
@@ -510,5 +523,11 @@ public class PlayerInput : MonoBehaviour
         {
             Select(entity.GetComponent<Selectable>());
         }
+    }
+
+    public void ForceVisualsRefresh()
+    {
+        UpdateSelectedActionPathVisuals(forceRefresh: true);
+        UpdateSelectedActionRangeVisuals(forceRefresh: true);
     }
 }

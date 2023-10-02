@@ -30,6 +30,8 @@ public class Entity : MonoBehaviour, ISelectable
     public static int TheoreticalActionPointMax = 5;
     public static int TheoreticalMovementMax = 8;
 
+    public Material DeathShader;
+
     public enum OwnerKind
     {
         Neutral,
@@ -414,8 +416,46 @@ public class Entity : MonoBehaviour, ISelectable
 
         if (Health <= 0)
         {
-            Debug.Log("Deadge!");
-            Destroy(gameObject);
+            Debug.Log($"{this} is deadge!");
+            Kill();
         }
+    }
+
+    public void Kill()
+    {
+        Health = 0;
+
+        StartCoroutine(DeathCoroutine());
+    }
+
+    [Range(0.0f, 5.0f)]
+    public float DeathAnimationTime = 0.5f;
+
+    public bool PlayDeathAnimation = true;
+
+    private IEnumerator DeathCoroutine()
+    {
+        if (PlayDeathAnimation == false)
+        {
+            _pubSubSender.Publish("entity.died", this);
+            Destroy(gameObject);
+            yield break;
+        }
+
+        var spriteRenderers = GetComponentsInChildren<SpriteRenderer>();
+
+        foreach(var sr in spriteRenderers)
+        {
+            var dissolveEffect = sr.gameObject.AddComponent<DissolveEffect>();
+            dissolveEffect.DissolveMaterial = DeathShader;
+            dissolveEffect.DissolveAmount = 0;
+            dissolveEffect.Duration = DeathAnimationTime;
+            dissolveEffect.IsDissolving = true;
+        }
+
+        yield return new WaitForSeconds(DeathAnimationTime);
+
+        _pubSubSender.Publish("entity.died", this);
+        Destroy(gameObject);
     }
 }

@@ -132,6 +132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e98d65995142e5e4396e3269193db2c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DeathShader: {fileID: 2100000, guid: 76d0a75579b8763468f721f25bdbcff6, type: 2}
   Owner: 1
   Definition: {fileID: 11400000, guid: 8bb9b663af2de9c41811fec853b0ace1, type: 2}
   GridManager: {fileID: 0}
@@ -141,6 +142,8 @@ MonoBehaviour:
   _movement: 0
   _isWaiting: 0
   _isBusy: 0
+  DeathAnimationTime: 0.5
+  PlayDeathAnimation: 1
 --- !u!114 &4891653499143316073
 MonoBehaviour:
   m_ObjectHideFlags: 0

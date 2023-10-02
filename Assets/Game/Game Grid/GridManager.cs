@@ -1,3 +1,4 @@
+using info.jacobingalls.jamkit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -42,6 +43,7 @@ public struct TileData
     }
 }
 
+[RequireComponent(typeof(PubSubSender))]
 public class GridManager : MonoBehaviour
 {
 
@@ -56,13 +58,13 @@ public class GridManager : MonoBehaviour
 
     public HashSet<Entity> Entities { get { return _entities; } }
     private HashSet<Entity> _entities = new();
-
+    private PubSubSender _pubSubSender;
 
 
     // Start is called before the first frame update
     void Start()
     {
-
+        _pubSubSender = GetComponent<PubSubSender>();
     }
 
     // Update is called once per frame
@@ -100,6 +102,8 @@ public class GridManager : MonoBehaviour
         {
             _tileData[newTileData.Position] = newTileData;
         }
+
+        _pubSubSender.Publish("grid.tile.updated");
     }
 
     // An ordered list of selectables at a given tile.
@@ -156,6 +160,8 @@ public class GridManager : MonoBehaviour
         _setEntityPositions_unsafe(entity, position);
 
         Debug.Log("Registered " + entity + " at " + position + ".");
+
+        _pubSubSender.Publish("grid.entity.registered");
     }
 
     public void UnregisterEntity(Entity entity)
@@ -167,6 +173,8 @@ public class GridManager : MonoBehaviour
         var data = GetTileData(position);
         data.Entity = null;
         UpdateTileData(data);
+
+        _pubSubSender.Publish("grid.entity.unregistered");
     }
 
     public void SetEntityPosition(Entity entity, Vector2Int position)

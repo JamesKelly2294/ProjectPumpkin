@@ -347,6 +347,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6690614968678920304, guid: ff58d6f8be0d043b0999f5f746eea276, type: 3}
+      propertyPath: DeathShader
+      value: 
+      objectReference: {fileID: -876546973899608171, guid: 7c5a5c8efb646f6489ea90ce9a4bffa3, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -428,7 +432,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Key
@@ -439,11 +443,19 @@ PrefabInstance:
       value: turnManager.currentTeam.changed
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[6].Key
+      value: grid.tile.updated
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[6].Delegate.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
@@ -455,11 +467,27 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[6].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 723750845}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 723750845}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 723750845}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[6].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 723750845}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
@@ -471,12 +499,28 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[6].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: UpdateDefaultSelectedAction
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: TurnDidChange
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: TurnDidChange
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[6].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ForceVisualsRefresh
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -487,11 +531,27 @@ PrefabInstance:
       value: PlayerInput, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: PlayerInput, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[6].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PlayerInput, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[4].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
       propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[5].Delegate.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5347780000587633163, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
+      propertyPath: Subscriptions.Array.data[6].Delegate.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6393965263993604590, guid: 3f87e71201d107949a5294d224f88fbd, type: 3}
@@ -2001,6 +2061,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6690614968678920304, guid: dcbfbd3ded71d4f1abef69723d87ab50, type: 3}
+      propertyPath: DeathShader
+      value: 
+      objectReference: {fileID: 2100000, guid: 76d0a75579b8763468f721f25bdbcff6, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
