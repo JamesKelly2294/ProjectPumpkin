@@ -456,7 +456,7 @@ public class PlayerInput : MonoBehaviour
             return;
         }
 
-        if (selectedAction.Kind != Action.ActionKind.Movement)
+        if (selectedAction.Kind != Action.ActionKind.Movement || !selectedAction.Targetable)
         {
             _gridRangeIndicator.HidePath();
             return;
@@ -487,6 +487,13 @@ public class PlayerInput : MonoBehaviour
             _gridRangeIndicator.gameObject.SetActive(false);
             return;
         }
+
+        if (!selectedAction.Targetable)
+        {
+            _gridRangeIndicator.HideRange();
+            return;
+        }
+        _gridRangeIndicator.ShowRange();
 
         int range = selectedEntity.Range(selectedAction);
         bool ignoringEntities = false;
