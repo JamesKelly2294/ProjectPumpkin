@@ -15,4 +15,4 @@ MonoBehaviour:
   id: SFX/GenericHurt
   audioMixerGroup: {fileID: 4674431572857700961, guid: a0420a807fa813e4cb71d6b63902ac1c, type: 2}
   audioClips:
-  - {fileID: 8300000, guid: e25742b56a0a6204b8e4fc34a04d29e9, type: 3}
+  - {fileID: 8300000, guid: 5c0c2c380d5084eb6bc4d286deef8029, type: 3}

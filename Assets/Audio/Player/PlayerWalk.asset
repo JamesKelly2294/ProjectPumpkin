@@ -15,5 +15,4 @@ MonoBehaviour:
   id: SFX/PlayerWalk
   audioMixerGroup: {fileID: 4674431572857700961, guid: a0420a807fa813e4cb71d6b63902ac1c, type: 2}
   audioClips:
-  - {fileID: 8300000, guid: 1504203d8d1054cd09f1cd95121ecc87, type: 3}
-  - {fileID: 8300000, guid: ac34f11cef0a54d1ab0fa17300348292, type: 3}
+  - {fileID: 8300000, guid: e44f5e4438d3747d383f09d9bf9ce4ac, type: 3}
