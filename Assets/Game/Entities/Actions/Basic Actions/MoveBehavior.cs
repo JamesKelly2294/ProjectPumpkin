@@ -36,6 +36,11 @@ public class MoveBehavior : ActionBehavior
             return;
         }
 
+        foreach (var p in path)
+        {
+            Debug.Log(p);
+        }
+
         if (!context.ignoringCost && context.action.CostIsPerTile)
         {
             for (int i = 0; i < path.Count - 1; i++)

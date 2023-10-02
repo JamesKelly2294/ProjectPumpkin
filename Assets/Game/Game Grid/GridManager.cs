@@ -209,13 +209,13 @@ public class GridManager : MonoBehaviour
         entity.transform.position = TileCoordinateToWorldPosition(position);
     }
 
-    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, int range = 0, bool debugVisuals = false, bool ignoringObstacles = false) 
+    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, int range = 0, bool alwaysIncludeTarget = false, bool debugVisuals = false, bool ignoringObstacles = false) 
     {
-        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, range:range, debugVisuals: debugVisuals, ignoringObstacles: ignoringObstacles);
+        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, range:range, debugVisuals: debugVisuals, alwaysIncludeTarget: alwaysIncludeTarget, ignoringObstacles: ignoringObstacles);
     }
 
 
-    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, int range = 0, bool debugVisuals=false, bool ignoringObstacles = false)
+    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, int range = 0, bool alwaysIncludeTarget = false, bool debugVisuals = false, bool ignoringObstacles = false)
     {
         if (startPosition == endPosition)
         {
@@ -227,7 +227,7 @@ public class GridManager : MonoBehaviour
         Dictionary<Vector3Int, Vector3Int> visited = new Dictionary<Vector3Int, Vector3Int>();
         Queue<Vector3Int> queue = new Queue<Vector3Int>();
 
-        foreach (var neighbor in NeighborsForTileAtPosition(startPosition, ignoringObstacles: ignoringObstacles))
+        foreach (var neighbor in NeighborsForTileAtPosition(startPosition, target: endPosition, alwaysIncludeTarget: alwaysIncludeTarget, ignoringObstacles: ignoringObstacles))
         {
             visited[neighbor] = startPosition;
             queue.Enqueue(neighbor);
@@ -243,7 +243,7 @@ public class GridManager : MonoBehaviour
             }
             else
             {
-                var neighbors = NeighborsForTileAtPosition(currentTile, ignoringObstacles: ignoringObstacles);
+                var neighbors = NeighborsForTileAtPosition(currentTile, target: endPosition, alwaysIncludeTarget: alwaysIncludeTarget, ignoringObstacles: ignoringObstacles);
                 foreach (var neighbor in neighbors)
                 {
                     if (visited.ContainsKey(neighbor)) { continue; }
@@ -323,6 +323,54 @@ public class GridManager : MonoBehaviour
         return results;
     }
 
+    public List<Vector2Int> OrderedBFS(Vector3Int startPosition, int range, bool ignoringObstacles = false)
+    {
+        if (range < 0)
+        {
+            Debug.LogError("Bruh.");
+            return new List<Vector2Int>();
+        }
+
+        if (range == 0)
+        {
+            var quickPath = new List<Vector2Int>();
+            quickPath.Add((Vector2Int)startPosition);
+            return quickPath;
+        }
+
+        List<Vector2Int> results = new();
+        Dictionary<Vector3Int, int> visited = new Dictionary<Vector3Int, int>();
+        Queue<Vector3Int> queue = new Queue<Vector3Int>();
+
+        foreach (var neighbor in NeighborsForTileAtPosition(startPosition, ignoringObstacles: ignoringObstacles))
+        {
+            visited[neighbor] = 1;
+            queue.Enqueue(neighbor);
+        }
+
+        while (queue.Count > 0)
+        {
+            var currentTile = queue.Dequeue();
+            if (visited[currentTile] > range)
+            {
+                break;
+            }
+            else
+            {
+                results.Add((Vector2Int)currentTile);
+                var neighbors = NeighborsForTileAtPosition(currentTile, ignoringObstacles: ignoringObstacles);
+                foreach (var neighbor in neighbors)
+                {
+                    if (visited.ContainsKey(neighbor)) { continue; }
+                    visited[neighbor] = visited[currentTile] + 1;
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+
+        return results;
+    }
+
     List<Vector2Int> BuildPath(Vector3Int startPosition, Vector3Int endPosition, Dictionary<Vector3Int, Vector3Int> visited)
     {
         List<Vector2Int> path = new List<Vector2Int>();
@@ -339,7 +387,7 @@ public class GridManager : MonoBehaviour
         return path;
     }
 
-    bool TileIsWalkable(Vector3Int tilePosition, bool ignoringObstacles)
+    bool TileIsWalkable(Vector3Int tilePosition, Vector3Int? target, bool alwaysIncludeTarget, bool ignoringObstacles)
     {
         var tileExists = Walkable.HasTile(tilePosition);
 
@@ -348,10 +396,16 @@ public class GridManager : MonoBehaviour
             obstaclesInTheWay = HasEntity((Vector2Int)tilePosition);
         }
 
-        return tileExists && !obstaclesInTheWay;
+        var overrideObstacleCheck = false;
+        if (target != null && alwaysIncludeTarget)
+        {
+            overrideObstacleCheck = (target.Value == tilePosition);
+        }
+
+        return tileExists && (!obstaclesInTheWay || overrideObstacleCheck);
     }
 
-    List<Vector3Int> NeighborsForTileAtPosition(Vector3Int tilePosition, bool includeDiagonal = false, bool ignoringObstacles = false)
+    List<Vector3Int> NeighborsForTileAtPosition(Vector3Int tilePosition, Vector3Int? target = null, bool includeDiagonal = false, bool alwaysIncludeTarget = false, bool ignoringObstacles = false)
     {
         var neighborPositions = new List<Vector3Int>();
 
@@ -359,10 +413,10 @@ public class GridManager : MonoBehaviour
         var eastPos = tilePosition + new Vector3Int(1, 0, 0);
         var southPos = tilePosition + new Vector3Int(0, 1, 0);
         var westPos = tilePosition + new Vector3Int(-1, 0, 0);
-        if (TileIsWalkable(northPos, ignoringObstacles)) { neighborPositions.Add(northPos); }
-        if (TileIsWalkable(eastPos, ignoringObstacles)) { neighborPositions.Add(eastPos); }
-        if (TileIsWalkable(southPos, ignoringObstacles)) { neighborPositions.Add(southPos); }
-        if (TileIsWalkable(westPos, ignoringObstacles)) { neighborPositions.Add(westPos); }
+        if (TileIsWalkable(northPos, target, alwaysIncludeTarget, ignoringObstacles)) { neighborPositions.Add(northPos); }
+        if (TileIsWalkable(eastPos, target, alwaysIncludeTarget, ignoringObstacles)) { neighborPositions.Add(eastPos); }
+        if (TileIsWalkable(southPos, target, alwaysIncludeTarget, ignoringObstacles)) { neighborPositions.Add(southPos); }
+        if (TileIsWalkable(westPos, target, alwaysIncludeTarget, ignoringObstacles)) { neighborPositions.Add(westPos); }
 
         if (includeDiagonal)
         {
@@ -370,10 +424,10 @@ public class GridManager : MonoBehaviour
             var southEastPos = tilePosition + new Vector3Int(1, 1, 0);
             var northWestPos = tilePosition + new Vector3Int(-1, -1, 0);
             var southWestPos = tilePosition + new Vector3Int(-1, 1, 0);
-            if (TileIsWalkable(northEastPos, ignoringObstacles)) { neighborPositions.Add(northEastPos); }
-            if (TileIsWalkable(southEastPos, ignoringObstacles)) { neighborPositions.Add(southEastPos); }
-            if (TileIsWalkable(northWestPos, ignoringObstacles)) { neighborPositions.Add(northWestPos); }
-            if (TileIsWalkable(southWestPos, ignoringObstacles)) { neighborPositions.Add(southWestPos); }
+            if (TileIsWalkable(northEastPos, target, alwaysIncludeTarget, ignoringObstacles)) { neighborPositions.Add(northEastPos); }
+            if (TileIsWalkable(southEastPos, target, alwaysIncludeTarget, ignoringObstacles)) { neighborPositions.Add(southEastPos); }
+            if (TileIsWalkable(northWestPos, target, alwaysIncludeTarget, ignoringObstacles)) { neighborPositions.Add(northWestPos); }
+            if (TileIsWalkable(southWestPos, target, alwaysIncludeTarget, ignoringObstacles)) { neighborPositions.Add(southWestPos); }
         }
 
         return neighborPositions;

@@ -164,54 +164,11 @@ public class PlayerInput : MonoBehaviour
         return _cameraControls.CameraIsPanning;
     }
 
-    private bool ValidateAction(Action action, Action.ExecutionContext context)
-    {
-        var entity = context.source;
-        var canAfford = entity.CanAffordAction(SelectedAction);
-
-        var validTarget = false;
-        if (action.Targetable && context.target != null)
-        {
-            var entityForTarget = context.target.Value.Entity;
-            switch (action.Target)
-            {
-                case Action.ActionTarget.Walkable:
-                    validTarget = context.target.Value.IsWalkable();
-                    break;
-                case Action.ActionTarget.Entity:
-                    validTarget = entityForTarget != null;
-                    break;
-                case Action.ActionTarget.AllyEntity:
-                    validTarget = entityForTarget != null && entity.Owner.GetAlignmentMapping()[entityForTarget.Owner] == Entity.OwnerAlignment.Good;
-                    break;
-                case Action.ActionTarget.EnemyEntity:
-                    validTarget = entityForTarget != null && entity.Owner.GetAlignmentMapping()[entityForTarget.Owner] == Entity.OwnerAlignment.Bad;
-                    break;
-            }
-
-            var targetPosition = context.target.Value.Position;
-            var path = context.gridManager.CalculatePath(context.source.Position, targetPosition, context.range, ignoringObstacles: true);
-            if (path.LastOrDefault() != targetPosition)
-            {
-                validTarget = false;
-            }
-        }
-        else
-        {
-            validTarget = true;
-        }
-
-        return canAfford && validTarget;
-    }
-
     private void ExecuteSelectedAction()
     {
         var entity = SelectedEntity();
 
-        if (entity == null || SelectedAction == null)
-        {
-            return;
-        }
+        if (entity == null || SelectedAction == null) { return; }
 
         var context = new Action.ExecutionContext();
         TileData? data = null;
@@ -225,10 +182,7 @@ public class PlayerInput : MonoBehaviour
         context.gridManager = _gridManager;
         context.target = data;
 
-        if (!ValidateAction(SelectedAction, context))
-        {
-            return;
-        }
+        if (!SelectedAction.Validate(context)) { return; }
 
         Debug.Log("Executing selected action!");
 
@@ -247,6 +201,11 @@ public class PlayerInput : MonoBehaviour
         if (asr.Entity.Owner != Entity.OwnerKind.Player)
         {
             SelectedAction = null;
+            return;
+        }
+
+        if (!asr.Entity.CanAffordAction(asr.Action) || (!asr.Action.CanExecuteWhileWaiting && asr.Entity.IsWaiting))
+        {
             return;
         }
 
@@ -433,12 +392,17 @@ public class PlayerInput : MonoBehaviour
         {
             if (selectedEntity.Owner == Entity.OwnerKind.Player)
             {
-                foreach (var action in selectedEntity.Actions)
+                var currentlySelectedActionIsStillValid = (selectedEntity.Actions.Contains(SelectedAction) && selectedEntity.CanAffordAction(SelectedAction));
+                if (!currentlySelectedActionIsStillValid)
                 {
-                    if (selectedEntity.CanAffordAction(action))
+                    // 
+                    foreach (var action in selectedEntity.Actions)
                     {
-                        SelectedAction = action;
-                        break;
+                        if (selectedEntity.CanAffordAction(action))
+                        {
+                            SelectedAction = action;
+                            break;
+                        }
                     }
                 }
             }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Action
@@ -182,5 +184,52 @@ public class Action
         public bool ignoringCost;
 
         public override string ToString() => $"<ExecutionContext: source={source}, target={target}>";
+    }
+
+    public bool Validate(Action.ExecutionContext context)
+    {
+        var entity = context.source;
+        var canAfford = entity.CanAffordAction(this);
+
+        var validTarget = false;
+        if (this.Targetable && context.target != null)
+        {
+            var entityForTarget = context.target.Value.Entity;
+            switch (this.Target)
+            {
+                case Action.ActionTarget.Walkable:
+                    validTarget = context.target.Value.IsWalkable();
+                    break;
+                case Action.ActionTarget.Entity:
+                    validTarget = entityForTarget != null;
+                    break;
+                case Action.ActionTarget.AllyEntity:
+                    validTarget = entityForTarget != null && entity.Owner.GetAlignmentMapping()[entityForTarget.Owner] == Entity.OwnerAlignment.Good;
+                    break;
+                case Action.ActionTarget.EnemyEntity:
+                    validTarget = entityForTarget != null && entity.Owner.GetAlignmentMapping()[entityForTarget.Owner] == Entity.OwnerAlignment.Bad;
+                    break;
+            }
+
+            var targetPosition = context.target.Value.Position;
+            var path = context.gridManager.CalculatePath(context.source.Position, targetPosition, context.range, ignoringObstacles: true);
+            if (path.LastOrDefault() != targetPosition)
+            {
+                validTarget = false;
+            }
+        }
+        else
+        {
+            validTarget = true;
+        }
+
+        bool validated = canAfford && validTarget;
+
+        if (!validated)
+        {
+            Debug.Log($"Unable to validate, entity={entity.gameObject}, canAfford={canAfford}, validTarget={validTarget}");
+        }
+
+        return validated;
     }
 }

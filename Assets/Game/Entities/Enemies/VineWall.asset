@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: VineWall
   m_EditorClassIdentifier: 
   Name: Vine Wall
+  ClassName: 
   Description: A thick wall of vines, impossible to squeeze through. Chance of spawning
     a new Vine Wall next to it.
   FlavorText: It's not evil; just growing...
@@ -23,6 +24,4 @@ MonoBehaviour:
   BaseMaxActionPoints: 1
   BaseMaxMovement: 0
   BaseActions:
-  - {fileID: 11400000, guid: c3d93b4c89b641f48823cdb72c620a4f, type: 2}
-  - {fileID: 11400000, guid: 83f6124ae90234f4f91696cc59ba1b84, type: 2}
   - {fileID: 11400000, guid: 59490ca2d68410341be263cdf6eaf4f4, type: 2}

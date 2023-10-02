@@ -191,17 +191,16 @@ public class TurnManager : MonoBehaviour
             _currentTeam = TurnOrder[currentTeamIndex + 1];
         }
 
-        UpdateEntitiesForCurrentTeam();
-            
-        if (turnDidChange) { _pubSubSender.Publish("turnManager.currentTurn.changed", _currentTurn); }
-        _pubSubSender.Publish("turnManager.currentTeam.changed", _currentTurn);
-        _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
-
-        var currentTeamEntities = OwnedEntities(CurrentTeam);
-        foreach ( var entity in currentTeamEntities )
+        var currentTeamEntities = OwnedEntities(_currentTeam);
+        foreach (var entity in currentTeamEntities)
         {
             entity.NewTurnBegan();
         }
+        UpdateEntitiesForCurrentTeam();
+
+        if (turnDidChange) { _pubSubSender.Publish("turnManager.currentTurn.changed", _currentTurn); }
+        _pubSubSender.Publish("turnManager.currentTeam.changed", _currentTurn);
+        _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
     }
 
     void UpdateEntitiesForCurrentTeam()
