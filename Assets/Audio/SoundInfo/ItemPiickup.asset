@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3c41cf80029352441b39ad9e2522d7a4, type: 3}
-  m_Name: Generic Death
+  m_Name: ItemPiickup
   m_EditorClassIdentifier: 
-  id: SFX/GenericDeath
+  id: SFX/ItemPickup
   audioMixerGroup: {fileID: 4674431572857700961, guid: a0420a807fa813e4cb71d6b63902ac1c, type: 2}
   audioClips:
-  - {fileID: 8300000, guid: ea43f5f5ae2f84ebe89b125fed69b6c3, type: 3}
+  - {fileID: 8300000, guid: 7d3d80d23e1974954b36258af5a6dd83, type: 3}
