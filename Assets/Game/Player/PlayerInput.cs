@@ -1,15 +1,8 @@
 using info.jacobingalls.jamkit;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.EventSystems;
-using static GridRangeIndicator.Configuration;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
-using static UnityEngine.GraphicsBuffer;
 
 public class ActionSelectionRequest
 {

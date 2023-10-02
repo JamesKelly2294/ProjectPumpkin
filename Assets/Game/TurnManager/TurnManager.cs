@@ -1,11 +1,7 @@
 using info.jacobingalls.jamkit;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
-using static UnityEngine.EventSystems.EventTrigger;
-using static UnityEngine.GraphicsBuffer;
 
 [RequireComponent(typeof(PubSubSender))]
 public class TurnManager : MonoBehaviour
