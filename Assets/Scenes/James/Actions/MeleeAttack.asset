@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35cea92640c75c84d80cea4776230658, type: 3}
-  m_Name: Attack
+  m_Name: MeleeAttack
   m_EditorClassIdentifier: 
   Name: Attack
   Description: Attack that stupid bug.

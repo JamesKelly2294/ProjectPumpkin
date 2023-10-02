@@ -14,9 +14,16 @@ public struct TileData
 
     public Entity Entity;
 
+    public GridManager GridManager;
+
     public bool IsEmpty()
     {
-        return Entity == null;
+        return Entity == null && IsWalkable();
+    }
+
+    public bool IsWalkable()
+    {
+        return GridManager.Walkable.HasTile((Vector3Int)Position);
     }
 
     public List<Selectable> Selectables
@@ -73,7 +80,8 @@ public class GridManager : MonoBehaviour
         {
             var tileData = new TileData
             {
-                Position = position
+                Position = position,
+                GridManager = this,
             };
             return tileData;
         }

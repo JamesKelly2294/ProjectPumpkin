@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 using static GridRangeIndicator.Configuration;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 using static UnityEditor.Timeline.TimelinePlaybackControls;
 using static UnityEngine.GraphicsBuffer;
 
@@ -175,7 +176,7 @@ public class PlayerInput : MonoBehaviour
             switch (action.Target)
             {
                 case Action.ActionTarget.Walkable:
-                    validTarget = true;
+                    validTarget = context.target.Value.IsWalkable();
                     break;
                 case Action.ActionTarget.Entity:
                     validTarget = entityForTarget != null;
@@ -231,6 +232,11 @@ public class PlayerInput : MonoBehaviour
     {
         ActionSelectionRequest asr = e.value as ActionSelectionRequest;
 
+        RequestActionSelectionHelper(asr);
+    }
+
+    private void RequestActionSelectionHelper(ActionSelectionRequest asr, bool autoExecuteNonTargetable = true)
+    {
         if (asr.Entity.Owner != Entity.OwnerKind.Player)
         {
             SelectedAction = null;
@@ -240,7 +246,7 @@ public class PlayerInput : MonoBehaviour
         SelectedSelectable = asr.Entity.GetComponent<Selectable>();
         SelectedAction = asr.Action;
 
-        if (!asr.Action.Targetable)
+        if (!asr.Action.Targetable && autoExecuteNonTargetable)
         {
             ExecuteSelectedAction();
         }
@@ -253,9 +259,10 @@ public class PlayerInput : MonoBehaviour
         UpdateTileHighlight();
         UpdateTileSelection();
 
+        var entity = SelectedEntity();
+
         if (SelectedAction != null)
         {
-            var entity = SelectedEntity();
             if (!entity.CanAffordAction(SelectedAction))
             {
                 Debug.Log("Nullifying action");
@@ -263,7 +270,6 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
-                Debug.Log("UpdateSelectedActionRangeVisuals");
                 UpdateSelectedActionRangeVisuals();
                 UpdateSelectedActionPathVisuals();
             }
@@ -278,6 +284,21 @@ public class PlayerInput : MonoBehaviour
         if (CanExecuteAction() && Input.GetMouseButtonUp(1))
         {
             ExecuteSelectedAction();
+        }
+
+        if (entity != null)
+        {
+            for (KeyCode keyCode = KeyCode.Alpha1; keyCode <= KeyCode.Alpha9; keyCode++)
+            {
+                var index = keyCode - KeyCode.Alpha1;
+                if (Input.GetKeyDown(keyCode) && index < entity.Actions.Count)
+                {
+                    ActionSelectionRequest asr = new ActionSelectionRequest();
+                    asr.Entity = entity;
+                    asr.Action = entity.Actions[index];
+                    RequestActionSelectionHelper(asr, autoExecuteNonTargetable: false);
+                }
+            }
         }
     }
 
@@ -398,12 +419,26 @@ public class PlayerInput : MonoBehaviour
         return selectionDidChange;
     }
 
-    void UpdateDefaultSelectedAction()
+    public void UpdateDefaultSelectedAction()
     {
         var selectedEntity = SelectedEntity();
         if (selectedEntity != null)
         {
-            SelectedAction = selectedEntity.Owner == Entity.OwnerKind.Player ? selectedEntity.Actions.FirstOrDefault() : null;
+            if (selectedEntity.Owner == Entity.OwnerKind.Player)
+            {
+                foreach (var action in selectedEntity.Actions)
+                {
+                    if (selectedEntity.CanAffordAction(action))
+                    {
+                        SelectedAction = action;
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                SelectedAction = null;
+            }
         }
         else
         {

@@ -25,11 +25,16 @@ public class MoveBehavior : ActionBehavior
         }
         else
         {
+            context.source.SetBusy(false);
             Debug.LogError("Invalid configuration for MoveBehavior - missing target");
             return;
         }
 
         var path = context.gridManager.CalculatePath(startPosition, endPosition, context.range);
+        if (path.Count <= 1) {
+            context.source.SetBusy(false);
+            return;
+        }
 
         if (!context.ignoringCost && context.action.CostIsPerTile)
         {

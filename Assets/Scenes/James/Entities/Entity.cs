@@ -358,4 +358,60 @@ public class Entity : MonoBehaviour, ISelectable
         moving = false;
         completionHandler(this);
     }
+
+
+
+
+
+    public delegate void MeleeAttackZenithReached(Entity e);
+    public delegate void MeleeAttackCompleted(Entity e);
+
+    public void PlayMeleeAttackAnimation(Vector2Int target, MeleeAttackZenithReached zenithHandler, MeleeAttackCompleted completionHandler)
+    {
+        StartCoroutine(MeleeAttackAnimationCoroutine(target, zenithHandler, completionHandler));
+    }
+
+    IEnumerator MeleeAttackAnimationCoroutine(Vector2Int target, MeleeAttackZenithReached zenithHandler, MeleeAttackCompleted completionHandler)
+    {
+        var t = 0.0f;
+        var speed = 7.5f; // meters per second
+        var timeToWalkAcrossTile = 1 / speed;
+        var tileDistance = Vector2Int.Distance(Position, target);
+        float animationTime = tileDistance * timeToWalkAcrossTile;
+
+        var curve = AnimationCurve.EaseInOut(0.0f, 0.0f, animationTime, 1.0f);
+        curve.postWrapMode = WrapMode.PingPong;
+
+        bool calledZenithHandler = false;
+        while (t < animationTime * 2)
+        {
+            t += Time.deltaTime;
+            var direction = new Vector3(target.x - Position.x, target.y - Position.y, 0.0f).normalized;
+            var progress = curve.Evaluate(t);
+            transform.position = (Vector3Int)Position + (direction * progress) + new Vector3(0.5f, 0.5f, 0.0f); // ew, becky. ew.
+
+            if (t > animationTime && !calledZenithHandler)
+            {
+                zenithHandler(this);
+                calledZenithHandler = true;
+            }
+
+            yield return null;
+        }
+
+        completionHandler(this);
+    }
+
+    public void ApplyDamage(int damageAmount)
+    {
+        if (damageAmount <= 0) { Debug.LogError("Cannot apply non-positive damage."); return; }
+
+        Health = Mathf.Max(Health - damageAmount, 0);
+
+        if (Health <= 0)
+        {
+            Debug.Log("Deadge!");
+            Destroy(gameObject);
+        }
+    }
 }

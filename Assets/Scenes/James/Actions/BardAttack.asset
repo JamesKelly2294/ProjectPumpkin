@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35cea92640c75c84d80cea4776230658, type: 3}
+  m_Name: BardAttack
+  m_EditorClassIdentifier: 
+  Name: Lute Bash
+  Description: Bash some class into this Sylvan trash.
+  FlavorText: '"Ew, don''t let them touch me."'
+  Icon: {fileID: 21300000, guid: 6a59098014ce04887bc6c633c8af24b3, type: 3}
+  Color: {r: 0.6886792, g: 0.25663045, b: 0.25663045, a: 1}
+  BlocksFromEndingTurn: 1
+  CanOnlyExecuteOnOwnersTurn: 1
+  CostIsPerTile: 0
+  CanExecuteWhileWaiting: 0
+  RangeIsDrivenByMovementCost: 0
+  DeferCostPayment: 0
+  Kind: 1
+  Target: 4
+  Behaviors:
+  - {fileID: 3196293187638663207, guid: d2aa3ca50ba8e2948b308eb5424c9ca7, type: 3}
+  BaseActionPointCost: 1
+  BaseMagicCost: 0
+  BaseMovementCost: 0
+  BaseHealthCost: 0
+  BaseRange: 1
