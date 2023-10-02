@@ -288,11 +288,13 @@ public class Entity : MonoBehaviour, ISelectable
     }
     public void OnSelected()
     {
+        AudioManager.Instance.Play("unit.selected");
     }
 
     public void OnDeselected()
     {
-
+        // Triggers at the same time as selected... perhaps not what we want...
+        // AudioManager.Instance.Play("unit.deselected");
     }
     public int Range(Action a)
     {

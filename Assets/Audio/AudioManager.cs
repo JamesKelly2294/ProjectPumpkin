@@ -67,6 +67,10 @@ public class AudioManager : MonoBehaviour
     {
         sounds[soundInfo.id] = soundInfo;
     }
+
+    public void PlaySound(string id) {
+        Play(id);
+    }
     
     public void Play(string id, bool loop = false, float pitchMin = 1.0f, float pitchMax = 1.0f, float volumeMin = 1.0f, float volumeMax = 1.0f, bool isMusic = false, Vector3? position = null, float minDistance = 1, float maxDistance = 1000)
     {
