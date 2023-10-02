@@ -357,7 +357,7 @@ public class Entity : MonoBehaviour, ISelectable
             transform.position = (Vector3Int)Position + (direction * progress) + new Vector3(0.5f, 0.5f, 0.0f); // ew, becky. ew.
 
             if (t > timeToWalkAcrossTile) {
-                GridManager.SetEntityPosition(this, currentNode);
+                EnterTile(currentNode);
 
                 if (path.Count > 0)
                 {
@@ -369,13 +369,32 @@ public class Entity : MonoBehaviour, ISelectable
 
             yield return null;
         }
-        GridManager.SetEntityPosition(this, destinationNode);
+        EnterTile(destinationNode);
 
         moving = false;
         completionHandler(this);
     }
 
+    public void EnterTile(Vector2Int tilePosition)
+    {
+        var enteredTileData = GridManager.SetEntityPosition(this, tilePosition);
 
+        if (enteredTileData != null)
+        {
+            if (TryGetComponent<Inventory>(out var inventory))
+            {
+                var items = new List<Item> (enteredTileData.Value.Items);
+                items.ForEach(i => { 
+                    var successfullyPickedUp = inventory.PickupItem(i);
+                    if (successfullyPickedUp)
+                    {
+                        GridManager.UnregisterItem(i);
+                        Destroy(i.gameObject);
+                    }
+                });
+            }
+        }
+    }
 
 
 
@@ -487,6 +506,27 @@ public class Entity : MonoBehaviour, ISelectable
         yield return new WaitForSeconds(DeathAnimationTime);
 
         _pubSubSender.Publish("entity.died", this);
+
+        if (Definition.MinDrops > 0 && Definition.PotentialItemDrops.Count > 0)
+        {
+            int numDrops = UnityEngine.Random.Range(Definition.MinDrops, Definition.MaxDrops + 1);
+
+            for (int i = 0; i < numDrops; i++)
+            {
+                var index = UnityEngine.Random.Range(0, Definition.PotentialItemDrops.Count);
+                var itemToDrop = Definition.PotentialItemDrops[index];
+
+                var go = Instantiate(Definition.DroppedItemPrefab);
+                go.transform.name = $"Dropped {itemToDrop.name}";
+                go.transform.position = transform.position;
+
+                var droppedItem = go.GetComponent<DroppedItem>();
+
+                droppedItem.Item.Definition = itemToDrop;
+                Debug.Log($"Dropping {itemToDrop.name}");
+            }
+        }
+
         Destroy(gameObject);
     }
 }

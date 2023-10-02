@@ -14,12 +14,13 @@ public struct TileData
     public Vector2Int Position;
 
     public Entity Entity;
+    public List<Item> Items;
 
     public GridManager GridManager;
 
     public bool IsEmpty()
     {
-        return Entity == null && IsWalkable();
+        return Entity == null && Items.Count == 0 && IsWalkable();
     }
 
     public bool IsWalkable()
@@ -58,6 +59,10 @@ public class GridManager : MonoBehaviour
 
     public HashSet<Entity> Entities { get { return _entities; } }
     private HashSet<Entity> _entities = new();
+
+    public HashSet<Item> Items { get { return _items; } }
+    private HashSet<Item> _items = new();
+
     private PubSubSender _pubSubSender;
 
 
@@ -83,6 +88,7 @@ public class GridManager : MonoBehaviour
             var tileData = new TileData
             {
                 Position = position,
+                Items = new List<Item>(),
                 GridManager = this,
             };
             return tileData;
@@ -178,18 +184,84 @@ public class GridManager : MonoBehaviour
         _pubSubSender.Publish("grid.entity.unregistered");
     }
 
-    public void SetEntityPosition(Entity entity, Vector2Int position)
+    public void RegisterItem(Item item, Vector2Int position)
     {
-        if (!_objectTilePositions.ContainsKey(entity))
+        if (!Walkable.HasTile((Vector3Int)position))
         {
-            Debug.Log("Unable to set position for entity that has not be registered.");
+            Debug.LogError("Cannot register item " + item + " at " + position + " as a walkable tile does not exist there!");
             return;
         }
 
-        _setEntityPositions_unsafe(entity, position);
+        _objectTilePositions[item] = position;
+        _items.Add(item);
+
+        PutItemOnGrid(item, position);
+        _setItemPositions_unsafe(item, position);
+
+        Debug.Log("Registered " + item + " at " + position + ".");
+
+        _pubSubSender.Publish("grid.entity.registered");
     }
 
-    private void _setEntityPositions_unsafe(Entity entity, Vector2Int position)
+    public void UnregisterItem(Item item)
+    {
+        var position = _objectTilePositions[item];
+        _objectTilePositions.Remove(item);
+        _items.Remove(item);
+
+        var data = GetTileData(position);
+        data.Items.Remove(item);
+        UpdateTileData(data);
+
+        _pubSubSender.Publish("grid.entity.unregistered");
+    }
+
+    public void SetItemPosition(Item item, Vector2Int position)
+    {
+        if (!_objectTilePositions.ContainsKey(item))
+        {
+            Debug.Log("Unable to set position for item that has not been registered.");
+            return;
+        }
+
+        _setItemPositions_unsafe(item, position);
+    }
+
+    private void _setItemPositions_unsafe(Item item, Vector2Int position)
+    {
+        var oldPosition = _objectTilePositions[item];
+        _objectTilePositions[item] = position;
+
+        var oldTileData = GetTileData(oldPosition);
+        if (oldTileData.Items.Contains(item))
+        {
+            Debug.Log("OLD DATA EXISTS, CLEARING");
+            oldTileData.Items.Remove(item);
+            UpdateTileData(oldTileData);
+        }
+
+        var newTileData = GetTileData(position);
+        newTileData.Items.Add(item);
+        UpdateTileData(newTileData);
+
+        var str = "";
+        newTileData.Items.ForEach(i => str += $"{i.Name}");
+
+        Debug.Log($"newTileData.Items for {newTileData.Position} is now {str}");
+    }
+
+    public TileData? SetEntityPosition(Entity entity, Vector2Int position)
+    {
+        if (!_objectTilePositions.ContainsKey(entity))
+        {
+            Debug.Log("Unable to set position for entity that has not been registered.");
+            return null;
+        }
+
+        return _setEntityPositions_unsafe(entity, position);
+    }
+
+    private TileData? _setEntityPositions_unsafe(Entity entity, Vector2Int position)
     {
         var oldPosition = _objectTilePositions[entity];
         _objectTilePositions[entity] = position;
@@ -201,6 +273,8 @@ public class GridManager : MonoBehaviour
         var newTileData = GetTileData(position);
         newTileData.Entity = entity;
         UpdateTileData(newTileData);
+
+        return newTileData;
     }
 
     public Entity GetEntity(Vector2Int position)
@@ -216,6 +290,19 @@ public class GridManager : MonoBehaviour
     void SnapEntityToGrid(Entity entity, Vector2Int position)
     {
         entity.transform.position = TileCoordinateToWorldPosition(position);
+    }
+
+    void PutItemOnGrid(Item item, Vector2Int position)
+    {
+        var basePosition = TileCoordinateToWorldPosition(position);
+
+        var x = basePosition.x + UnityEngine.Random.Range(-0.4f, 0.4f);
+        var y = basePosition.y + UnityEngine.Random.Range(-0.4f, 0.4f);
+        var z = basePosition.z;
+        item.transform.position = new Vector3(x, y, z);
+
+        var currentRotation = item.transform.rotation.eulerAngles;
+        item.transform.rotation = Quaternion.Euler(currentRotation.x, currentRotation.y, UnityEngine.Random.Range(-30f, 30f));
     }
 
     public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, int range = 0, int maxRange = 0, bool alwaysIncludeTarget = false, bool debugVisuals = false, bool ignoringObstacles = false) 

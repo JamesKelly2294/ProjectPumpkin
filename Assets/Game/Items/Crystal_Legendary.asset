@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e083c7ac931d00a4cbe38ba08b86d371, type: 3}
   m_Name: Crystal_Legendary
   m_EditorClassIdentifier: 
-  Name: Crystal
+  Name: Legendary Crystal
   Description: Description of the item.
   FlavorText: '"Flavor text for the item."'
   Icon: {fileID: 21300000, guid: 8eeac2a0ef5945b449850f34bef3e52e, type: 3}

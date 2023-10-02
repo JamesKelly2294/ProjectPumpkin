@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 4891653499143316073}
   - component: {fileID: 8803722516490841046}
   - component: {fileID: 4040592937986781583}
+  - component: {fileID: -5152679210076319505}
   m_Layer: 0
   m_Name: Tanglewaver
   m_TagString: Untagged
@@ -136,6 +137,8 @@ MonoBehaviour:
   Owner: 1
   Definition: {fileID: 11400000, guid: 99ec5cff7a5194cd0bf43632b33499b7, type: 2}
   GridManager: {fileID: 0}
+  HurtSfx: SFX/GenericHurt
+  DeathSfx: SFX/GenericDeath
   _health: 0
   _mana: 0
   _actionPoints: 0
@@ -309,6 +312,21 @@ MonoBehaviour:
   walkVerticalTime: 0
   walkVerticalTotalTime: 0.5
   WiggleTarget: {fileID: 8801499485578269710}
+  DistanceForFootstep: 1
+--- !u!114 &-5152679210076319505
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4242559653279700501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49a56aae284c5b748964151fd4282b38, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Capacity: 15
+  _items: []
 --- !u!1 &8801499485578269710
 GameObject:
   m_ObjectHideFlags: 0

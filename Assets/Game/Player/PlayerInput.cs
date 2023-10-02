@@ -397,6 +397,7 @@ public class PlayerInput : MonoBehaviour
         {
             UpdateSelectableVisuals();
             UpdateDefaultSelectedAction();
+            GetComponent<PubSubSender>().Publish("player_input.selection.changed", newlySelectedObject);
         }
 
         return selectionDidChange;

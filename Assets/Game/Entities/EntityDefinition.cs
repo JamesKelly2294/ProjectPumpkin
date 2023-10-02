@@ -24,5 +24,15 @@ public class EntityDefinition : ScriptableObject
     [Range(0.1f, 10.0f)]
     public float MoveSpeed = 5.0f;
 
+
+    [Header("Loot")]
+    public GameObject DroppedItemPrefab;
+    public List<ItemDefinition> PotentialItemDrops;
+
+    [Range(0, 10)]
+    public int MinDrops;
+    [Range(0, 10)]
+    public int MaxDrops;
+
     public List<ActionDefinition> BaseActions = new List<ActionDefinition>();
 }

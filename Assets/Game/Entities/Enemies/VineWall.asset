@@ -24,5 +24,10 @@ MonoBehaviour:
   BaseMaxActionPoints: 1
   BaseMaxMovement: 0
   MoveSpeed: 5
+  DroppedItemPrefab: {fileID: 1235759972541900410, guid: d68b3b8684c400e4b8b12d9f97d95d03, type: 3}
+  PotentialItemDrops:
+  - {fileID: 11400000, guid: 241b633a161534c4487d2d4f8c0d76db, type: 2}
+  MinDrops: 3
+  MaxDrops: 6
   BaseActions:
   - {fileID: 11400000, guid: 59490ca2d68410341be263cdf6eaf4f4, type: 2}
