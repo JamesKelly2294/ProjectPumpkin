@@ -19,7 +19,7 @@ MonoBehaviour:
   Icon: {fileID: 21300000, guid: 251cb20cbc3f9427ebf6e52a87319e16, type: 3}
   Color: {r: 0.23529412, g: 0.16774146, b: 0, a: 1}
   BaseMaxHealth: 15
-  BaseMaxMana: 5
+  BaseMaxMana: 0
   BaseMaxActionPoints: 2
   BaseMaxMovement: 4
   MoveSpeed: 5

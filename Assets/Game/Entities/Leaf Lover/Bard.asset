@@ -18,10 +18,10 @@ MonoBehaviour:
   FlavorText: '"Want to hear a song from my latest EP?"'
   Icon: {fileID: 21300000, guid: a4d4b4922a01946fea597f7770a16dd0, type: 3}
   Color: {r: 0.14181623, g: 0, b: 0.23584908, a: 1}
-  BaseMaxHealth: 15
-  BaseMaxMana: 5
+  BaseMaxHealth: 25
+  BaseMaxMana: 0
   BaseMaxActionPoints: 3
-  BaseMaxMovement: 4
+  BaseMaxMovement: 3
   MoveSpeed: 5
   BaseActions:
   - {fileID: 11400000, guid: c3d93b4c89b641f48823cdb72c620a4f, type: 2}

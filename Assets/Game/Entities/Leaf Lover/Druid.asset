@@ -18,7 +18,7 @@ MonoBehaviour:
   FlavorText: '"Nobody cares for the trees anymore."'
   Icon: {fileID: 21300000, guid: b9cb634a729664e57ba35076b935e905, type: 3}
   Color: {r: 0.015940156, g: 0.1981132, b: 0, a: 1}
-  BaseMaxHealth: 10
+  BaseMaxHealth: 15
   BaseMaxMana: 10
   BaseMaxActionPoints: 2
   BaseMaxMovement: 3
