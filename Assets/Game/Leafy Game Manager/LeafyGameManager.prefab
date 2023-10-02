@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4275419588052103931}
   - component: {fileID: 5157966429404348554}
+  - component: {fileID: 2369788731823957103}
   m_Layer: 0
   m_Name: LeafyGameManager
   m_TagString: Untagged
@@ -42,5 +43,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b919551c5e1978d44839c168a427bd80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2369788731823957103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5427928929197826346}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa85f00fea274f27ad241da0b5a270c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
