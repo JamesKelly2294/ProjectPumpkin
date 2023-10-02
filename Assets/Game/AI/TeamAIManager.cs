@@ -163,7 +163,8 @@ public class TeamAIManager : MonoBehaviour
             walkPath = path.GetRange(0, range);
         }
 
-        TileData? data = _gridManager.GetTileData(walkPath.Last());
+        TileData? data = null;
+        if (walkPath != null && walkPath.Count >= 1) { data = _gridManager.GetTileData(walkPath.Last()); }
         context.action = a;
         context.source = _selectedEntity;
         context.range = range;

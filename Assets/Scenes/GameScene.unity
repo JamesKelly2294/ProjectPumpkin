@@ -1387,6 +1387,75 @@ Transform:
   - {fileID: 1306516265}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1206411861
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 700154185766278688, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_Name
+      value: AudioManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154185766278690, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154186250235075, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: sounds.Array.size
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 700154186250235075, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: sounds.Array.data[10]
+      value: 
+      objectReference: {fileID: 11400000, guid: 0a3d0fd884a334e13b011fe660e983c5, type: 2}
+    - target: {fileID: 700154186250235075, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
+      propertyPath: sounds.Array.data[11]
+      value: 
+      objectReference: {fileID: 11400000, guid: 3cd1cd3df3e614c3c8702bd7638bb19e, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 694d5d12212bc9e4bbc86351a2faeaf7, type: 3}
 --- !u!1 &1306516264
 GameObject:
   m_ObjectHideFlags: 0
@@ -1866,11 +1935,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1990347479255314698, guid: dcbfbd3ded71d4f1abef69723d87ab50, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.73
+      value: -2.56
       objectReference: {fileID: 0}
     - target: {fileID: 1990347479255314698, guid: dcbfbd3ded71d4f1abef69723d87ab50, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.55
+      value: 2.59
       objectReference: {fileID: 0}
     - target: {fileID: 1990347479255314698, guid: dcbfbd3ded71d4f1abef69723d87ab50, type: 3}
       propertyPath: m_LocalPosition.z
@@ -6693,7 +6762,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4560678043716388548, guid: 05dc7c1182c8522428a115eb24460f33, type: 3}
       propertyPath: AggroRange
-      value: 10
+      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -6729,3 +6798,4 @@ SceneRoots:
   - {fileID: 8981772647200125969}
   - {fileID: 874303885}
   - {fileID: 2084586578}
+  - {fileID: 1206411861}
