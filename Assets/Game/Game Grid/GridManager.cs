@@ -103,6 +103,7 @@ public class GridManager : MonoBehaviour
             _tileData[newTileData.Position] = newTileData;
         }
 
+        if (_pubSubSender == null) { _pubSubSender = GetComponent<PubSubSender>(); }
         _pubSubSender.Publish("grid.tile.updated");
     }
 
