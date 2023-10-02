@@ -366,18 +366,18 @@ public class Entity : MonoBehaviour, ISelectable
     public delegate void MeleeAttackZenithReached(Entity e);
     public delegate void MeleeAttackCompleted(Entity e);
 
-    public void PlayMeleeAttackAnimation(Vector2Int target, MeleeAttackZenithReached zenithHandler, MeleeAttackCompleted completionHandler)
+    public void PlayMeleeAttackAnimation(Vector2Int target, float speedMPS, MeleeAttackZenithReached zenithHandler, MeleeAttackCompleted completionHandler)
     {
-        StartCoroutine(MeleeAttackAnimationCoroutine(target, zenithHandler, completionHandler));
+        StartCoroutine(MeleeAttackAnimationCoroutine(target, speedMPS, zenithHandler, completionHandler));
     }
 
-    IEnumerator MeleeAttackAnimationCoroutine(Vector2Int target, MeleeAttackZenithReached zenithHandler, MeleeAttackCompleted completionHandler)
+    IEnumerator MeleeAttackAnimationCoroutine(Vector2Int target, float speedMPS, MeleeAttackZenithReached zenithHandler, MeleeAttackCompleted completionHandler)
     {
         var t = 0.0f;
-        var speed = 7.5f; // meters per second
+        var speed = speedMPS; // meters per second
         var timeToWalkAcrossTile = 1 / speed;
-        var tileDistance = Vector2Int.Distance(Position, target);
-        float animationTime = tileDistance * timeToWalkAcrossTile;
+        var targetDirection = (new Vector3(target.x - Position.x, target.y - Position.y, 0.0f).normalized).normalized;
+        float animationTime = targetDirection.magnitude * timeToWalkAcrossTile;
 
         var curve = AnimationCurve.EaseInOut(0.0f, 0.0f, animationTime, 1.0f);
         curve.postWrapMode = WrapMode.PingPong;

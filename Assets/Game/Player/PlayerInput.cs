@@ -188,6 +188,13 @@ public class PlayerInput : MonoBehaviour
                     validTarget = entityForTarget != null && entity.Owner.GetAlignmentMapping()[entityForTarget.Owner] == Entity.OwnerAlignment.Bad;
                     break;
             }
+
+            var targetPosition = context.target.Value.Position;
+            var path = context.gridManager.CalculatePath(context.source.Position, targetPosition, context.range, ignoringObstacles: true);
+            if (path.LastOrDefault() != targetPosition)
+            {
+                validTarget = false;
+            }
         }
         else
         {

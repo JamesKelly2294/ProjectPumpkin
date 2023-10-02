@@ -44,3 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c1e92348b08634aa53ea60f8dd7d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsMeleeAttack: 1
+  DamageAmount: 2
+  Speed: 11.5

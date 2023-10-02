@@ -10,6 +10,9 @@ public class BasicAttackBehavior : ActionBehavior
     [Range(0, 20)]
     public int DamageAmount = 2;
 
+    [Range(0.1f, 20.0f)]
+    public float Speed = 11.5f;
+
     public override bool CanExecute(Action.ExecutionContext context)
     {
         return context.source != null && context.target != null && context.target.Value.Entity != null;
@@ -41,7 +44,7 @@ public class BasicAttackBehavior : ActionBehavior
             return;
         }
 
-        context.source.PlayMeleeAttackAnimation(targetPosition, zenithHandler: AttackAnimationZenithCompleted, completionHandler: AttackAnimationCompleted);
+        context.source.PlayMeleeAttackAnimation(targetPosition, speedMPS: Speed, zenithHandler: AttackAnimationZenithCompleted, completionHandler: AttackAnimationCompleted);
     }
 
     private void AttackAnimationZenithCompleted(Entity e)

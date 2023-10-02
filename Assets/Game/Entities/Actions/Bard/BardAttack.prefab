@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5733087898952117575}
   - component: {fileID: 3196293187638663207}
   m_Layer: 0
-  m_Name: DruidAttack
+  m_Name: BardAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -44,5 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22c1e92348b08634aa53ea60f8dd7d37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsMeleeAttack: 0
-  DamageAmount: 5
+  IsMeleeAttack: 1
+  DamageAmount: 2
+  Speed: 11.5
