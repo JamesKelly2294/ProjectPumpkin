@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BarkSoldier
   m_EditorClassIdentifier: 
   Name: Bark Soldier
+  ClassName: 
   Description: Basic Bark grunt.
   FlavorText: Born from a recently felled tree, the stump gained consciousness and
     was recruited into the Bark Army. Just a stump; what's the worst that could happen?
@@ -22,6 +23,7 @@ MonoBehaviour:
   BaseMaxMana: 1
   BaseMaxActionPoints: 1
   BaseMaxMovement: 3
+  MoveSpeed: 2.5
   BaseActions:
   - {fileID: 11400000, guid: c3d93b4c89b641f48823cdb72c620a4f, type: 2}
   - {fileID: 11400000, guid: 83f6124ae90234f4f91696cc59ba1b84, type: 2}

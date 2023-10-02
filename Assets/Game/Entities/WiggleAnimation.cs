@@ -11,6 +11,18 @@ public class WiggleAnimation : MonoBehaviour
     private Vector3 _oldPosition;
     private Vector3 _originalOffset;
 
+    [Range(0.1f, 5.0f)]
+    public float DistanceForFootstep = 1.0f;
+
+    void PlayFootstepAudio()
+    {
+        AudioManager.Instance.Play("SFX/PlayerWalk",
+            pitchMin: 0.60f, pitchMax: 0.675f,
+            volumeMin: 0.3f, volumeMax: 0.3f,
+            position: transform.position,
+            minDistance: 10, maxDistance: 20);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,12 +38,21 @@ public class WiggleAnimation : MonoBehaviour
         Wiggle();
     }
 
+    private float totalDistance = 0.0f;
+
     private void Wiggle()
     {
 
         Vector3 movement = transform.position - _oldPosition;
         movement = new Vector3(movement.x, movement.y, movement.z);
+        totalDistance += movement.magnitude;
         _oldPosition = transform.position;
+
+        if (totalDistance >= DistanceForFootstep)
+        {
+            PlayFootstepAudio();
+            totalDistance -= DistanceForFootstep;
+        }
 
         // Animate walk
         if (movement != Vector3.zero)

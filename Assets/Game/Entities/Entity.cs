@@ -70,6 +70,16 @@ public class Entity : MonoBehaviour, ISelectable
 
     public GridManager GridManager;
 
+    public string HurtSfx = "SFX/GenericHurt";
+    public string DeathSfx = "SFX/GenericDeath";
+
+    public float MoveSpeed
+    {
+        get
+        {
+            return Definition.MoveSpeed;
+        }
+    }
 
     public string Name
     {
@@ -335,7 +345,7 @@ public class Entity : MonoBehaviour, ISelectable
 
 
         var t = 0.0f;
-        var speed = 7.5f; // meters per second
+        var speed = MoveSpeed; // meters per second
         var timeToWalkAcrossTile = 1 / speed;
 
         while (Position != destinationNode)
@@ -408,10 +418,29 @@ public class Entity : MonoBehaviour, ISelectable
         completionHandler(this);
     }
 
+    void PlayDeathAudio()
+    {
+        AudioManager.Instance.Play("SFX/GenericDeath",
+            pitchMin: 0.9f, pitchMax: 1.1f,
+            volumeMin: 1.0f, volumeMax: 1.0f,
+            position: transform.position,
+            minDistance: 10, maxDistance: 20);
+    }
+
+    void PlayHurtAudio()
+    {
+        AudioManager.Instance.Play("SFX/GenericHurt",
+            pitchMin: 0.9f, pitchMax: 1.1f,
+            volumeMin: 0.7f, volumeMax: 0.7f,
+            position: transform.position,
+            minDistance: 10, maxDistance: 20);
+    }
+
     public void ApplyDamage(int damageAmount)
     {
         if (damageAmount <= 0) { Debug.LogError("Cannot apply non-positive damage."); return; }
 
+        PlayHurtAudio();
         Health = Mathf.Max(Health - damageAmount, 0);
 
         if (Health <= 0)
@@ -435,6 +464,8 @@ public class Entity : MonoBehaviour, ISelectable
 
     private IEnumerator DeathCoroutine()
     {
+        PlayDeathAudio();
+
         if (PlayDeathAnimation == false)
         {
             _pubSubSender.Publish("entity.died", this);

@@ -185,6 +185,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 668c794f553724f43ac25f12dff503f5, type: 2}
   - {fileID: 11400000, guid: 3921c471c173d44a9ad7b6750806fdd3, type: 2}
   - {fileID: 11400000, guid: 0a3d0fd884a334e13b011fe660e983c5, type: 2}
+  - {fileID: 11400000, guid: 28c86e3a688c24e34aa1fbebf272fe25, type: 2}
+  - {fileID: 11400000, guid: 84ac98c87adc14524aefd1505c942347, type: 2}
+  - {fileID: 11400000, guid: 34e9acb7f72c84a89943c50739520715, type: 2}
 --- !u!114 &3260317210035423714
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,7 +265,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4753370037513140389
 Transform:
   m_ObjectHideFlags: 0
@@ -337,4 +340,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sounds:
-  - {fileID: 11400000, guid: ce77aa01fcee64a5b8fc77854d7aed08, type: 2}
+  - {fileID: 11400000, guid: 1b8dce669ab344e51ae8f602d76cc251, type: 2}

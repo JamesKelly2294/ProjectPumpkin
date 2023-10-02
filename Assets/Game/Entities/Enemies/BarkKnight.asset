@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BarkKnight
   m_EditorClassIdentifier: 
   Name: Bark Knight
+  ClassName: 
   Description: A promoted Bark Soldier; hits harder, and can take a lot more damage.
   FlavorText: Finally, time for the tree's to hit back.
   Icon: {fileID: 21300000, guid: 1ef312ef55ff54331b3435f924c1ea3a, type: 3}
@@ -21,6 +22,7 @@ MonoBehaviour:
   BaseMaxMana: 5
   BaseMaxActionPoints: 3
   BaseMaxMovement: 2
+  MoveSpeed: 1
   BaseActions:
   - {fileID: 11400000, guid: c3d93b4c89b641f48823cdb72c620a4f, type: 2}
   - {fileID: 11400000, guid: 83f6124ae90234f4f91696cc59ba1b84, type: 2}

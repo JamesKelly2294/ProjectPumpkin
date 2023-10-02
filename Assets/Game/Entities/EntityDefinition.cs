@@ -21,5 +21,8 @@ public class EntityDefinition : ScriptableObject
     [Range(0, 20)]
     public int BaseMaxMovement = 4;
 
+    [Range(0.1f, 10.0f)]
+    public float MoveSpeed = 5.0f;
+
     public List<ActionDefinition> BaseActions = new List<ActionDefinition>();
 }

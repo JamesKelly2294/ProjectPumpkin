@@ -21,6 +21,15 @@ public class BasicAttackBehavior : ActionBehavior
     private Action.ExecutionContext _executionContext;
     private Entity _targetEntity;
 
+    void PlayAttackAudio()
+    {
+        AudioManager.Instance.Play("SFX/GenericAttack",
+            pitchMin: 0.9f, pitchMax: 1.1f,
+            volumeMin: 0.7f, volumeMax: 0.7f,
+            position: transform.position,
+            minDistance: 10, maxDistance: 20);
+    }
+
     public override void Execute(Action.ExecutionContext context)
     {
         Debug.Log("Executing " + context);
@@ -44,6 +53,7 @@ public class BasicAttackBehavior : ActionBehavior
             return;
         }
 
+        PlayAttackAudio();
         context.source.PlayMeleeAttackAnimation(targetPosition, speedMPS: Speed, zenithHandler: AttackAnimationZenithCompleted, completionHandler: AttackAnimationCompleted);
     }
 
