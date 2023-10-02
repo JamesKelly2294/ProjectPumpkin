@@ -23,5 +23,6 @@ MonoBehaviour:
   BaseMaxMana: 0
   BaseMaxActionPoints: 1
   BaseMaxMovement: 0
+  MoveSpeed: 5
   BaseActions:
   - {fileID: 11400000, guid: 59490ca2d68410341be263cdf6eaf4f4, type: 2}
