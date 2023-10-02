@@ -11,10 +11,13 @@ public class ScoreIndicator : MonoBehaviour
     private int _totalCrystals;
     private int _collectedCrystals;
 
+    private Mossy _mossy;
+
     // Start is called before the first frame update
     void Start()
     {
         ScoreLabel.text = "";
+        _mossy = FindObjectOfType<Mossy>();
     }
     public void CrystalsCollected(PubSubListenerEvent e)
     {
@@ -28,6 +31,15 @@ public class ScoreIndicator : MonoBehaviour
         int total = (int)e.value;
         _totalCrystals = total;
         Redraw();
+    }
+
+    public void Update()
+    {
+        if (_mossy.GlobalCrystalCount != _collectedCrystals)
+        {
+            _totalCrystals = _mossy.GlobalCrystalCount;
+            Redraw();
+        }
     }
 
     public void Redraw()

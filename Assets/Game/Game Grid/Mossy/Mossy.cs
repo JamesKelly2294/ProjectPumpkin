@@ -16,6 +16,14 @@ public class Mossy : MonoBehaviour
     [SerializeField]
     private int _globalCrystalCount;
 
+    public int GlobalCrystalCount
+    {
+        get
+        {
+            return _globalCrystalCount;
+        }
+    }
+
     [SerializeField]
     private int _collectedCrystals;
 
