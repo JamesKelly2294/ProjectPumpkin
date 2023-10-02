@@ -6,7 +6,7 @@ using TMPro;
 public class LoseScene : MonoBehaviour
 {
 
-    public TextMeshProUGUI shots, xp;
+    public TextMeshProUGUI turns, points, kills, crystals;
 
     // Start is called before the first frame update
     void Start()
@@ -14,8 +14,10 @@ public class LoseScene : MonoBehaviour
         GameManager gameManager = GameObject.FindObjectOfType<GameManager>();
         if (gameManager != null)
         {
-            shots.text = "" + gameManager.PastState.PackagesDelivered + " Packages Delivered";
-            xp.text = "$" + gameManager.PastState.TotalMoneyEarned + " Earned";
+            turns.text = "" + gameManager.PastState.Turns;
+            points.text = "" + gameManager.PastState.Points;
+            kills.text = "" + gameManager.PastState.EnemiesSlain;
+            crystals.text = "" + gameManager.PastState.CrystalsDelivered;
         }
     }
 

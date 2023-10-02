@@ -15,9 +15,10 @@ public enum SceneIndices
 
 public struct PastState
 {
-    public int PackagesDelivered;
-    public int PackagesLost;
-    public int TotalMoneyEarned;
+    public int EnemiesSlain;
+    public int Points;
+    public int Turns;
+    public int CrystalsDelivered;
 }
 
 public class GameManager : MonoBehaviour
@@ -43,19 +44,24 @@ public class GameManager : MonoBehaviour
 
     private GameObject _activeLoadingScreen;
 
-    public void PackageDelivered()
+    public void CrystalsDelivered(PubSubListenerEvent e)
     {
-        PastState.PackagesDelivered += 1;
+        PastState.CrystalsDelivered += (int)e.value;
     }
 
-    public void PackageLost()
+    public void EnemySlain()
     {
-        PastState.PackagesLost += 1;
+        PastState.EnemiesSlain += 1;
     }
 
-    public void MoneyEarned(PubSubListenerEvent e)
+    public void PointsEarned(PubSubListenerEvent e)
     {
-        PastState.TotalMoneyEarned += (int)e.value;
+        PastState.Points += (int)e.value;
+    }
+
+    public void Turn()
+    {
+        PastState.Turns += 1;
     }
 
     public void LoadGame()
