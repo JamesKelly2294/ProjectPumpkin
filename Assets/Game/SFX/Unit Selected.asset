@@ -15,4 +15,4 @@ MonoBehaviour:
   id: unit.selected
   audioMixerGroup: {fileID: 4674431572857700961, guid: a0420a807fa813e4cb71d6b63902ac1c, type: 2}
   audioClips:
-  - {fileID: 8300000, guid: 4fdb8ed498cfa4aa0b0c5b402727f8c9, type: 3}
+  - {fileID: 8300000, guid: c7991b89034db47f499f0bc2266fa467, type: 3}
