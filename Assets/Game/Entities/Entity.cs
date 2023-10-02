@@ -224,6 +224,7 @@ public class Entity : MonoBehaviour, ISelectable
     {
         Movement = MaxMovement;
         ActionPoints = MaxActionPoints;
+        Mana = Mathf.Min(MaxMana, Mana + 1);
         IsWaiting = false;
     }
 
@@ -482,6 +483,13 @@ public class Entity : MonoBehaviour, ISelectable
             Debug.Log($"{this} is deadge!");
             Kill();
         }
+    }
+
+    public void ApplyHealing(int damageAmount)
+    {
+        if (damageAmount <= 0) { Debug.LogError("Cannot heal non-positive damage."); return; }
+
+        Health = Mathf.Min(Health + damageAmount, MaxHealth);
     }
 
     public void Kill()

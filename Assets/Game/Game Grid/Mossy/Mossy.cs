@@ -29,6 +29,8 @@ public class Mossy : MonoBehaviour
 
         _globalCrystalCount = _gridManager.Items.Where(i => i.Definition.Name.Contains("Crystal")).Count();
         Debug.Log($"M.O.S.E found {_globalCrystalCount} crystals");
+
+        GetComponent<PubSubSender>().Publish("mossy.crystals.global_total_changed", _globalCrystalCount);
     }
 
     // Update is called once per frame

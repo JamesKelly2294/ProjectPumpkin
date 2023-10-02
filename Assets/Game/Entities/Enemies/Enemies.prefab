@@ -97,6 +97,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7936277994750762962}
   - {fileID: 280504092611455676}
   - {fileID: 2552689657182743262}
   - {fileID: 1398451374773177295}
@@ -183,7 +184,6 @@ Transform:
   - {fileID: 789516352808794888}
   - {fileID: 652527494095489230}
   - {fileID: 1686654128898438862}
-  - {fileID: 7936277994750762962}
   - {fileID: 4792201065469733234}
   m_Father: {fileID: 1510760110658597285}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4793,15 +4793,15 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 1398451374773177295}
+    m_TransformParent: {fileID: 1510760110658597285}
     m_Modifications:
     - target: {fileID: 1990347479255314698, guid: dcbfbd3ded71d4f1abef69723d87ab50, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.145
+      value: -7.02
       objectReference: {fileID: 0}
     - target: {fileID: 1990347479255314698, guid: dcbfbd3ded71d4f1abef69723d87ab50, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1.648
+      value: -2.73
       objectReference: {fileID: 0}
     - target: {fileID: 1990347479255314698, guid: dcbfbd3ded71d4f1abef69723d87ab50, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4837,7 +4837,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4242559653279700501, guid: dcbfbd3ded71d4f1abef69723d87ab50, type: 3}
       propertyPath: m_Name
-      value: BarkSoldier (4)
+      value: Intro
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
