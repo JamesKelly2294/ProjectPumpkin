@@ -218,13 +218,13 @@ public class GridManager : MonoBehaviour
         entity.transform.position = TileCoordinateToWorldPosition(position);
     }
 
-    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, int range = 0, bool alwaysIncludeTarget = false, bool debugVisuals = false, bool ignoringObstacles = false) 
+    public List<Vector2Int> CalculatePath(Vector2Int startPosition, Vector2Int endPosition, int range = 0, int maxRange = 0, bool alwaysIncludeTarget = false, bool debugVisuals = false, bool ignoringObstacles = false) 
     {
-        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, range:range, debugVisuals: debugVisuals, alwaysIncludeTarget: alwaysIncludeTarget, ignoringObstacles: ignoringObstacles);
+        return CalculatePath((Vector3Int)startPosition, (Vector3Int)endPosition, range:range, maxRange: maxRange, debugVisuals: debugVisuals, alwaysIncludeTarget: alwaysIncludeTarget, ignoringObstacles: ignoringObstacles);
     }
 
 
-    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, int range = 0, bool alwaysIncludeTarget = false, bool debugVisuals = false, bool ignoringObstacles = false)
+    public List<Vector2Int> CalculatePath(Vector3Int startPosition, Vector3Int endPosition, int range = 0, int maxRange = 0, bool alwaysIncludeTarget = false, bool debugVisuals = false, bool ignoringObstacles = false)
     {
         if (startPosition == endPosition)
         {
@@ -272,6 +272,14 @@ public class GridManager : MonoBehaviour
         if (range > 0)
         {
             path = path.GetRange(0, Mathf.Min(range + 1, path.Count));
+        }
+
+        if (maxRange > 0)
+        {
+            if (path.Count > maxRange)
+            {
+                return new List<Vector2Int>();
+            }
         }
 
         return path;

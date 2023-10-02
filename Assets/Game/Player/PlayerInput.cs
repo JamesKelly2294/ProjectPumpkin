@@ -438,15 +438,16 @@ public class PlayerInput : MonoBehaviour
     {
         var selectedEntity = SelectedEntity();
         var selectedAction = SelectedAction;
-        if (selectedAction == null || selectedEntity == null)
-        {
-            _gridRangeIndicator.gameObject.SetActive(false);
-            return;
-        }
 
         if (forceRefresh)
         {
             _gridRangeIndicator.ClearPathVisuals(purgeCache: true);
+        }
+
+        if (selectedAction == null || selectedEntity == null || _turnManager.CurrentTeam != Entity.OwnerKind.Player)
+        {
+            _gridRangeIndicator.gameObject.SetActive(false);
+            return;
         }
 
         if (selectedAction.Kind != Action.ActionKind.Movement || !selectedAction.Targetable)
@@ -475,15 +476,16 @@ public class PlayerInput : MonoBehaviour
     {
         var selectedEntity = SelectedEntity();
         var selectedAction = SelectedAction;
-        if (selectedAction == null || selectedEntity == null)
-        {
-            _gridRangeIndicator.gameObject.SetActive(false);
-            return;
-        }
 
         if (forceRefresh)
         {
             _gridRangeIndicator.ClearRangeVisuals(purgeCache: true);
+        }
+
+        if (selectedAction == null || selectedEntity == null || _turnManager.CurrentTeam != Entity.OwnerKind.Player)
+        {
+            _gridRangeIndicator.gameObject.SetActive(false);
+            return;
         }
 
         if (!selectedAction.Targetable)

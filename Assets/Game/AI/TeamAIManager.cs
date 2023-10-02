@@ -1,12 +1,23 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using static UnityEngine.EventSystems.EventTrigger;
 
 public class TeamAIManager : MonoBehaviour
 {
+    struct AttackDecisionCandidate
+    {
+        public Action Action;
+        public Vector2Int? TargetPosition;
+        public Entity TargetEntity;
+        public bool CanAfford;
+        public bool InRange;
+    }
+
     public Entity.OwnerKind ControlledTeam;
     [Range(0, 50)]
     public int AggroRange = 10;
@@ -18,7 +29,7 @@ public class TeamAIManager : MonoBehaviour
     private Entity _aggroTarget;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         _turnManager = FindObjectOfType<TurnManager>();
     }
@@ -43,19 +54,26 @@ public class TeamAIManager : MonoBehaviour
         }
     }
 
+    float _cooldownDuration = 0.25f;
+    float _cooldownTimer = 0.5f;
+
     void Update()
     {
         if (!TakingTurn || _turnManager.BlockingEventIsExecuting) { return; }
 
+        if (_cooldownTimer > 0.0f) { _cooldownTimer -= Time.deltaTime; return; }
+
         var foundEntity = SelectEntity();
         if (!foundEntity) { 
             _turnManager.EndTeamTurn();
+            _cooldownTimer = 0.0f;
             Debug.Log($"End turn for {ControlledTeam}.");
             return; 
         }
 
         AnalyzeSituation();
         TakeAction();
+        _cooldownTimer = _cooldownDuration;
     }
 
     bool SelectEntity()
@@ -74,7 +92,7 @@ public class TeamAIManager : MonoBehaviour
 
         var availableEntities = _turnManager.CurrentTeamEntitiesThatCanTakeAction;
         if (availableEntities.Count == 0) { return false; }
-        var randomIndex = Random.Range(0, availableEntities.Count);
+        var randomIndex = UnityEngine.Random.Range(0, availableEntities.Count);
         var nextEntity = availableEntities[randomIndex];
         _turnManager.CurrentTeamEntitiesThatCanTakeAction.RemoveAt(randomIndex);
 
@@ -155,7 +173,7 @@ public class TeamAIManager : MonoBehaviour
         List<Vector2Int> walkPath = null;
 
         // Step One: Try to find a direct path to the target
-        var path = _gridManager.CalculatePath(_selectedEntity.Position, _aggroTarget.Position, range: AggroRange, alwaysIncludeTarget: true);
+        var path = _gridManager.CalculatePath(_selectedEntity.Position, _aggroTarget.Position, maxRange: AggroRange, alwaysIncludeTarget: true);
 
         // Step Two: Try to find a path to the target assuming we can walk through entities.
         // If we can, walk as far along that path as we can.
@@ -168,6 +186,10 @@ public class TeamAIManager : MonoBehaviour
                 if (tileData.Entity == null || tileData.Entity == _selectedEntity)
                 {
                     walkPath.Add(pos);
+                }
+                else
+                {
+                    break;
                 }
             }
             range = Mathf.Min(walkPath.Count, range + 1);
@@ -207,6 +229,62 @@ public class TeamAIManager : MonoBehaviour
         return context;
     }
 
+    bool SelectedEntityCanReachAttackActionTarget(Action a)
+    {
+        // We have an attack action, where the target can be required to be within melee range
+        // or could be further away for a ranged attack
+
+        // Goal: BFS, ignoring entities, get a list 
+
+        return false;
+    }
+
+    Entity FindTargetInRangeForSelectedEntity(int range)
+    {
+        var exploration = _gridManager.OrderedBFS((Vector3Int)_selectedEntity.Position, range, ignoringObstacles: true);
+        var alignmentMapping = _selectedEntity.Owner.GetAlignmentMapping();
+        Entity target = null;
+        foreach (var tile in exploration)
+        {
+            var data = _gridManager.GetTileData(tile);
+            var tileEntity = data.Entity;
+            if (tileEntity == null) { continue; }
+            var prospectiveTargetAligment = alignmentMapping[tileEntity.Owner];
+            if (prospectiveTargetAligment == Entity.OwnerAlignment.Bad)
+            {
+                target = data.Entity;
+                break;
+            }
+        }
+
+        return target;
+    }
+
+    List<AttackDecisionCandidate> CandidateAttackActionsForSelectedEntity()
+    {
+        List<AttackDecisionCandidate> results = new List<AttackDecisionCandidate>();
+
+        var attackActions = _selectedEntity.Actions.Where(a => a.Kind == Action.ActionKind.Attack);
+
+        foreach (var attackAction in attackActions)
+        {
+            var target = FindTargetInRangeForSelectedEntity(attackAction.Range);
+
+            var decisionCandidate = new AttackDecisionCandidate()
+            {
+                Action = attackAction,
+                TargetEntity = target,
+                TargetPosition = target == null ? null : target.Position,
+                CanAfford = _selectedEntity.CanAffordAction(attackAction),
+                InRange = target != null,
+            };
+
+            results.Add(decisionCandidate);
+        }
+
+        return results;
+    }
+
     void TakeAction()
     {
         if (_selectedEntity == null) { return; }
@@ -217,8 +295,28 @@ public class TeamAIManager : MonoBehaviour
 
         // If we don't have a target, wait
         // TODO: Fix for abilities that don't require targets
-        if (_aggroTarget == null)  {  actionDecision = waitAction; }
-        else if (_selectedEntity.CanAffordAction(moveAction)) { actionDecision = moveAction; }
+        if (_aggroTarget == null)  
+        {  
+            actionDecision = waitAction; 
+        }
+        else {
+            var attackCadidatesInRange = CandidateAttackActionsForSelectedEntity().Where(a => a.InRange);
+            var attackCandidatesInRangeAndAffordable = attackCadidatesInRange.Where(a => a.CanAfford).ToList();
+
+            if (attackCandidatesInRangeAndAffordable.Count > 0)
+            {
+                var randomIndex = UnityEngine.Random.Range(0, attackCandidatesInRangeAndAffordable.Count);
+                actionDecision = attackCandidatesInRangeAndAffordable[randomIndex].Action;
+            }
+
+            // If we can't find a valid attack, move towards target
+            // unless we're in range for an attack already, even if we can't afford it
+            var entityShouldMoveIntoRange = attackCadidatesInRange.Count() == 0 && actionDecision == null;
+            if (entityShouldMoveIntoRange)
+            {
+                actionDecision = _selectedEntity.CanAffordAction(moveAction) ? moveAction : null;
+            }
+        }
 
         if (actionDecision == null)
         {
@@ -249,7 +347,5 @@ public class TeamAIManager : MonoBehaviour
 
         Debug.Log($"AI Decision - {_selectedEntity} takes action {actionDecision.Name}");
         _turnManager.SubmitAction(actionDecision, context);
-
-        _selectedEntity = null;
     }
 }

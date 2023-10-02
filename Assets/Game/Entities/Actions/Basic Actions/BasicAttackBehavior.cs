@@ -7,7 +7,7 @@ public class BasicAttackBehavior : ActionBehavior
 {
     public bool IsMeleeAttack = true;
 
-    [Range(0, 20)]
+    [Range(0, 40)]
     public int DamageAmount = 2;
 
     [Range(0.1f, 20.0f)]

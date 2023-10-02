@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de2cc81903d598148af665746556f951, type: 3}
   m_Name: Sharpshooter
   m_EditorClassIdentifier: 
-  Name: TBD
+  Name: Shadequiver Thornarrow
   ClassName: Sharpshooter
-  Description: TBD
-  FlavorText: TBD
+  Description: A keen eye and steady hand.
+  FlavorText: '"One shot, one kill. Precision is my thrill."'
   Icon: {fileID: 21300000, guid: 251cb20cbc3f9427ebf6e52a87319e16, type: 3}
   Color: {r: 0.23529412, g: 0.16774146, b: 0, a: 1}
   BaseMaxHealth: 15
   BaseMaxMana: 5
   BaseMaxActionPoints: 3
   BaseMaxMovement: 4
+  MoveSpeed: 5
   BaseActions:
   - {fileID: 11400000, guid: c3d93b4c89b641f48823cdb72c620a4f, type: 2}
-  - {fileID: 11400000, guid: 21ff0fa53c50d1142ba1f52bcf12c4ef, type: 2}
+  - {fileID: 11400000, guid: 96532544aaa8d2d43a81f6497c049efc, type: 2}
   - {fileID: 11400000, guid: 59490ca2d68410341be263cdf6eaf4f4, type: 2}

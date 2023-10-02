@@ -218,6 +218,13 @@ public class TurnManager : MonoBehaviour
         _gridManager = FindObjectOfType<GridManager>();
     }
 
+    private void Start()
+    {
+        _pubSubSender.Publish("turnManager.currentTeam.changed", _currentTeam);
+        _pubSubSender.Publish("turnManager.currentTurn.changed", _currentTurn);
+        _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
+    }
+
     // Update is called once per frame
     void Update()
     {

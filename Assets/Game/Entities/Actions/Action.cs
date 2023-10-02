@@ -32,6 +32,25 @@ public class Action
         this.Entity = entity;
     }
 
+    public int Damage
+    {
+        get
+        {
+            var totalDamage = 0;
+
+            foreach(var behavior in BehaviorRecipes)
+            {
+                var attackBehavior = behavior as BasicAttackBehavior;
+                if (attackBehavior != null)
+                {
+                    totalDamage += attackBehavior.DamageAmount;
+                }
+            }
+
+            return totalDamage;
+        }
+    }
+
     public ActionKind Kind
     {
         get

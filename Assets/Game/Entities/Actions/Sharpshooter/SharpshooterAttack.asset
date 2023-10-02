@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 35cea92640c75c84d80cea4776230658, type: 3}
-  m_Name: DruidAttack
+  m_Name: SharpshooterAttack
   m_EditorClassIdentifier: 
-  Name: Fireball
-  Description: Lovingly ignite the forest with fiery fury.
-  FlavorText: '"In the midst of trees, a blazing spectacle. Nature''s wrath, your
-    foes'' receptacle."'
-  Icon: {fileID: 21300000, guid: 9e908a9c15a894765b8f89a718eb69c8, type: 3}
+  Name: Precision Shot
+  Description: Aim true, strike with surgical precision.
+  FlavorText: '"Bullseye - or whatever the elven equivalent of that is. Probably
+    something about leaves."'
+  Icon: {fileID: 21300000, guid: e7549720e76904fd08ea0511b9669a22, type: 3}
   Color: {r: 0.6886792, g: 0.25663045, b: 0.25663045, a: 1}
   BlocksFromEndingTurn: 1
   CanOnlyExecuteOnOwnersTurn: 1
@@ -27,9 +27,9 @@ MonoBehaviour:
   Kind: 1
   Target: 4
   Behaviors:
-  - {fileID: 3196293187638663207, guid: 8c0f9bcae03505c4dbf2b4ca2bdea655, type: 3}
+  - {fileID: 3196293187638663207, guid: 77eb4a1098ef51448afcc1703ea3c07f, type: 3}
   BaseActionPointCost: 1
-  BaseMagicCost: 1
+  BaseMagicCost: 0
   BaseMovementCost: 0
   BaseHealthCost: 0
-  BaseRange: 3
+  BaseRange: 1
