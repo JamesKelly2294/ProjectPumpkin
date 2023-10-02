@@ -163,15 +163,47 @@ public class PlayerInput : MonoBehaviour
         return _cameraControls.CameraIsPanning;
     }
 
+    private bool ValidateAction(Action action, Action.ExecutionContext context)
+    {
+        var entity = context.source;
+        var canAfford = entity.CanAffordAction(SelectedAction);
+
+        var validTarget = false;
+        if (action.Targetable && context.target != null)
+        {
+            var entityForTarget = context.target.Value.Entity;
+            switch (action.Target)
+            {
+                case Action.ActionTarget.Walkable:
+                    validTarget = true;
+                    break;
+                case Action.ActionTarget.Entity:
+                    validTarget = entityForTarget != null;
+                    break;
+                case Action.ActionTarget.AllyEntity:
+                    validTarget = entityForTarget != null && entity.Owner.GetAlignmentMapping()[entityForTarget.Owner] == Entity.OwnerAlignment.Good;
+                    break;
+                case Action.ActionTarget.EnemyEntity:
+                    validTarget = entityForTarget != null && entity.Owner.GetAlignmentMapping()[entityForTarget.Owner] == Entity.OwnerAlignment.Bad;
+                    break;
+            }
+        }
+        else
+        {
+            validTarget = true;
+        }
+
+        return canAfford && validTarget;
+    }
+
     private void ExecuteSelectedAction()
     {
         var entity = SelectedEntity();
 
-        if (entity == null || SelectedAction == null || !entity.CanAffordAction(SelectedAction))
+        if (entity == null || SelectedAction == null)
         {
             return;
         }
-        Debug.Log("Executing selected action!");
 
         var context = new Action.ExecutionContext();
         TileData? data = null;
@@ -184,6 +216,13 @@ public class PlayerInput : MonoBehaviour
         context.range = entity.Range(SelectedAction);
         context.gridManager = _gridManager;
         context.target = data;
+
+        if (!ValidateAction(SelectedAction, context))
+        {
+            return;
+        }
+
+        Debug.Log("Executing selected action!");
 
         _turnManager.SubmitAction(SelectedAction, context);
     }
@@ -417,15 +456,11 @@ public class PlayerInput : MonoBehaviour
         int range = selectedEntity.Range(selectedAction);
         bool ignoringEntities = false;
 
-        Dictionary<Entity.OwnerKind, OwnerAlignment> ownerToAlignmentMapping = null;
+        Dictionary<Entity.OwnerKind, Entity.OwnerAlignment> ownerToAlignmentMapping = null;
         if (selectedAction.Targetable && selectedAction.Kind == Action.ActionKind.Attack) {
             ownerToAlignmentMapping = new();
             ignoringEntities = true;
-            foreach (Entity.OwnerKind ownerKind in Enum.GetValues(typeof(Entity.OwnerKind)))
-            {
-                if (ownerKind == selectedEntity.Owner) { ownerToAlignmentMapping[ownerKind] = OwnerAlignment.Good; }
-                else { ownerToAlignmentMapping[ownerKind] = OwnerAlignment.Bad; }
-            }
+            ownerToAlignmentMapping = selectedEntity.Owner.GetAlignmentMapping();
         }
 
         GridRangeIndicator.Configuration configuration = new GridRangeIndicator.Configuration

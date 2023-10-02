@@ -6,18 +6,11 @@ public class GridRangeIndicator : MonoBehaviour
 {
     public struct Configuration : IEquatable<Configuration>
     {
-        public enum OwnerAlignment
-        {
-            Good,
-            Bad,
-            Neutral
-        }
-
         public Vector2Int origin;
         public int range;
         public bool ignoringEntities;
 
-        public Dictionary<Entity.OwnerKind, OwnerAlignment> ownerToAlignmentMapping;
+        public Dictionary<Entity.OwnerKind, Entity.OwnerAlignment> ownerToAlignmentMapping;
 
         public override bool Equals(object? obj) => obj is Configuration other && this.Equals(other);
 
@@ -146,7 +139,7 @@ public class GridRangeIndicator : MonoBehaviour
             var entity = gridManager.GetTileData(new Vector2Int(x, y)).Entity;
             if (entity != null)
             {
-                var alignment = Configuration.OwnerAlignment.Neutral;
+                var alignment = Entity.OwnerAlignment.Neutral;
 
                 if (ownerToAlignmentMapping.ContainsKey(entity.Owner))
                 {
@@ -155,10 +148,10 @@ public class GridRangeIndicator : MonoBehaviour
 
                 switch (alignment)
                 {
-                    case Configuration.OwnerAlignment.Good:
+                    case Entity.OwnerAlignment.Good:
                         tileOutline.GetComponent<SpriteRenderer>().color = AlliedEntityColor;
                         break;
-                    case Configuration.OwnerAlignment.Bad:
+                    case Entity.OwnerAlignment.Bad:
                         tileOutline.GetComponent<SpriteRenderer>().color = EnemyyEntityColor;
                         break;
                     default:

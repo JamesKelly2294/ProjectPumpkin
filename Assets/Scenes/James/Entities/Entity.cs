@@ -4,6 +4,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using static Entity;
+
+public static class OwnerKindExtensions
+{
+    public static Dictionary<Entity.OwnerKind, Entity.OwnerAlignment> GetAlignmentMapping(this Entity.OwnerKind kind)
+    {
+        Dictionary<Entity.OwnerKind, Entity.OwnerAlignment> results = new();
+        foreach (Entity.OwnerKind ownerKind in Enum.GetValues(typeof(Entity.OwnerKind)))
+        {
+            if (ownerKind == kind) { results[ownerKind] = OwnerAlignment.Good; }
+            else { results[ownerKind] = OwnerAlignment.Bad; }
+        }
+
+        return results;
+    }
+}
 
 [RequireComponent(typeof(Selectable))]
 [RequireComponent(typeof(PubSubSender))]
@@ -21,6 +37,12 @@ public class Entity : MonoBehaviour, ISelectable
         Enemy,
         Ally,
         EnemyAlly
+    }
+    public enum OwnerAlignment
+    {
+        Good,
+        Bad,
+        Neutral
     }
 
     public struct ActionCostAnalysis
