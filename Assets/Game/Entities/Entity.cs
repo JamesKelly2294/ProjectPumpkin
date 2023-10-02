@@ -473,6 +473,11 @@ public class Entity : MonoBehaviour, ISelectable
     {
         Health = 0;
 
+        if (Owner == OwnerKind.Enemy)
+        {
+            GetComponent<PubSubSender>().Publish("enemy.slain");
+        }
+
         StartCoroutine(DeathCoroutine());
     }
 

@@ -54,7 +54,8 @@ public class TeamAIManager : MonoBehaviour
         }
     }
 
-    float _cooldownDuration = 0.25f;
+    [Range(0.0f, 1.0f)]
+    public float CooldownDuration = 0.1f;
     float _cooldownTimer = 0.5f;
 
     void Update()
@@ -73,7 +74,7 @@ public class TeamAIManager : MonoBehaviour
 
         AnalyzeSituation();
         TakeAction();
-        _cooldownTimer = _cooldownDuration;
+        _cooldownTimer = CooldownDuration;
     }
 
     bool SelectEntity()

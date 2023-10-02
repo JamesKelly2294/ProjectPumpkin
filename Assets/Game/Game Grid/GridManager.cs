@@ -200,7 +200,7 @@ public class GridManager : MonoBehaviour
 
         Debug.Log("Registered " + item + " at " + position + ".");
 
-        _pubSubSender.Publish("grid.entity.registered");
+        _pubSubSender.Publish("grid.item.registered");
     }
 
     public void UnregisterItem(Item item)
@@ -213,7 +213,7 @@ public class GridManager : MonoBehaviour
         data.Items.Remove(item);
         UpdateTileData(data);
 
-        _pubSubSender.Publish("grid.entity.unregistered");
+        _pubSubSender.Publish("grid.item.unregistered");
     }
 
     public void SetItemPosition(Item item, Vector2Int position)
@@ -509,7 +509,7 @@ public class GridManager : MonoBehaviour
         return tileExists && (!obstaclesInTheWay || overrideObstacleCheck);
     }
 
-    List<Vector3Int> NeighborsForTileAtPosition(Vector3Int tilePosition, Vector3Int? target = null, bool includeDiagonal = false, bool alwaysIncludeTarget = false, bool ignoringObstacles = false)
+    public List<Vector3Int> NeighborsForTileAtPosition(Vector3Int tilePosition, Vector3Int? target = null, bool includeDiagonal = false, bool alwaysIncludeTarget = false, bool ignoringObstacles = false)
     {
         var neighborPositions = new List<Vector3Int>();
 
@@ -540,5 +540,10 @@ public class GridManager : MonoBehaviour
     public Vector3 TileCoordinateToWorldPosition(Vector2Int position)
     {
         return new Vector3(position.x + _tileCenterOffset, position.y + _tileCenterOffset, 0.0f);
+    }
+
+    public Vector2Int ToWorldPositionTileCoordinate(Vector3 position)
+    {
+        return new Vector2Int(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y));
     }
 }

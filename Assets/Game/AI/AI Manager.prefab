@@ -46,6 +46,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ControlledTeam: 2
+  AggroRange: 12
+  CooldownDuration: 0.1
 --- !u!114 &2376935754764086219
 MonoBehaviour:
   m_ObjectHideFlags: 0
