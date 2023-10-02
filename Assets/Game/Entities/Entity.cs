@@ -177,19 +177,6 @@ public class Entity : MonoBehaviour, ISelectable
         IsBusy = busy;
     }
 
-    public bool CanAffordAnyAction
-    {
-        get
-        {
-            var canAffordASpecificAction = Actions.Any(a => CanAffordAction(a) && a.BlocksFromEndingTurn);
-            var canMove = Movement > 0;
-
-            var canTakeAnyAction = canMove || canAffordASpecificAction;
-
-            return !IsWaiting && canTakeAnyAction; 
-        }
-    }
-
     public ActionCostAnalysis CreateActionCostAnalysis(Action a)
     {
         var actionAttempt = new ActionCostAnalysis
@@ -203,19 +190,33 @@ public class Entity : MonoBehaviour, ISelectable
         return actionAttempt;
     }
 
+    public bool CanAffordAction(Action a)
+    {
+        return CreateActionCostAnalysis(a).CanBeExecuted;
+    }
+
+    public bool CanAffordAnyAction
+    {
+        get
+        {
+            var canAffordASpecificAction = Actions.Any(a => CanAffordAction(a) && a.BlocksFromEndingTurn);
+            var canMove = Movement > 0;
+
+            var canTakeAnyAction = canMove || canAffordASpecificAction;
+
+            return !IsWaiting && canTakeAnyAction; 
+        }
+    }
+
     public void NewTurnBegan()
     {
+        Movement = MaxMovement;
         IsWaiting = false;
     }
 
     public void ToggleWait()
     {
         IsWaiting = !IsWaiting;
-    }
-
-    public bool CanAffordAction(Action a)
-    {
-        return CreateActionCostAnalysis(a).CanBeExecuted;
     }
 
     IEnumerator test()

@@ -179,25 +179,37 @@ public class TurnManager : MonoBehaviour
             Debug.LogError("Error - the current team is not part of the TurnOrder array. We don't know whose turn is next!");
         }
 
+        bool turnDidChange = false;
         if (currentTeamIndex == TurnOrder.Count - 1)
         {
             _currentTeam = TurnOrder[0];
             _currentTurn += 1;
-
-            _pubSubSender.Publish("turnManager.currentTurn.changed", _currentTurn);
-            _pubSubSender.Publish("turnManager.currentTeam.changed", _currentTurn);
-            _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
+            turnDidChange = true;
         }
         else
         {
-            CurrentTeam = TurnOrder[currentTeamIndex + 1];
+            _currentTeam = TurnOrder[currentTeamIndex + 1];
         }
+
+        UpdateEntitiesForCurrentTeam();
+            
+        if (turnDidChange) { _pubSubSender.Publish("turnManager.currentTurn.changed", _currentTurn); }
+        _pubSubSender.Publish("turnManager.currentTeam.changed", _currentTurn);
+        _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
 
         var currentTeamEntities = OwnedEntities(CurrentTeam);
         foreach ( var entity in currentTeamEntities )
         {
             entity.NewTurnBegan();
         }
+    }
+
+    void UpdateEntitiesForCurrentTeam()
+    {
+        var currentTeamEntities = OwnedEntities(CurrentTeam);
+
+        CurrentTeamEntitiesThatCanTakeAction = currentTeamEntities.Where(e => EntityCanDoMoreThisTurn(e)).ToList();
+        CurrentTeamCanTakeAction = CurrentTeamEntitiesThatCanTakeAction.Count > 0;
     }
 
     // Start is called before the first frame update
@@ -210,8 +222,6 @@ public class TurnManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        var currentTeamEntities = OwnedEntities(CurrentTeam);
-        CurrentTeamEntitiesThatCanTakeAction = currentTeamEntities.Where(e => EntityCanDoMoreThisTurn(e)).ToList();
-        CurrentTeamCanTakeAction = CurrentTeamEntitiesThatCanTakeAction.Count > 0;
+        UpdateEntitiesForCurrentTeam();
     }
 }
