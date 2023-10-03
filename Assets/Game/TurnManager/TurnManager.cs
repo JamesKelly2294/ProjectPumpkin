@@ -87,6 +87,7 @@ public class TurnManager : MonoBehaviour
                .Where(e => e.Owner == owner)
                .ToList();
     }
+
     public bool EntityCanDoMoreThisTurn(Entity entity)
     {
         return entity.CanAffordAnyAction;

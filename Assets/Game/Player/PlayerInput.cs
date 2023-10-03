@@ -262,16 +262,32 @@ public class PlayerInput : MonoBehaviour
             ExecuteSelectedAction();
         }
 
-        if (entity != null)
-        {
+        // Player squad selection
+        var playerSelectables = _turnManager.OwnedEntities(Entity.OwnerKind.Player).Select(e => e.GetComponent<Selectable>()).ToList();
+        if (playerSelectables.Count > 0) {
             for (KeyCode keyCode = KeyCode.Alpha1; keyCode <= KeyCode.Alpha9; keyCode++)
             {
                 var index = keyCode - KeyCode.Alpha1;
-                if (Input.GetKeyDown(keyCode) && index < entity.Actions.Count)
+                if (index >= playerSelectables.Count) { break; }
+                if (Input.GetKeyDown(keyCode))
+                {
+                    Select(playerSelectables[index]);
+                }
+            }
+        }
+
+        // Ability selection
+        if (entity != null)
+        {
+            List<KeyCode> actionMappings = new() { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.F, KeyCode.V };
+            for (int i = 0; i < actionMappings.Count; i++)
+            {
+                var keyCode = actionMappings[i];
+                if (Input.GetKeyDown(keyCode) && i < entity.Actions.Count)
                 {
                     ActionSelectionRequest asr = new ActionSelectionRequest();
                     asr.Entity = entity;
-                    asr.Action = entity.Actions[index];
+                    asr.Action = entity.Actions[i];
                     RequestActionSelectionHelper(asr, autoExecuteNonTargetable: false);
                 }
             }
@@ -406,7 +422,6 @@ public class PlayerInput : MonoBehaviour
                 var currentlySelectedActionIsStillValid = (selectedEntity.Actions.Contains(SelectedAction) && selectedEntity.CanAffordAction(SelectedAction));
                 if (!currentlySelectedActionIsStillValid)
                 {
-                    // 
                     foreach (var action in selectedEntity.Actions)
                     {
                         if (selectedEntity.CanAffordAction(action))
@@ -494,7 +509,6 @@ public class PlayerInput : MonoBehaviour
 
         Dictionary<Entity.OwnerKind, Entity.OwnerAlignment> ownerToAlignmentMapping = null;
         if (selectedAction.Targetable && selectedAction.Kind == Action.ActionKind.Attack) {
-            ownerToAlignmentMapping = new();
             ignoringEntities = true;
             ownerToAlignmentMapping = selectedEntity.Owner.GetAlignmentMapping();
         }
