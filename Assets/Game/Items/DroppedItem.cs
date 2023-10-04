@@ -13,16 +13,18 @@ public class DroppedItem : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
+
+    }
+
+    private void Start()
+    {
         if (GridManager == null)
         {
             GridManager = FindObjectOfType<GridManager>();
         }
         var position = new Vector2Int(Mathf.FloorToInt(transform.position.x), Mathf.FloorToInt(transform.position.y));
         GridManager.RegisterItem(Item, position);
-    }
 
-    private void Start()
-    {
         VisualsRenderer.sprite = Item.Icon;
         VisualsRenderer.color = Item.Color;
     }

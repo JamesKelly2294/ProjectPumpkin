@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GridRangeIndicator : MonoBehaviour
@@ -14,7 +15,24 @@ public class GridRangeIndicator : MonoBehaviour
 
         public override bool Equals(object? obj) => obj is Configuration other && this.Equals(other);
 
-        public bool Equals(Configuration p) => origin == p.origin && range == p.range;
+        public bool Equals(Configuration p) {
+
+            var easyPropertiesMatch = origin == p.origin &&
+                range == p.range &&
+                ignoringEntities == p.ignoringEntities;
+
+            if (!easyPropertiesMatch) { return false; }
+
+            var mappingsEqual = ownerToAlignmentMapping == p.ownerToAlignmentMapping;
+            if (!mappingsEqual && ownerToAlignmentMapping != null && p.ownerToAlignmentMapping != null)
+            {
+                mappingsEqual = ownerToAlignmentMapping.OrderBy(pair => pair.Key)
+                                                       .SequenceEqual(p.ownerToAlignmentMapping
+                                                       .OrderBy(pair => pair.Key));
+            }
+
+            return mappingsEqual;
+        }
 
         public override int GetHashCode() => (origin, range).GetHashCode();
 
@@ -197,6 +215,7 @@ public class GridRangeIndicator : MonoBehaviour
                 return;
             }
         }
+        Debug.Log("Update range visuals...");
 
         _cachedRangeConfiguration = configuration;
         ClearRangeVisuals(purgeCache: false);

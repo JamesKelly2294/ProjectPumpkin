@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using static Entity;
 
@@ -233,21 +234,6 @@ public class Entity : MonoBehaviour, ISelectable
         IsWaiting = !IsWaiting;
     }
 
-    IEnumerator test()
-    {
-        IsBusy = true;
-        Debug.Log($"{this} is busy.");
-        var t = 0.0f;
-
-        while (t < 2.0f)
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-        IsBusy = false;
-        Debug.Log($"{this} is no longer busy.");
-    }
-
     public void PayCostForAction(Action a)
     {
         Health -= a.HealthCost;
@@ -373,6 +359,7 @@ public class Entity : MonoBehaviour, ISelectable
         EnterTile(destinationNode);
 
         moving = false;
+        transform.position = (Vector3Int)destinationNode + new Vector3(0.5f, 0.5f, 0.0f); 
         completionHandler(this);
     }
 
@@ -428,6 +415,7 @@ public class Entity : MonoBehaviour, ISelectable
         var speed = speedMPS; // meters per second
         var timeToWalkAcrossTile = 1 / speed;
         var targetDirection = (new Vector3(target.x - Position.x, target.y - Position.y, 0.0f).normalized).normalized;
+        var startPosition = transform.position;
         float animationTime = targetDirection.magnitude * timeToWalkAcrossTile;
 
         var curve = AnimationCurve.EaseInOut(0.0f, 0.0f, animationTime, 1.0f);
@@ -450,6 +438,7 @@ public class Entity : MonoBehaviour, ISelectable
             yield return null;
         }
 
+        transform.position = startPosition;
         completionHandler(this);
     }
 

@@ -27,6 +27,8 @@ public class Mossy : MonoBehaviour
     [SerializeField]
     private int _collectedCrystals;
 
+    bool _determinedGlobalCrystalCount = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,17 +36,19 @@ public class Mossy : MonoBehaviour
         _turnManager = FindObjectOfType<TurnManager>();
 
         _gridPosition = (Vector3Int)_gridManager.ToWorldPositionTileCoordinate(transform.position);
-
-        _globalCrystalCount = _gridManager.Items.Where(i => i.Definition.Name.Contains("Crystal")).Count();
-        Debug.Log($"M.O.S.E found {_globalCrystalCount} crystals");
-
-        GetComponent<PubSubSender>().Publish("mossy.crystals.global_total_changed", _globalCrystalCount);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!_determinedGlobalCrystalCount)
+        {
+            _globalCrystalCount = _gridManager.Items.Where(i => i.Definition.Name.Contains("Crystal")).Count();
+            Debug.Log($"M.O.S.E found {_globalCrystalCount} crystals");
 
+            GetComponent<PubSubSender>().Publish("mossy.crystals.global_total_changed", _globalCrystalCount);
+            _determinedGlobalCrystalCount = true;
+        }
     }
 
     void PlaySuckAudio()

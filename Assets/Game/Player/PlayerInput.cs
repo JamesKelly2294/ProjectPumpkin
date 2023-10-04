@@ -228,9 +228,7 @@ public class PlayerInput : MonoBehaviour
         UpdateTileSelection();
 
         var entity = SelectedEntity();
-        if (entity == null) { return; }
-
-        if (SelectedAction != null)
+        if (SelectedAction != null && entity != null)
         {
             if (!entity.CanAffordAction(SelectedAction))
             {
@@ -239,7 +237,8 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
-                if (_turnManager.CurrentTeam == Entity.OwnerKind.Player)
+                var shouldUpdateVisuals = !_turnManager.BlockingEventIsExecuting && SelectedAction.Targetable;
+                if (_turnManager.CurrentTeam == Entity.OwnerKind.Player && shouldUpdateVisuals)
                 {
                     UpdateSelectedActionRangeVisuals();
                     UpdateSelectedActionPathVisuals();
@@ -252,7 +251,8 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        if (SelectedAction == null || SelectedEntity() == null || SelectedEntity().IsBusy || !SelectedAction.Targetable)
+        var shouldClearVisuals = SelectedAction == null || SelectedEntity() == null || _turnManager.BlockingEventIsExecuting || !SelectedAction.Targetable;
+        if (shouldClearVisuals)
         {
             _gridRangeIndicator.ClearRangeVisuals();
             _gridRangeIndicator.ClearPathVisuals();
@@ -538,7 +538,12 @@ public class PlayerInput : MonoBehaviour
 
     public void ForceVisualsRefresh()
     {
-        UpdateSelectedActionPathVisuals(forceRefresh: true);
-        UpdateSelectedActionRangeVisuals(forceRefresh: true);
+        var shouldClearVisuals = SelectedAction == null || SelectedEntity() == null || _turnManager.BlockingEventIsExecuting || !SelectedAction.Targetable;
+
+        if (!shouldClearVisuals)
+        {
+            UpdateSelectedActionPathVisuals(forceRefresh: true);
+            UpdateSelectedActionRangeVisuals(forceRefresh: true);
+        }
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
+using static UnityEngine.EventSystems.EventTrigger;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 
 public struct TileData
@@ -161,7 +162,7 @@ public class GridManager : MonoBehaviour
 
         Debug.Log("Registered " + entity + " at " + position + ".");
 
-        PubSubSender.Publish("grid.entity.registered");
+        PubSubSender.Publish("grid.entity.registered", entity);
     }
 
     public void UnregisterEntity(Entity entity)
@@ -174,7 +175,8 @@ public class GridManager : MonoBehaviour
         data.Entity = null;
         UpdateTileData(data);
 
-        PubSubSender.Publish("grid.entity.unregistered");
+        PubSubSender.Publish("grid.entity.position.changed", entity);
+        PubSubSender.Publish("grid.entity.unregistered", entity);
     }
 
     public void RegisterItem(Item item, Vector2Int position)
@@ -193,7 +195,7 @@ public class GridManager : MonoBehaviour
 
         Debug.Log("Registered " + item + " at " + position + ".");
 
-        PubSubSender.Publish("grid.item.registered");
+        PubSubSender.Publish("grid.item.registered", item);
     }
 
     public void UnregisterItem(Item item)
@@ -206,7 +208,7 @@ public class GridManager : MonoBehaviour
         data.Items.Remove(item);
         UpdateTileData(data);
 
-        PubSubSender.Publish("grid.item.unregistered");
+        PubSubSender.Publish("grid.item.unregistered", item);
     }
 
     public void SetItemPosition(Item item, Vector2Int position)
@@ -228,7 +230,6 @@ public class GridManager : MonoBehaviour
         var oldTileData = GetTileData(oldPosition);
         if (oldTileData.Items.Contains(item))
         {
-            Debug.Log("OLD DATA EXISTS, CLEARING");
             oldTileData.Items.Remove(item);
             UpdateTileData(oldTileData);
         }
@@ -240,7 +241,9 @@ public class GridManager : MonoBehaviour
         var str = "";
         newTileData.Items.ForEach(i => str += $"{i.Name}");
 
-        Debug.Log($"newTileData.Items for {newTileData.Position} is now {str}");
+        Debug.Log($"Setting item pos {position} newTileData.Items for {newTileData.Position} is now {str}");
+
+        PubSubSender.Publish("grid.item.position.changed", item);
     }
 
     public TileData? SetEntityPosition(Entity entity, Vector2Int position)
@@ -266,6 +269,8 @@ public class GridManager : MonoBehaviour
         var newTileData = GetTileData(position);
         newTileData.Entity = entity;
         UpdateTileData(newTileData);
+
+        PubSubSender.Publish("grid.entity.position.changed", entity);
 
         return newTileData;
     }
