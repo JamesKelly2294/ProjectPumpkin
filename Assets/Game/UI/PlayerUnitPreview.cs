@@ -13,6 +13,7 @@ public class PlayerUnitPreview : MonoBehaviour, IPointerClickHandler
     public Image Icon;
     public Image IconBackground;
     public Image IconFrame;
+    public Image RestIcon;
     public Sprite GoldFramePrefab;
     public Sprite SilverFramePrefab;
     public Color GoldColor;
@@ -58,7 +59,7 @@ public class PlayerUnitPreview : MonoBehaviour, IPointerClickHandler
         MovementBar.SetProgress((float)entity.Movement / (float)entity.MaxMovement);
         ManaBar.SetProgress((float)entity.Mana / (float)entity.MaxMana);
         HealthBar.SetProgress((float)entity.Health / (float)entity.MaxHealth);
-
+        RestIcon.enabled = entity.IsWaiting;
         // Update Pips
         int uPips = entity.MaxActionPoints - entity.ActionPoints;
         if (availablePips != entity.ActionPoints || unavailablePips != uPips || isWaiting != entity.IsWaiting) { 

@@ -1,4 +1,5 @@
 using info.jacobingalls.jamkit;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ public class EndTurnButton : MonoBehaviour
     private PubSubSender _sender;
     private PlayerInput _playerInput;
 
+    private List<Entity> _entitiesWithAvailableActions;
     private Entity _entityWithAvailableActions;
 
     // Start is called before the first frame update
@@ -43,9 +45,12 @@ public class EndTurnButton : MonoBehaviour
         if (_turnManager.CurrentTeam == Entity.OwnerKind.Player)
         {
             Button.interactable = !_turnManager.BlockingEventIsExecuting;
-            if (_turnManager.CurrentTeamEntitiesThatCanTakeAction.Count > 0)
+
+            _entitiesWithAvailableActions = _turnManager.CurrentTeamEntitiesThatCanTakeAction.Where(e => !e.ActedThisTurn).ToList();
+
+            if (_entitiesWithAvailableActions.Count > 0)
             {
-                _entityWithAvailableActions = _turnManager.CurrentTeamEntitiesThatCanTakeAction.First();
+                _entityWithAvailableActions = _entitiesWithAvailableActions.First();
                 EndTurnButtonImage.color = PlayerTurnStillWorkToDoColor;
                 var name = _entityWithAvailableActions.ClassName.Length == 0 ? _entityWithAvailableActions.Name : _entityWithAvailableActions.ClassName;
                 EndTurnButtonLabel.text = $"{name} ready!";
@@ -75,10 +80,46 @@ public class EndTurnButton : MonoBehaviour
         {
             if (_entityWithAvailableActions != null)
             {
+                var currentlySelectedSelectable = _playerInput.SelectedSelectable;
                 var selectable = _entityWithAvailableActions.GetComponent<Selectable>();
+                var remainingSelectables = _entitiesWithAvailableActions.Select(e => e.GetComponent<Selectable>()).Where(s => s != null).ToList();
+
+                if (remainingSelectables.Count > 0)
+                {
+                    remainingSelectables.RemoveAt(0);
+                }
+
                 if (selectable != null)
                 {
-                    _playerInput.Select(selectable);
+                    if (currentlySelectedSelectable == selectable)
+                    {
+                        // The player is clicking the button on a unit already selected
+                        // Auto wait for convenience
+                        foreach (var action in _entityWithAvailableActions.Actions)
+                        {
+                            if (action.Name.ToLower() == "wait")
+                            {
+                                var actionSelectionRequest = new ActionSelectionRequest()
+                                {
+                                    Action = action,
+                                    Entity = _entityWithAvailableActions,
+                                };
+
+                                _playerInput.RequestActionSelection(actionSelectionRequest);
+
+                                if (remainingSelectables.Count > 0)
+                                {
+                                    _playerInput.Select(remainingSelectables.First());
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        _playerInput.Select(selectable);
+                    }
                 }
             }
         }

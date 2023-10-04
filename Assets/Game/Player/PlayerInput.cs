@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static UnityEngine.EventSystems.EventTrigger;
 
 public class ActionSelectionRequest
 {
@@ -164,7 +165,7 @@ public class PlayerInput : MonoBehaviour
     {
         var entity = SelectedEntity();
 
-        if (entity == null || SelectedAction == null) { return; }
+        if (entity == null || SelectedAction == null || entity.IsWaiting || entity.IsBusy) { return; }
 
         var context = new Action.ExecutionContext();
         TileData? data = null;
@@ -196,6 +197,11 @@ public class PlayerInput : MonoBehaviour
         ActionSelectionRequest asr = e.value as ActionSelectionRequest;
 
         RequestActionSelectionHelper(asr);
+    }
+
+    public void RequestActionSelection(ActionSelectionRequest actionSelectionRequest)
+    {
+        RequestActionSelectionHelper(actionSelectionRequest);
     }
 
     private void RequestActionSelectionHelper(ActionSelectionRequest asr, bool autoExecuteNonTargetable = true)
@@ -237,7 +243,7 @@ public class PlayerInput : MonoBehaviour
             }
             else
             {
-                var shouldUpdateVisuals = !_turnManager.BlockingEventIsExecuting && SelectedAction.Targetable;
+                var shouldUpdateVisuals = !_turnManager.BlockingEventIsExecuting && SelectedAction.Targetable && !entity.IsWaiting;
                 if (_turnManager.CurrentTeam == Entity.OwnerKind.Player && shouldUpdateVisuals)
                 {
                     UpdateSelectedActionRangeVisuals();
@@ -251,7 +257,7 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
-        var shouldClearVisuals = SelectedAction == null || SelectedEntity() == null || _turnManager.BlockingEventIsExecuting || !SelectedAction.Targetable;
+        var shouldClearVisuals = SelectedAction == null || entity == null || _turnManager.BlockingEventIsExecuting || !SelectedAction.Targetable || entity.IsWaiting;
         if (shouldClearVisuals)
         {
             _gridRangeIndicator.ClearRangeVisuals();
@@ -263,9 +269,15 @@ public class PlayerInput : MonoBehaviour
             ExecuteSelectedAction();
         }
 
+        ProcessKeyboardShortcuts();
+    }
+
+    void ProcessKeyboardShortcuts()
+    {
         // Player squad selection
         var playerSelectables = _turnManager.OwnedEntities(Entity.OwnerKind.Player).Select(e => e.GetComponent<Selectable>()).ToList();
-        if (playerSelectables.Count > 0) {
+        if (playerSelectables.Count > 0)
+        {
             for (KeyCode keyCode = KeyCode.Alpha1; keyCode <= KeyCode.Alpha9; keyCode++)
             {
                 var index = keyCode - KeyCode.Alpha1;
@@ -277,6 +289,7 @@ public class PlayerInput : MonoBehaviour
             }
         }
 
+        var entity = SelectedEntity();
         // Ability selection
         if (entity != null)
         {
@@ -291,6 +304,12 @@ public class PlayerInput : MonoBehaviour
                     asr.Action = entity.Actions[i];
                     RequestActionSelectionHelper(asr, autoExecuteNonTargetable: false);
                 }
+            }
+
+            var waitAction = entity.Actions.FirstOrDefault(a => a.Name.ToLower() == "wait");
+            if (waitAction != null && Input.GetKeyDown(KeyCode.Space))
+            {
+                RequestActionSelection(new ActionSelectionRequest { Action = waitAction, Entity = entity });
             }
         }
     }
@@ -425,7 +444,8 @@ public class PlayerInput : MonoBehaviour
                 {
                     foreach (var action in selectedEntity.Actions)
                     {
-                        if (selectedEntity.CanAffordAction(action))
+                        var waitingIsABlocker = selectedEntity.IsWaiting && !action.CanExecuteWhileWaiting;
+                        if (selectedEntity.CanAffordAction(action) && !waitingIsABlocker)
                         {
                             SelectedAction = action;
                             break;

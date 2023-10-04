@@ -172,6 +172,19 @@ public class Entity : MonoBehaviour, ISelectable
         IsWaiting = waiting;
     }
 
+    public bool ActedThisTurn
+    {
+        get { return _actedThisTurn; }
+        set
+        {
+            if (_actedThisTurn == value) { return; }
+            _actedThisTurn = value;
+            _pubSubSender.Publish("entity.acted_this_turn.changed", _actedThisTurn);
+        }
+    }
+    [SerializeField]
+    private bool _actedThisTurn = false;
+
     public bool IsBusy // if a unit is "busy", they are actively executing an action, and UI should be disabled
     {
         get { return _isBusy; }
@@ -226,6 +239,7 @@ public class Entity : MonoBehaviour, ISelectable
         Movement = MaxMovement;
         ActionPoints = MaxActionPoints;
         Mana = Mathf.Min(MaxMana, Mana + 1);
+        ActedThisTurn = false;
         IsWaiting = false;
     }
 
@@ -533,6 +547,22 @@ public class Entity : MonoBehaviour, ISelectable
                 var index = UnityEngine.Random.Range(0, Definition.PotentialItemDrops.Count);
                 var itemToDrop = Definition.PotentialItemDrops[index];
 
+                var go = Instantiate(Definition.DroppedItemPrefab);
+                go.transform.name = $"Dropped {itemToDrop.name}";
+                go.transform.position = transform.position;
+
+                var droppedItem = go.GetComponent<DroppedItem>();
+
+                droppedItem.Item.Definition = itemToDrop;
+                Debug.Log($"Dropping {itemToDrop.name}");
+            }
+        }
+
+        var inventory = GetComponent<Inventory>();
+        if (inventory != null && inventory.Items.Count > 0)
+        {
+            foreach (var itemToDrop in inventory.Items)
+            {
                 var go = Instantiate(Definition.DroppedItemPrefab);
                 go.transform.name = $"Dropped {itemToDrop.name}";
                 go.transform.position = transform.position;

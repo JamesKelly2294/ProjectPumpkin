@@ -27,7 +27,7 @@ MonoBehaviour:
   Kind: 1
   Target: 4
   Behaviors:
-  - {fileID: 3196293187638663207, guid: 77eb4a1098ef51448afcc1703ea3c07f, type: 3}
+  - {fileID: 3196293187638663207, guid: 8020cb8aabfb9ba4fa55d3d062b5851a, type: 3}
   BaseActionPointCost: 1
   BaseMagicCost: 0
   BaseMovementCost: 0

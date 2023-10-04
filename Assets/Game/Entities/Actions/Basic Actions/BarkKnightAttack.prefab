@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5733087898952117575}
   - component: {fileID: 3196293187638663207}
   m_Layer: 0
-  m_Name: TangleweaverAttack
+  m_Name: BarkKnightAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45,5 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsMeleeAttack: 1
-  DamageAmount: 20
-  Speed: 11.5
+  DamageAmount: 5
+  Speed: 7

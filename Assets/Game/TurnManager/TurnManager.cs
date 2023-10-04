@@ -64,6 +64,23 @@ public class TurnManager : MonoBehaviour
     [SerializeField]
     private List<Entity> _currentTeamEntitiesThatCanTakeAction = new();
 
+    // WE CAN GO EVEN LONGER WITH VARIABLE NAMES
+    public List<Entity> CurrentTeamEntitiesThatCanTakeActionAndHaveNotActed
+    {
+        get { return _currentTeamEntitiesThatCanTakeActionAndHaveNotActed; }
+        private set
+        {
+            if (_currentTeamEntitiesThatCanTakeActionAndHaveNotActed == value) { return; }
+            if (_currentTeamEntitiesThatCanTakeActionAndHaveNotActed.Count == value.Count && _currentTeamEntitiesThatCanTakeActionAndHaveNotActed.SequenceEqual(value)) { return; }
+
+            _currentTeamEntitiesThatCanTakeActionAndHaveNotActed = value;
+            _pubSubSender.Publish("turnManager._currentTeamEntitiesThatCanTakeActionAndHaveNotActed.changed", _currentTeamEntitiesThatCanTakeActionAndHaveNotActed);
+            _pubSubSender.Publish("turnManager.state.changed", _currentTurn);
+        }
+    }
+    [SerializeField]
+    private List<Entity> _currentTeamEntitiesThatCanTakeActionAndHaveNotActed = new();
+
     public bool BlockingEventIsExecuting
     {
         get { return _blockingEventIsExecuting; }
@@ -166,6 +183,8 @@ public class TurnManager : MonoBehaviour
         {
             behavior.Execute(context);
         }
+
+        entity.ActedThisTurn = true;
     }
 
     public void EndTeamTurn()
@@ -205,6 +224,7 @@ public class TurnManager : MonoBehaviour
         var currentTeamEntities = OwnedEntities(CurrentTeam);
 
         CurrentTeamEntitiesThatCanTakeAction = currentTeamEntities.Where(e => EntityCanDoMoreThisTurn(e)).ToList();
+        CurrentTeamEntitiesThatCanTakeActionAndHaveNotActed = CurrentTeamEntitiesThatCanTakeAction.Where(e => !e.ActedThisTurn).ToList();
         CurrentTeamCanTakeAction = CurrentTeamEntitiesThatCanTakeAction.Count > 0;
     }
 

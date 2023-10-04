@@ -14,6 +14,7 @@ public class UnitSelectionAreaFace : MonoBehaviour
     public Image Icon;
     public Image IconBackground;
     public Image IconFrame;
+    public Image RestIcon;
     public Sprite GoldFramePrefab;
     public Sprite SilverFramePrefab;
     public Sprite RubyFramePrefab;
@@ -44,6 +45,7 @@ public class UnitSelectionAreaFace : MonoBehaviour
         if (entity == null) { return; }
         Icon.sprite = entity.Definition.Icon;
         IconBackground.color = entity.Definition.Color;
+        RestIcon.enabled = entity.IsWaiting;
 
         // Update Pips
         int uPips = entity.MaxActionPoints - entity.ActionPoints;
