@@ -228,6 +228,7 @@ public class PlayerInput : MonoBehaviour
         UpdateTileSelection();
 
         var entity = SelectedEntity();
+        if (entity == null) { return; }
 
         if (SelectedAction != null)
         {

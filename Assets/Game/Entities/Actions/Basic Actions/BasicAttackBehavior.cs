@@ -60,8 +60,11 @@ public class BasicAttackBehavior : ActionBehavior
     private void AttackAnimationZenithCompleted(Entity e)
     {
         Debug.Log("Zenith!");
-
-        _targetEntity.ApplyDamage(DamageAmount);
+        
+        if (_targetEntity != null) 
+        {
+            _targetEntity.ApplyDamage(DamageAmount);
+        }
     }
 
     private void AttackAnimationCompleted(Entity e)

@@ -76,7 +76,7 @@ public class Mossy : MonoBehaviour
                 var inventory = tileData.Entity.GetComponent<Inventory>();
 
                 var suckedThisTurn = false;
-                if (inventory.Items.Count > 0)
+                if (inventory != null && inventory.Items.Count > 0)
                 {
                     _collectedCrystals += inventory.Items.Where(i => i.Name.Contains("Crystal")).Count();
 
