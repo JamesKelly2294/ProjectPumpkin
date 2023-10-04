@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
     public void LoadGame()
     {
         _activeLoadingScreen = introLoadingScreen;
+        if (_activeLoadingScreen.activeSelf == true) { return; }
         _activeLoadingScreen.SetActive(true);
         scenesLoading.Add(SceneManager.UnloadSceneAsync((int)SceneIndices.TitleScreen));
 
@@ -84,7 +85,7 @@ public class GameManager : MonoBehaviour
     public void ShowLoseScreen()
     {
         _activeLoadingScreen = transitionalLoadingScreen;
-
+        if (_activeLoadingScreen.activeSelf == true) { return; }
         _activeLoadingScreen.SetActive(true);
         scenesLoading.Add(SceneManager.UnloadSceneAsync(loadGameSceneName));
 
@@ -96,7 +97,7 @@ public class GameManager : MonoBehaviour
     public void ShowWinScreen()
     {
         _activeLoadingScreen = transitionalLoadingScreen;
-
+        if (_activeLoadingScreen.activeSelf == true) { return; }
         _activeLoadingScreen.SetActive(true);
         scenesLoading.Add(SceneManager.UnloadSceneAsync(loadGameSceneName));
 
@@ -108,6 +109,7 @@ public class GameManager : MonoBehaviour
     public void ShowMainWindow()
     {
         _activeLoadingScreen = transitionalLoadingScreen;
+        if (_activeLoadingScreen.activeSelf == true) { return; }
         _activeLoadingScreen.SetActive(true);
 
         // Absolute fucking hack
