@@ -63,14 +63,8 @@ public class GridManager : MonoBehaviour
     public HashSet<Item> Items { get { return _items; } }
     private HashSet<Item> _items = new();
 
-    private PubSubSender _pubSubSender;
+    public PubSubSender PubSubSender;
 
-
-    // Start is called before the first frame update
-    void Awake()
-    {
-        _pubSubSender = GetComponent<PubSubSender>();
-    }
 
     // Update is called once per frame
     void Update()
@@ -109,8 +103,7 @@ public class GridManager : MonoBehaviour
             _tileData[newTileData.Position] = newTileData;
         }
 
-        if (_pubSubSender == null) { _pubSubSender = GetComponent<PubSubSender>(); }
-        _pubSubSender.Publish("grid.tile.updated");
+        PubSubSender.Publish("grid.tile.updated");
     }
 
     // An ordered list of selectables at a given tile.
@@ -168,7 +161,7 @@ public class GridManager : MonoBehaviour
 
         Debug.Log("Registered " + entity + " at " + position + ".");
 
-        _pubSubSender.Publish("grid.entity.registered");
+        PubSubSender.Publish("grid.entity.registered");
     }
 
     public void UnregisterEntity(Entity entity)
@@ -181,7 +174,7 @@ public class GridManager : MonoBehaviour
         data.Entity = null;
         UpdateTileData(data);
 
-        _pubSubSender.Publish("grid.entity.unregistered");
+        PubSubSender.Publish("grid.entity.unregistered");
     }
 
     public void RegisterItem(Item item, Vector2Int position)
@@ -200,7 +193,7 @@ public class GridManager : MonoBehaviour
 
         Debug.Log("Registered " + item + " at " + position + ".");
 
-        _pubSubSender.Publish("grid.item.registered");
+        PubSubSender.Publish("grid.item.registered");
     }
 
     public void UnregisterItem(Item item)
@@ -213,7 +206,7 @@ public class GridManager : MonoBehaviour
         data.Items.Remove(item);
         UpdateTileData(data);
 
-        _pubSubSender.Publish("grid.item.unregistered");
+        PubSubSender.Publish("grid.item.unregistered");
     }
 
     public void SetItemPosition(Item item, Vector2Int position)
