@@ -30,11 +30,16 @@ public class ActionButtons : MonoBehaviour
                 Destroy(child.gameObject);
             }
 
+            var i = 0;
+            var hotkeyMappings = new List<string> { "Q", "W", "E", "R", "F"};
             foreach(Action action in actions) {
                 ActionButton actionButton = GameObject.Instantiate(ActionButtonPrefab, gameObject.transform);
                 actionButton.gameObject.SetActive(false);
                 actionButton.SetAction(action);
                 actionButton.gameObject.SetActive(true);
+                actionButton.HotkeyLabel.text = $"{hotkeyMappings[i]}";
+
+                i += 1;
             }
         }
     }

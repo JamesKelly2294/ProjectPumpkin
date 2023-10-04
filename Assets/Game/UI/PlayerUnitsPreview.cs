@@ -31,9 +31,13 @@ public class PlayerUnitsPreview : MonoBehaviour
         foreach(Transform child in Holder.transform) {
             GameObject.Destroy(child.gameObject);
         }
+
+        int i = 0;
         foreach(Entity entity in turnManager.OwnedEntities(Entity.OwnerKind.Player)) {
             PlayerUnitPreview unit = GameObject.Instantiate(PlayerUnitPreviewPrefab, Holder.transform);
+            unit.HotkeyLabel.text = $"{i+1}";
             unit.SetEntity(entity);
+            i += 1;
         }
     }
 }

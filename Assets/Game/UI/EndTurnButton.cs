@@ -109,7 +109,10 @@ public class EndTurnButton : MonoBehaviour
 
                                 if (remainingSelectables.Count > 0)
                                 {
-                                    _playerInput.Select(remainingSelectables.First());
+                                    var newSelectable = remainingSelectables.First();
+                                    _playerInput.Select(newSelectable);
+                                    var camera = Camera.main;
+                                    if (camera != null) { camera.transform.position = new Vector3(newSelectable.transform.position.x, newSelectable.transform.position.y, camera.transform.position.z); }
                                 }
 
                                 break;
@@ -119,6 +122,9 @@ public class EndTurnButton : MonoBehaviour
                     else
                     {
                         _playerInput.Select(selectable);
+
+                        var camera = Camera.main;
+                        if (camera != null) { camera.transform.position = new Vector3(selectable.transform.position.x, selectable.transform.position.y, camera.transform.position.z); }
                     }
                 }
             }

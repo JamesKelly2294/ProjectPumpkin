@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using info.jacobingalls.jamkit;
 using UnityEngine.EventSystems;
+using TMPro;
 
 [RequireComponent(typeof(PubSubSender))]
 public class PlayerUnitPreview : MonoBehaviour, IPointerClickHandler
@@ -25,6 +26,7 @@ public class PlayerUnitPreview : MonoBehaviour, IPointerClickHandler
     public Image PipsHolderFrame;
     public GameObject ActionPointPrefab;
     public GameObject UnavailableActionPointPrefab;
+    public TextMeshProUGUI HotkeyLabel;
 
     private int availablePips = 0, unavailablePips;
     private bool isWaiting = false;

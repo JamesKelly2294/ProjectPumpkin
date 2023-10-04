@@ -2,6 +2,7 @@ using info.jacobingalls.jamkit;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Analytics;
 using UnityEngine.EventSystems;
 using static UnityEngine.EventSystems.EventTrigger;
 
@@ -165,7 +166,7 @@ public class PlayerInput : MonoBehaviour
     {
         var entity = SelectedEntity();
 
-        if (entity == null || SelectedAction == null || entity.IsWaiting || entity.IsBusy) { return; }
+        if (entity == null || SelectedAction == null || (entity.IsWaiting && !SelectedAction.CanExecuteWhileWaiting) || entity.IsBusy) { return; }
 
         var context = new Action.ExecutionContext();
         TileData? data = null;
@@ -284,14 +285,17 @@ public class PlayerInput : MonoBehaviour
                 if (index >= playerSelectables.Count) { break; }
                 if (Input.GetKeyDown(keyCode))
                 {
-                    Select(playerSelectables[index]);
+                    var selectable = playerSelectables[index];
+                    Select(selectable);
+                    var camera = Camera.main;
+                    if (camera != null) { camera.transform.position = new Vector3(selectable.transform.position.x, selectable.transform.position.y, camera.transform.position.z); }
                 }
             }
         }
 
         var entity = SelectedEntity();
         // Ability selection
-        if (entity != null)
+        if (entity != null && entity.Owner == Entity.OwnerKind.Player)
         {
             List<KeyCode> actionMappings = new() { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.R, KeyCode.F, KeyCode.V };
             for (int i = 0; i < actionMappings.Count; i++)
@@ -310,7 +314,23 @@ public class PlayerInput : MonoBehaviour
             if (waitAction != null && Input.GetKeyDown(KeyCode.Space))
             {
                 RequestActionSelection(new ActionSelectionRequest { Action = waitAction, Entity = entity });
+
+                var entitiesWithAvailableActions = _turnManager.CurrentTeamEntitiesThatCanTakeAction.Where(e => !e.ActedThisTurn && e.Owner == Entity.OwnerKind.Player).ToList();
+                var remainingSelectables = entitiesWithAvailableActions.Select(e => e.GetComponent<Selectable>()).Where(s => s != null).ToList();
+
+                if (remainingSelectables.Count > 0)
+                {
+                    var selectable = remainingSelectables.First();
+                    Select(selectable);
+                    var camera = Camera.main;
+                    if (camera != null) { camera.transform.position = new Vector3(selectable.transform.position.x, selectable.transform.position.y, camera.transform.position.z); }
+                }
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetKeyDown(KeyCode.Return))
+        {
+            GetComponent<PubSubSender>().Publish("end_turn_button.pressed");
         }
     }
 

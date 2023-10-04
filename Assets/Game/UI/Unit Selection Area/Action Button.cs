@@ -34,6 +34,7 @@ public class ActionButton : MonoBehaviour
     public CanvasGroup CanvasGroup;
     public CanvasGroup PipsCanvasGroup;
     public Outline Outline;
+    public TextMeshProUGUI HotkeyLabel;
 
     private PlayerInput _playerInput;
 
