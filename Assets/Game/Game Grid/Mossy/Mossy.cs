@@ -29,12 +29,15 @@ public class Mossy : MonoBehaviour
 
     bool _determinedGlobalCrystalCount = false;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         _gridManager = FindObjectOfType<GridManager>();
         _turnManager = FindObjectOfType<TurnManager>();
+    }
 
+    // Start is called before the first frame update
+    void Start()
+    {
         _gridPosition = (Vector3Int)_gridManager.ToWorldPositionTileCoordinate(transform.position);
     }
 
