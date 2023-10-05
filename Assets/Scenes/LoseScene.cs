@@ -6,7 +6,7 @@ using TMPro;
 public class LoseScene : MonoBehaviour
 {
 
-    public TextMeshProUGUI turns, points, kills, crystals;
+    public TextMeshProUGUI turns, points, kills, crystals, junk;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +18,7 @@ public class LoseScene : MonoBehaviour
             points.text = "" + gameManager.PastState.Points;
             kills.text = "" + gameManager.PastState.EnemiesSlain;
             crystals.text = "" + gameManager.PastState.CrystalsDelivered;
+            junk.text = "" + gameManager.PastState.JunkDelivered;
         }
     }
 

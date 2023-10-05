@@ -19,6 +19,7 @@ public struct PastState
     public int Points;
     public int Turns;
     public int CrystalsDelivered;
+    public int JunkDelivered;
 }
 
 public class GameManager : MonoBehaviour
@@ -47,6 +48,11 @@ public class GameManager : MonoBehaviour
     public void CrystalsDelivered(PubSubListenerEvent e)
     {
         PastState.CrystalsDelivered += (int)e.value;
+    }
+
+    public void JunkDelivered(PubSubListenerEvent e)
+    {
+        PastState.JunkDelivered += (int)e.value;
     }
 
     public void EnemySlain()
