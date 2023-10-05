@@ -82,12 +82,13 @@ public class Mossy : MonoBehaviour
                 var suckedThisTurn = false;
                 if (inventory != null && inventory.Items.Count > 0)
                 {
-                    _collectedCrystals += inventory.Items.Where(i => i.Name.Contains("Crystal")).Count();
+                    var newlyCollectedCrystals = inventory.Items.Where(i => i.Name.Contains("Crystal")).Count();
+                    _collectedCrystals += newlyCollectedCrystals;
 
                     Debug.Log($"M.O.S.E sucked up {inventory.Items.Count} items, including {_collectedCrystals} crystals");
 
-                    GetComponent<PubSubSender>().Publish("mossy.cystals.delivered", _collectedCrystals);
-                    GetComponent<PubSubSender>().Publish("points.gained", _collectedCrystals * 10);
+                    GetComponent<PubSubSender>().Publish("mossy.cystals.delivered", newlyCollectedCrystals);
+                    GetComponent<PubSubSender>().Publish("points.gained", newlyCollectedCrystals * 10);
 
                     inventory.RemoveAllItems();
                     suckedThisTurn = true;
